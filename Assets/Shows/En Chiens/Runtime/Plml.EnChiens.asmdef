@@ -1,0 +1,17 @@
+{
+    "name": "Plml.EnChiens",
+    "rootNamespace": "Plml.EnChiens",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:69d67a94e5f017c4aacb0ead26935355"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
