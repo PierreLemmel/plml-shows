@@ -2095,7 +2095,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoPlay: 0
   introStartTime: 10
-  outroStartTime: 0
+  outroStartTime: 169.5
   introTimeline: {fileID: 11400000, guid: 7437f6ebf140d394f884f66f01573f05, type: 2}
   outroTimeline: {fileID: 11400000, guid: 2547b3e6b406d9543ab2f3396cbce957, type: 2}
   parLedCourJardin: {fileID: 432598086}
