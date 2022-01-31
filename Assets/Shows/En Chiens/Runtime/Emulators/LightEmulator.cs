@@ -60,6 +60,9 @@ namespace Plml.EnChiens.Emulators
             });
 
             text.text = textContent;
+
+            bool isBackgroundDark = (bgColor.r + bgColor.g + bgColor.b < 3 * 255 / 2);
+            text.color = isBackgroundDark ? Color.white : Color.black;
         }
 
         protected abstract Color32 GetColor();

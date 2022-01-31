@@ -975,7 +975,7 @@ MonoBehaviour:
   master: 1
   fade: 0
   refreshRate: 30
-  enableOpenDmx: 0
+  enableOpenDmx: 1
 --- !u!1 &698264923
 GameObject:
   m_ObjectHideFlags: 0
@@ -1717,7 +1717,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1453930643}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47276fb6dd6471e43bb4175e0187e10e, type: 3}
+  m_Script: {fileID: 11500000, guid: 249fd639a6af5e440b6413e71c04f365, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1453930645
@@ -2095,7 +2095,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoPlay: 0
   introStartTime: 10
-  outroStartTime: 169.5
+  outroStartTime: 0
   introTimeline: {fileID: 11400000, guid: 7437f6ebf140d394f884f66f01573f05, type: 2}
   outroTimeline: {fileID: 11400000, guid: 2547b3e6b406d9543ab2f3396cbce957, type: 2}
   parLedCourJardin: {fileID: 432598086}
