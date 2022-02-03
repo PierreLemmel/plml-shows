@@ -1,4 +1,4 @@
-﻿using Plml.Dmx.Fixtures;
+﻿using Plml.Dmx.SimpleFixtures;
 using UnityEngine;
 
 namespace Plml.EnChiens.Emulators

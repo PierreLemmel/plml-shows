@@ -1,4 +1,4 @@
-using Plml.Dmx.Fixtures;
+using Plml.Dmx.SimpleFixtures;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using UText = UnityEngine.UI.Text;
 namespace Plml.EnChiens.Emulators
 {
     public abstract class LightEmulator<TFixture> : MonoBehaviour
-        where TFixture : DmxFixture
+        where TFixture : SimpleDmxFixture
     {
         protected static readonly Color coldColor = Color.white;
         protected static readonly Color warmColor = Color.yellow;

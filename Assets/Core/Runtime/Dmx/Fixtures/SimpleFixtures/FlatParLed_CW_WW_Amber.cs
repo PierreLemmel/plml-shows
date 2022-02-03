@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-namespace Plml.Dmx.Fixtures
+namespace Plml.Dmx.SimpleFixtures
 {
-    public class FlatParLed_CW_WW_Amber : DmxFixture
+    public class FlatParLed_CW_WW_Amber : SimpleDmxFixture
     {
         [Range(0x00, 0xff)]
         public int dimmer;

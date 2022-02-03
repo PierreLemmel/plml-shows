@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Plml.Dmx.Fixtures
+namespace Plml.Dmx.SimpleFixtures
 {
-    public class ParLedServo_SharkCombi : DmxFixture
+    public class ParLedServo_SharkCombi : SimpleDmxFixture
     {
         [Range(0, 0xff)]
         public int dimmer;

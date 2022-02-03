@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Plml.Dmx.Fixtures
+namespace Plml.Dmx.SimpleFixtures
 {
-    public class ParLedRGBW : DmxFixture
+    public class ParLedRGBW : SimpleDmxFixture
     {
         [Range(0x00, 0xff)]
         public int dimmer;

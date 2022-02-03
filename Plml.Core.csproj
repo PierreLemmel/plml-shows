@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,9 +53,6 @@
     <UnityVersion>2021.2.8f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\ValueChecker.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\And.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\ValueCheckerFactory.cs" />
@@ -81,7 +78,6 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\Spy.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\EditTimeOnlyAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\HideInPlayModeAttribute.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\ParLedRGBW.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker3.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\MidiInputDispatcher.cs" />
     <Compile Include="Assets\Core\Runtime\Spout\SpoutApi.cs" />
@@ -94,7 +90,6 @@
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ExpressionTreeBuilder.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\Token.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FTD2XXDll.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\DmxControler.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker15.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\MidiInputListener.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker1.cs" />
@@ -123,10 +118,8 @@
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\AstBuilder.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FTD2XXInterface.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\GreaterThan.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\ParLedServo_SharkCombi.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker8.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\IChecker.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\FlatParLed_CW_WW_Amber.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker5.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\CalculationEngine.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxFixture.cs" />
@@ -137,7 +130,6 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\AllPropertiesCheckerFactory.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Execution\IExecutor.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_OPEN_BY.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\TestFixture.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\LessThan.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\ReadOnlyAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Execution\Interpreter.cs" />
@@ -161,6 +153,18 @@
     <Compile Include="Assets\Core\Runtime\Core\Helpers\RunInBackground.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Control\SimpleDmxControler.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackControler.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrack.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackElement.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\Definitions\DmxChannelType.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\SimpleFixtures\TestFixture.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\Definitions\FixtureDefinition.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\SimpleFixtures\FlatParLed_CW_WW_Amber.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\SimpleFixtures\ParLedRGBW.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\SimpleFixtures\SimpleDmxFixture.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\SimpleFixtures\ParLedServo_SharkCombi.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\Definitions\DmxChannelDefinition.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />
@@ -412,6 +416,9 @@
     <Reference Include="UnityEditor.Graphs">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.Android.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\UnityEditor.Android.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
@@ -444,6 +451,12 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Android.Types">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Android.Gradle">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>

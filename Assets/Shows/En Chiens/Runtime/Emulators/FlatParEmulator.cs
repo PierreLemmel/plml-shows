@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Plml.Dmx.Fixtures;
+using Plml.Dmx.SimpleFixtures;
 
 namespace Plml.EnChiens.Emulators
 {

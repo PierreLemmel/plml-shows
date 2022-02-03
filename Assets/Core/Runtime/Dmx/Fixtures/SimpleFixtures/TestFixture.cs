@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Plml.Dmx.Fixtures
+namespace Plml.Dmx.SimpleFixtures
 {
-    public class TestFixture : DmxFixture
+    public class TestFixture : SimpleDmxFixture
     {
         public int nbOfChannels = 16;
         public byte[] testChannels;

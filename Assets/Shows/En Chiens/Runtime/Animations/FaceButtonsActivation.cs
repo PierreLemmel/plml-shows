@@ -1,4 +1,4 @@
-using Plml.Dmx.Fixtures;
+using Plml.Dmx.SimpleFixtures;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

@@ -1,4 +1,4 @@
-﻿using Plml.Dmx.Fixtures;
+using Plml.Dmx.SimpleFixtures;
 using Plml.Dmx.OpenDmx;
 using Plml.Dmx.OpenDmx.FTD2XX;
 using System;
@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Plml.Dmx
 {
-    public class DmxControler : MonoBehaviour
+    public class DmxTrackControler : MonoBehaviour
     {
         public GameObject fixturesObject;
 
@@ -23,7 +23,7 @@ namespace Plml.Dmx
 
         public bool enableOpenDmx = true;
 
-        private DmxFixture[] fixtures;
+        private SimpleDmxFixture[] fixtures;
 
         private IOpenDmxInterface openDmx = new FTD2XXInterface();
 
@@ -36,7 +36,7 @@ namespace Plml.Dmx
 
         private void Awake()
         {
-            fixtures = fixturesObject.GetComponentsInChildren<DmxFixture>();
+            fixtures = fixturesObject.GetComponentsInChildren<SimpleDmxFixture>();
 
             int lastChannel = fixtures.Max(fix => fix.channelOffset + fix.Channels.Length);
 
@@ -61,7 +61,7 @@ namespace Plml.Dmx
         {
             if (Time.time - lastTime < 1.0f / refreshRate) return;
 
-            foreach (DmxFixture fixture in fixtures)
+            foreach (SimpleDmxFixture fixture in fixtures)
                 Array.Copy(fixture.Channels, 0, targets, fixture.channelOffset, fixture.Channels.Length);
 
             for (int i = 0; i < channels.Length; i++)

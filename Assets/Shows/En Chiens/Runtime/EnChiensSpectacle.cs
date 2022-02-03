@@ -1,5 +1,5 @@
 using Plml.EnChiens.Animation;
-using Plml.Dmx.Fixtures;
+using Plml.Dmx.SimpleFixtures;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
