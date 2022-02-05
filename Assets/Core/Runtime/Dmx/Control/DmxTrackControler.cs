@@ -10,7 +10,11 @@ namespace Plml.Dmx
 {
     public class DmxTrackControler : MonoBehaviour
     {
+        [EditTimeOnly]
         public GameObject fixturesObject;
+
+        [EditTimeOnly]
+        public GameObject tracksObject;
 
         [Range(0.0f, 1.0f)]
         public float master = 1.0f;
@@ -23,27 +27,30 @@ namespace Plml.Dmx
 
         public bool enableOpenDmx = true;
 
-        private SimpleDmxFixture[] fixtures;
+        private DmxTrack[] tracks;
+
 
         private IOpenDmxInterface openDmx = new FTD2XXInterface();
 
         private byte[] channels;
         private float[] currents;
         private float[] speeds;
-        private byte[] targets;
+        private float[] targets;
 
         private float lastTime;
 
         private void Awake()
         {
-            fixtures = fixturesObject.GetComponentsInChildren<SimpleDmxFixture>();
+            tracks = tracksObject.GetComponentsInChildren<DmxTrack>();
 
-            int lastChannel = fixtures.Max(fix => fix.channelOffset + fix.Channels.Length);
+            int lastChannel = fixturesObject
+                .GetComponentsInChildren<DmxFixture>()
+                .Max(fix => fix.channelOffset + fix.model.chanCount);
 
             channels = new byte[lastChannel];
             currents = new float[lastChannel];
             speeds = new float[lastChannel];
-            targets = new byte[lastChannel];
+            targets = new float[lastChannel];
 
             lastTime = Time.time;
 
@@ -59,16 +66,29 @@ namespace Plml.Dmx
 
         private void Update()
         {
-            if (Time.time - lastTime < 1.0f / refreshRate) return;
+            Array.Clear(targets, 0, targets.Length);
 
-            foreach (SimpleDmxFixture fixture in fixtures)
-                Array.Copy(fixture.Channels, 0, targets, fixture.channelOffset, fixture.Channels.Length);
+            foreach (DmxTrack track in tracks.Where(t => t.isPlaying))
+            {
+                float master = track.master;
+
+                foreach (DmxTrackElement elt in track.Elements)
+                {
+                    int[] channels = elt.channels;
+                    for (int i=0, address = elt.Address; i<channels.Length; i++, address++)
+                    {
+                        targets[address] = Math.Max(targets[address], master * channels[i]);
+                    }
+                }
+            }
 
             for (int i = 0; i < channels.Length; i++)
             {
                 currents[i] = Mathf.SmoothDamp(currents[i], master * targets[i], ref speeds[i], fade);
                 channels[i] = (byte)currents[i];
             }
+
+            if (Time.time - lastTime < 1.0f / refreshRate) return;
 
             if (enableOpenDmx)
             {

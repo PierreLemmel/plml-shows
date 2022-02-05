@@ -8,12 +8,12 @@ namespace Plml.Playground.Surfaces
     [RequireComponent(typeof(MeshRenderer))]
     public class GridSurfaceMesh : MonoBehaviour
     {
-        public GridSurfaceParameters surfaceParameters = new GridSurfaceParameters();
+        public GridSurfaceParameters surfaceParameters = new();
 
         public SurfaceFormula formula = new();
 
 
-        public Vector2 Speed { get; set; } = new Vector2(0.0f, 0.0f);
+        public Vector2 Speed { get; set; } = new(0.0f, 0.0f);
 
         private Mesh mesh;
 

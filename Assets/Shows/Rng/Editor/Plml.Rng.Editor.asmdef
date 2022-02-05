@@ -1,7 +1,9 @@
 {
     "name": "Plml.Rng.Editor",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:2fe091ac95caf984db2864b2fe652a0d"
+    ],
     "includePlatforms": [
         "Editor"
     ],

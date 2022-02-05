@@ -7,10 +7,8 @@ namespace Plml.Editor
     [CustomPropertyDrawer(typeof(EditTimeOnlyAttribute))]
     public class EditTimeOnlyDrawer : OverlayPropertyDrawer<EditTimeOnlyAttribute>
     {
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            return EditorGUI.GetPropertyHeight(property, label, true);
-        }
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => EditorGUI
+            .GetPropertyHeight(property, label, true);
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -24,7 +22,7 @@ namespace Plml.Editor
             if (InnerDrawer != null)
                 InnerDrawer.OnGUI(position, property, label);
             else
-                EditorGUI.PropertyField(position, property, true);
+                EditorGUI.PropertyField(position, property, label, true);
         }
     }
 }

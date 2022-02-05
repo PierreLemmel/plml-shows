@@ -1,3 +1,16 @@
 {
-	"name": "Plml.Rng"
+    "name": "Plml.Rng",
+    "rootNamespace": "",
+    "references": [
+        "GUID:69d67a94e5f017c4aacb0ead26935355"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
