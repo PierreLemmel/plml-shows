@@ -14,7 +14,7 @@ namespace Plml.Dmx
         public GameObject fixturesObject;
 
         [EditTimeOnly]
-        public GameObject tracksObject;
+        public DmxTrackCollection tracksObject;
 
         [Range(0.0f, 1.0f)]
         public float master = 1.0f;
@@ -27,9 +27,6 @@ namespace Plml.Dmx
 
         public bool enableOpenDmx = true;
 
-        private DmxTrack[] tracks;
-
-
         private IOpenDmxInterface openDmx = new FTD2XXInterface();
 
         private byte[] channels;
@@ -41,8 +38,6 @@ namespace Plml.Dmx
 
         private void Awake()
         {
-            tracks = tracksObject.GetComponentsInChildren<DmxTrack>();
-
             int lastChannel = fixturesObject
                 .GetComponentsInChildren<DmxFixture>()
                 .Max(fix => fix.channelOffset + fix.model.chanCount);
@@ -67,6 +62,8 @@ namespace Plml.Dmx
         private void Update()
         {
             Array.Clear(targets, 0, targets.Length);
+
+            var tracks = tracksObject.GetComponentsInChildren<DmxTrack>();
 
             foreach (DmxTrack track in tracks.Where(t => t.isPlaying))
             {

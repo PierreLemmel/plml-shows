@@ -42,8 +42,13 @@ namespace Plml.Dmx.Editor
                 }
             }
 
-            EditorGUI.BeginDisabledGroup(true);
 
+            if (GUILayout.Button("Reset"))
+            {
+                Array.Clear(trackElt.channels, 0, trackElt.channels.Length);
+            }
+
+            EditorGUI.BeginDisabledGroup(true);
             int chan = 0;
             EditorGUILayout.LabelField("Channels: ");
             EditorGUI.indentLevel++;

@@ -16,13 +16,7 @@ namespace Plml.Dmx.Editor
             {
                 if (GUILayout.Button("Initialize"))
                 {
-                    foreach (var fixture in FindObjectsOfType<DmxFixture>())
-                    {
-                        GameObject trackEltObj = new(fixture.name);
-                        trackEltObj.transform.SetParent(track.transform);
-                        var trackElt = trackEltObj.AddComponent<DmxTrackElement>();
-                        trackElt.fixture = fixture;
-                    }
+                    track.AttachDefaultTrackElements();
                 }
             }
 

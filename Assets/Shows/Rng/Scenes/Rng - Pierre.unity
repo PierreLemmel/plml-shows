@@ -123,6 +123,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &38213472
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 38213473}
+  - component: {fileID: 38213474}
+  m_Layer: 0
+  m_Name: Par LED RGB Jar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &38213473
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38213472}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -273.13162, y: -395.05783, z: 482.08508}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 923189758}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &38213474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38213472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1920f8b7027f5a45b4c821ef880e971, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fixture: {fileID: 1079528838}
+  channels: 000000000000000000000000000000000000000000000000
 --- !u!1 &124015754
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,9 +214,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixturesObject: {fileID: 199301607}
-  tracksObject: {fileID: 1610790779}
+  tracksObject: {fileID: 1610790781}
   master: 1
-  fade: 0
+  fade: 30.8
   refreshRate: 30
   enableOpenDmx: 1
 --- !u!1001 &199301605
@@ -285,6 +331,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 1079528838}
+  channels: 00000000a6000000ff00000000000000ff00000000000000
+--- !u!1 &222309154
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 222309155}
+  - component: {fileID: 222309156}
+  m_Layer: 0
+  m_Name: Par LED RGB Cour
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &222309155
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222309154}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -273.13162, y: -395.05783, z: 482.08508}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 923189758}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &222309156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222309154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1920f8b7027f5a45b4c821ef880e971, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fixture: {fileID: 1949408962}
   channels: 000000000000000000000000000000000000000000000000
 --- !u!114 &278896406 stripped
 MonoBehaviour:
@@ -387,6 +479,56 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &923189757
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 923189758}
+  - component: {fileID: 923189759}
+  m_Layer: 0
+  m_Name: Test Track 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &923189758
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 923189757}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 222309155}
+  - {fileID: 1318510678}
+  - {fileID: 1666244332}
+  - {fileID: 38213473}
+  m_Father: {fileID: 1610790780}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &923189759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 923189757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bfd107e594efd043bdf1a0c11959f87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPlaying: 0
+  master: 1
 --- !u!114 &1079528838 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 205819364912815583, guid: 274ee12a567c91d43bfb625b59f7d2e9, type: 3}
@@ -398,6 +540,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36adcb8a6ad11844696e0266f21b392f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1318510677
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1318510678}
+  - component: {fileID: 1318510679}
+  m_Layer: 0
+  m_Name: Par LED CW/WW Cour
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1318510678
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318510677}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -273.13162, y: -395.05783, z: 482.08508}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 923189758}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1318510679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318510677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1920f8b7027f5a45b4c821ef880e971, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fixture: {fileID: 397501772}
+  channels: ff000000ff000000b3000000000000000000000000000000
 --- !u!1 &1409414918
 GameObject:
   m_ObjectHideFlags: 0
@@ -493,7 +681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 1949408962}
-  channels: 000000000000000000000000000000000000000000000000
+  channels: ff000000bb0000000000000000000000ff00000000000000
 --- !u!1 &1498891930
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,6 +735,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1610790780}
+  - component: {fileID: 1610790781}
   m_Layer: 0
   m_Name: Tracks - Pierre
   m_TagString: Untagged
@@ -567,9 +756,22 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1409414919}
+  - {fileID: 923189758}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1610790781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610790779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90ee106514a81da49ad3627b1b34dce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1654410492
 GameObject:
   m_ObjectHideFlags: 0
@@ -616,6 +818,52 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fixture: {fileID: 278896406}
   channels: 000000000000000000000000000000000000000000000000
+--- !u!1 &1666244331
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1666244332}
+  - component: {fileID: 1666244333}
+  m_Layer: 0
+  m_Name: Par LED CW/WW Jar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1666244332
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666244331}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -273.13162, y: -395.05783, z: 482.08508}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 923189758}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1666244333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666244331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1920f8b7027f5a45b4c821ef880e971, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fixture: {fileID: 278896406}
+  channels: ff000000ff00000090000000000000000000000000000000
 --- !u!114 &1949408962 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 205819364493021247, guid: 274ee12a567c91d43bfb625b59f7d2e9, type: 3}

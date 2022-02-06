@@ -322,11 +322,29 @@
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Google.VersionHandler">
+      <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\Google.VersionHandler.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Database">
+      <HintPath>Assets\ThirdParties\Firebase\Firebase\Plugins\Firebase.Database.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Burst.Unsafe">
       <HintPath>Library\PackageCache\com.unity.burst@1.6.0\Unity.Burst.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Mdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.6.0\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Tasks">
+      <HintPath>Assets\ThirdParties\Firebase\Parse\Plugins\dotNet45\Unity.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.PackageManagerResolver">
+      <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\1.2.169\Google.PackageManagerResolver.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.VersionHandlerImpl">
+      <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\1.2.169\Google.VersionHandlerImpl.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.TaskExtension">
+      <HintPath>Assets\ThirdParties\Firebase\Firebase\Plugins\Firebase.TaskExtension.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Pdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.6.0\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
@@ -336,6 +354,24 @@
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.6.0\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.MiniJson">
+      <HintPath>Assets\ThirdParties\Firebase\Firebase\Plugins\Google.MiniJson.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Platform">
+      <HintPath>Assets\ThirdParties\Firebase\Firebase\Plugins\Firebase.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Compat">
+      <HintPath>Assets\ThirdParties\Firebase\Parse\Plugins\dotNet45\Unity.Compat.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.App">
+      <HintPath>Assets\ThirdParties\Firebase\Firebase\Plugins\Firebase.App.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Auth">
+      <HintPath>Assets\ThirdParties\Firebase\Firebase\Plugins\Firebase.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.JarResolver">
+      <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\1.2.169\Google.JarResolver.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Android.Types">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
