@@ -57,6 +57,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Shows\Rng\Editor\CustomEditors\RngSceneEditor.cs" />
+    <Compile Include="Assets\Shows\Rng\Editor\CustomEditors\RngShowEditor.cs" />
+    <Compile Include="Assets\Shows\Rng\Editor\CustomEditors\Providers\SceneDurationProviderCollectionEditor.cs" />
+    <Compile Include="Assets\Shows\Rng\Editor\CustomEditors\Providers\ProviderCollectionEditor.cs" />
+    <Compile Include="Assets\Shows\Rng\Editor\CustomEditors\Providers\DmxTrackProviderCollectionEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shows\Rng\Editor\Plml.Rng.Editor.asmdef" />
@@ -757,6 +761,10 @@
     <ProjectReference Include="Plml.Rng.csproj">
       <Project>{8F0EBABD-EF43-5DEE-7561-5A0F23631976}</Project>
       <Name>Plml.Rng</Name>
+    </ProjectReference>
+    <ProjectReference Include="Plml.Core.csproj">
+      <Project>{5DED7F19-C216-8C7F-DEF8-DB1C3C7FC075}</Project>
+      <Name>Plml.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

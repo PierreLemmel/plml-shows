@@ -56,7 +56,19 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Shows\Rng\Runtime\RngSceneCollection.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\RngShow.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\RngProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\SceneDurationProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\RngProviderCollection.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\SceneDurationProviderCollection.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\RngSettings.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\TimeWindow.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngScene.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\DmxTrackProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\DmxTrackProviderCollection.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\ColorTrackProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\StaticTrackProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shows\Rng\Runtime\Plml.Rng.asmdef" />

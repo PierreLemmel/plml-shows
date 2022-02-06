@@ -19,7 +19,7 @@ namespace Plml.Dmx
         [Range(0.0f, 1.0f)]
         public float master = 1.0f;
 
-        [Range(0.0f, 60.0f)]
+        [CubicRange(0.0f, 60.0f)]
         public float fade = 0.0f;
 
         [Range(1.0f, 60.0f)]

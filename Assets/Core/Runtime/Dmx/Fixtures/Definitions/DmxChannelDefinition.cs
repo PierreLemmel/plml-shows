@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Plml.Dmx
 {
     [Serializable]
-    public struct DmxChannelDefinition
+    public class DmxChannelDefinition
     {
         [Range(0, 32)]
         public int channel;

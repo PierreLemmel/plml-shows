@@ -67,6 +67,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpy.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\MoreReflection.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_DEVICE_LIST_INFO_NODE.cs" />
+    <Compile Include="Assets\Core\Runtime\Annotations\QuadraticRangeAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\FunctionInfo.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\TokenReader.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\ParseException.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\OpenDmxExtensions.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\WinMMDll.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\FunctionRegistry.cs" />
+    <Compile Include="Assets\Core\Runtime\Annotations\CustomRangeAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\SimpleDmxControler.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ConstantRegistry.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\IFunctionRegistry.cs" />
@@ -132,8 +134,10 @@
     <Compile Include="Assets\Core\Runtime\Jace\Operations\GreaterThan.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker8.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\IChecker.cs" />
+    <Compile Include="Assets\Core\Runtime\Core\Helpers\MoreLinq.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker5.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackCollection.cs" />
+    <Compile Include="Assets\Core\Runtime\Core\Helpers\GameObjects.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\CalculationEngine.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxFixture.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpySetupActionNode.cs" />
@@ -159,12 +163,14 @@
     <Compile Include="Assets\Core\Runtime\Jace\Operations\GreaterOrEqualThan.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\SimpleFixtures\FlatParLed_CW_WW_Amber.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpySetupPropertiesNode.cs" />
+    <Compile Include="Assets\Core\Runtime\Annotations\CubicRangeAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\IOpenDmxInterface.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackControler.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\UnaryMinus.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\Fixtures\AkaiLPD8Dispatcher.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Substraction.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\ValueArrayChecker.cs" />
+    <Compile Include="Assets\Core\Runtime\Core\Helpers\Components.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker7.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\SpyImpl.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrack.cs" />

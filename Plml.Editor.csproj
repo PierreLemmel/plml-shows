@@ -57,9 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Core\Editor\Drawers\HideInPlayDrawer.cs" />
+    <Compile Include="Assets\Core\Editor\Drawers\CustomRangeDrawer.cs" />
     <Compile Include="Assets\Core\Editor\Drawers\HideInEditDrawer.cs" />
     <Compile Include="Assets\Core\Editor\Drawers\OverlayPropertyDrawer.cs" />
+    <Compile Include="Assets\Core\Editor\Drawers\QuadraticRangeDrawer.cs" />
     <Compile Include="Assets\Core\Editor\CustomEditors\Dmx\DmxEditorHelper.cs" />
+    <Compile Include="Assets\Core\Editor\Drawers\QubicRangeDrawer.cs" />
     <Compile Include="Assets\Core\Editor\CustomEditors\Dmx\DmxTrackEditor.cs" />
     <Compile Include="Assets\Core\Editor\CustomEditors\Dmx\DmxTrackElementEditor.cs" />
     <Compile Include="Assets\Core\Editor\CustomEditors\Dmx\DmxTrackCollectionEditor.cs" />

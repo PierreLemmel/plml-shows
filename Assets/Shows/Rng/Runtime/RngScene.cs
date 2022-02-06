@@ -1,23 +1,26 @@
-using Plml.Dmx;
-using System.Collections;
-using System.Collections.Generic;
+﻿using Plml.Dmx;
+using System;
 using UnityEngine;
 
 namespace Plml.Rng
 {
     public class RngScene : MonoBehaviour
     {
-        private DmxTrackControler controler;
+        public float duration
+        {
+            get => sceneWindow.duration;
+            set => sceneWindow.duration = value;
+        }
 
         [EditTimeOnly]
-        public float totalDuration = 3600.0f;
+        public TimeWindow sceneWindow;
 
-        [PlayTimeOnly]
-        public float remainingDuration = 3600.0f;
+        [EditTimeOnly]
+        public bool hasMusic;
 
-        private void Awake()
-        {
-            controler = FindObjectOfType<DmxTrackControler>();
-        }
+        [EditTimeOnly]
+        public TimeWindow musicWindow;
+
+        public DmxTrack track;
     }
 }
