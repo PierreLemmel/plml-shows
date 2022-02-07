@@ -76,8 +76,9 @@ namespace Plml.Dmx
 
         private void Update()
         {
-            int chanCount = fixture?.model.chanCount ?? 0;
-            if (channels.Length != chanCount)
+
+            int chanCount = fixture?.model?.chanCount ?? 0;
+            if (channels?.Length != chanCount)
                 channels = new int[chanCount];
         }
     }

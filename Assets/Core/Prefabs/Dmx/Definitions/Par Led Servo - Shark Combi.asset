@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a0379090f17ddc44b2300a47c8ee892, type: 3}
-  m_Name: Par Led Servo
+  m_Name: Par Led Servo - Shark Combi
   m_EditorClassIdentifier: 
   manufacturer: Shark Combi
   type: Servo
-  mode: 
+  mode: 20 CH
   chanCount: 20
   channels:
   - channel: 0
@@ -22,10 +22,10 @@ MonoBehaviour:
   - channel: 2
     type: 8
   - channel: 5
-    type: 1
-  - channel: 6
+    type: 0
+  - channel: 7
     type: 9
-  - channel: 9
-    type: 4
   - channel: 10
+    type: 4
+  - channel: 11
     type: 5
