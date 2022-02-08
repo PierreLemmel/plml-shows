@@ -1,4 +1,5 @@
 using Plml.Dmx;
+using Plml.Rng.Audio;
 using Plml.Rng.Dmx;
 using System;
 using System.Collections;
@@ -32,8 +33,6 @@ namespace Plml.Rng
         [ReadOnly]
         public RngScene[] scenes = Array.Empty<RngScene>();
 
-        
-
         private void Awake()
         {
             controler = FindObjectOfType<DmxTrackControler>();
@@ -53,16 +52,16 @@ namespace Plml.Rng
 
             SceneDurationProviderCollection durationProviderCollection = GetComponentInChildren<SceneDurationProviderCollection>();
             DmxTrackProviderCollection trackProviderCollection = GetComponentInChildren<DmxTrackProviderCollection>();
+            AudioProviderCollection audioProviderCollection = GetComponentInChildren<AudioProviderCollection>();
 
             int sceneCount = URandom.Range(settings.minScenes, settings.maxScenes);
             scenes = new RngScene[sceneCount];
 
             float targetDuration = totalDuration / sceneCount;
 
-            float startTime = 0.0f;
             for (int i = 0; i < sceneCount; i++)
             {
-                GameObject sceneObj = new($"Rng Scene {i}");
+                GameObject sceneObj = new();
                 RngScene scene = sceneObj.AddComponent<RngScene>();
 
                 sceneObj.AttachTo(sceneCollection);
@@ -73,15 +72,33 @@ namespace Plml.Rng
 
                 scenes[i] = scene;
 
-                scene.sceneWindow = durationProviderCollection.GetNextElement(startTime);
+                scene.sceneWindow = durationProviderCollection.GetNextElement();
 
-                startTime += scene.duration;
             }
 
             float durationFactor = totalDuration / scenes.Sum(scene => scene.duration);
+            Debug.Log(durationFactor);
+            float startTime = 0.0f;
 
+            int idx = 1;
             foreach (RngScene scene in scenes)
-                scene.duration *= durationFactor;
+            {
+                float duration = scene.duration * durationFactor;
+
+                scene.duration = duration;
+                scene.startTime = startTime;
+
+                startTime += duration;
+
+                var audioData = audioProviderCollection.GetNextElement(scene.startTime, duration);
+                scene.audioData = audioData;
+
+                string dmxLabel = scene.track.name;
+                string audioLabel = scene.hasAudio ?
+                    $"{audioData.audioClip.name} ({audioData.musicWindow.duration:0.0}s, {audioData.audioVolume:P1})" :
+                    "No Audio";
+                scene.name = $"{idx++}: {dmxLabel}, {duration:0.0}s - {audioLabel}";
+            }
         }
 
         public void StartShow() => isPlaying = true;

@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{8F0EBABD-EF43-5DEE-7561-5A0F23631976}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -56,19 +57,24 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Duration\SceneDurationProviderCollection.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\RngAudioData.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngSceneCollection.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\DmxTrackProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngShow.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\StaticTrackProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\RngProvider.cs" />
-    <Compile Include="Assets\Shows\Rng\Runtime\Providers\SceneDurationProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\RngProviderCollection.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\ColorTrackProvider.cs" />
-    <Compile Include="Assets\Shows\Rng\Runtime\Providers\SceneDurationProviderCollection.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\AudioClipProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\AudioProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\AudioProviderCollection.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngSettings.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Duration\SceneDurationProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\DmxTrackProviderCollection.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\TimeWindow.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngScene.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\NoAudioProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shows\Rng\Runtime\Plml.Rng.asmdef" />
@@ -320,6 +326,9 @@
     <Reference Include="UnityEditor.Graphs">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.Android.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\UnityEditor.Android.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
@@ -373,6 +382,12 @@
     </Reference>
     <Reference Include="Google.JarResolver">
       <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\1.2.169\Google.JarResolver.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Android.Types">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Android.Gradle">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>

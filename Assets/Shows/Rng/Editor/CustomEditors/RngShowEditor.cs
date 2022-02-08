@@ -16,7 +16,19 @@ namespace Plml.Rng.Editor
 
             if (GUILayout.Button("Start Show")) show.StartShow();
             if (GUILayout.Button("Stop Show")) show.StopShow();
-            if (GUILayout.Button("Regenerate Scenes")) show.RegenerateScenes();
+            if (GUILayout.Button("Regenerate Scenes"))
+            {
+                Debug.Log("");
+                Debug.Log("Generating show...");
+                show.RegenerateScenes();
+                Debug.Log("Show generated");
+
+                foreach (var scene in show.scenes)
+                {
+                    Debug.Log(scene.name);
+                }
+                Debug.Log("");
+            }
 
             base.OnInspectorGUI();
         }

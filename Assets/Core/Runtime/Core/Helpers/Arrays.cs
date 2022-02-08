@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using UnityEngine;
+
+using URandom = UnityEngine.Random;
+
 namespace Plml
 {
     public static class Arrays
@@ -143,5 +147,7 @@ namespace Plml
 
             return result;
         }
+
+        public static T RandomElement<T>(this T[] array) => array[URandom.Range(0, array.Length)];
     }
 }

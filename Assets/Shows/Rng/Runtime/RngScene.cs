@@ -1,4 +1,6 @@
 ﻿using Plml.Dmx;
+using Plml.Rng.Audio;
+using Plml.Rng.Dmx;
 using System;
 using UnityEngine;
 
@@ -12,15 +14,21 @@ namespace Plml.Rng
             set => sceneWindow.duration = value;
         }
 
+        public float startTime
+        {
+            get => sceneWindow.startTime;
+            set => sceneWindow.startTime = value;
+        }
+
         [EditTimeOnly]
         public TimeWindow sceneWindow;
 
-        [EditTimeOnly]
-        public bool hasMusic;
+        public bool hasAudio => audioData != null;
 
         [EditTimeOnly]
-        public TimeWindow musicWindow;
+        public RngAudioData audioData;
 
+        [EditTimeOnly]
         public DmxTrack track;
     }
 }

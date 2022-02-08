@@ -50,4 +50,10 @@ namespace Plml.Rng
     {
         public TProvided GetNextElement(TParam param) => GetNextProvider().GetElement(param);
     }
+
+    public abstract class RngProviderCollection<TProvider, TProvided, T1, T2> : RngProviderCollectionBase<TProvider>
+       where TProvider : RngProvider<TProvided, T1, T2>
+    {
+        public TProvided GetNextElement(T1 p1, T2 p2) => GetNextProvider().GetElement(p1, p2);
+    }
 }

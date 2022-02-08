@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UEditor = UnityEditor.Editor;
 
@@ -23,9 +24,17 @@ namespace Plml.Rng.Editor
             }
 
             EditorGUILayout.LabelField("Weights");
-            foreach (TProvider provider in collection.GetProviders())
+
+            TProvider[] providers = collection.GetProviders();
+            float totalWeight = providers.Any() ? providers.Sum(p => p.weight) : 0.0f;
+            foreach (TProvider provider in providers)
             {
-                provider.weight = EditorGUILayout.Slider(provider.name, provider.weight, RngProviderBase.MinWeight, RngProviderBase.MaxWeight);
+                provider.weight = EditorGUILayout.Slider(
+                    $"{provider.name} ({provider.weight / totalWeight:P})",
+                    provider.weight,
+                    RngProviderBase.MinWeight,
+                    RngProviderBase.MaxWeight
+                );
             }
         }
     }

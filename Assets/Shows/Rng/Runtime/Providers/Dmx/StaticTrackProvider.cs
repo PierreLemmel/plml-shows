@@ -6,11 +6,15 @@ namespace Plml.Rng.Dmx
 {
     public class StaticTrackProvider : DmxTrackProvider
     {
+        public string trackName = "";
+
         public override DmxTrack GetElement()
         {
             GameObject original = GetComponentInChildren<DmxTrack>().gameObject;
 
             GameObject clone = Instantiate(original);
+
+            clone.name = !string.IsNullOrEmpty(trackName) ? trackName : original.name;
             return clone.GetComponent<DmxTrack>();
         }
 
