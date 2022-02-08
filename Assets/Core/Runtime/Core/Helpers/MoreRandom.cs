@@ -2,10 +2,11 @@
 using UnityEngine;
 
 using URandom = UnityEngine.Random;
+using UColor = UnityEngine.Color;
 
 namespace Plml
 {
-    public static class MoreMath
+    public static class MoreRandom
     {
         public static float NormalDistribution(float mean, float stdDev)
         {
@@ -19,5 +20,7 @@ namespace Plml
 
             return result;
         }
+
+        public static Color Color(Color from, Color to) => UColor.Lerp(from, to, URandom.value);
     }
 }

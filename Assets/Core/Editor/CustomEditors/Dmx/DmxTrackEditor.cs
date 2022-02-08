@@ -38,7 +38,6 @@ namespace Plml.Dmx.Editor
                 if (channelType == DmxChannelType.Color)
                 {
                     Color maxColor = Colors.Max(eltsWithChan.Select(elt => elt.GetColor()));
-
                     Color newColor = EditorGUILayout.ColorField(label, maxColor);
 
                     if (newColor != maxColor)
