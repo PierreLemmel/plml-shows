@@ -22,5 +22,8 @@ namespace Plml
         }
 
         public static Color Color(Color from, Color to) => UColor.Lerp(from, to, URandom.value);
+
+        public static float Range(FloatRange range) => URandom.Range(range.min, range.max);
+        public static int Range(IntRange range) => URandom.Range(range.min, range.max);
     }
 }

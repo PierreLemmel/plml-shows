@@ -134,7 +134,7 @@
     <Compile Include="Assets\Core\Runtime\Jace\Operations\GreaterThan.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker8.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\IChecker.cs" />
-    <Compile Include="Assets\Core\Runtime\Core\Helpers\MoreLinq.cs" />
+    <Compile Include="Assets\Core\Runtime\Core\Helpers\Enumerables.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\FloatRange.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker5.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackCollection.cs" />
@@ -180,6 +180,9 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\SimpleFixtures\ParLedRGBW.cs" />
+    <Compile Include="Assets\Core\Runtime\Core\Types\IntRange.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Annotations\DmxRangeAttribute.cs" />
+    <Compile Include="Assets\Core\Runtime\Annotations\RangeBounds01Attribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />

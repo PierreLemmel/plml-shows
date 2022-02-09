@@ -18,6 +18,17 @@ namespace Plml.Dmx
             elements = GetComponentsInChildren<DmxTrackElement>();
         }
 
+        public DmxTrackElement AddElement(DmxFixture fixture)
+        {
+            DmxTrackElement trackElt = default;
+            this.AddChild(fixture.name, child => child
+                .AddComponent(elt => elt.fixture = fixture, out trackElt)
+            );
+            return trackElt;
+        }
+
+        public void AddElements(IEnumerable<DmxFixture> fixtures) => fixtures.ForEach(fixture => AddElement(fixture));
+
         public IEnumerable<DmxTrackElement> Elements => elements;
     }
 }

@@ -31,8 +31,11 @@ namespace Plml.Dmx.Editor
             foreach(var channelType in channelTypes)
             {
                 IReadOnlyCollection<DmxTrackElement> eltsWithChan = elements
+                    .Where(elt => elt.channels?.Any() ?? false)
                     .Where(elt => elt.HasChannel(channelType))
                     .ToList();
+
+                if (eltsWithChan.IsEmpty()) continue;
 
                 string label = channelType.ToString();
                 if (channelType == DmxChannelType.Color)

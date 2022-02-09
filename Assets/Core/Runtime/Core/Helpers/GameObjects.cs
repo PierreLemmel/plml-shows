@@ -41,11 +41,67 @@ namespace Plml
 
         public static GameObject WithComponent<TComponent>(this GameObject go) where TComponent : Component => go.WithComponent<TComponent>(out _);
 
+        public static GameObject WithComponent<TComponent>(this GameObject go, Action<TComponent> setup) where TComponent : Component
+            => WithComponent(go, setup, out _);
+
         public static GameObject WithComponent<TComponent>(this GameObject go, out TComponent component) where TComponent : Component
         {
             component = go.AddComponent<TComponent>();
             return go;
         }
+
+        public static GameObject WithComponent<TComponent>(this GameObject go, Action<TComponent> setup, out TComponent component) where TComponent : Component
+        {
+            GameObject gameObject = go.WithComponent(out component);
+            setup(component);
+
+            return gameObject;
+        }
+
+        public static GameObject WithChild(this GameObject go, string name) => go.WithChild(name, out _);
+
+        public static GameObject WithChild(this GameObject go, string name, out GameObject child)
+        {
+            child = new GameObject(name)
+                .AttachTo(go);
+
+            return go;
+        }
+
+        public static GameObject WithChild(this GameObject go, string name, Action<GameObject> setup) => go.WithChild(name, setup, out _);
+
+        public static GameObject WithChild(this GameObject go, string name, Action<GameObject> setup, out GameObject child)
+        {
+            child = new GameObject(name)
+                .AttachTo(go);
+
+            setup(child);
+
+            return go;
+        }
+
+        public static GameObject AddChild(this GameObject go, string name) => go.WithChild(name);
+        public static GameObject AddChild(this GameObject go, string name, out GameObject child) => go.WithChild(name, out child);
+        public static GameObject AddChild(this GameObject go, string name, Action<GameObject> setup) => go.WithChild(name, setup);
+        public static GameObject AddChild(this GameObject go, string name, Action<GameObject> setup, out GameObject child) => go.WithChild(name, setup, out child);
+
+        public static TComponent AddComponent<TComponent>(this GameObject go, Action<TComponent> setup)
+            where TComponent : Component
+        {
+            TComponent result = go.AddComponent<TComponent>();
+            setup(result);
+            return result;
+        }
+
+        public static void AddComponent<TComponent>(this GameObject go, Action<TComponent> setup, out TComponent component)
+            where TComponent : Component
+        {
+            component = go.AddComponent<TComponent>();
+            setup(component);
+        }
+
+        public static void AddComponent<TComponent>(this GameObject go, out TComponent component)
+            where TComponent : Component => component = go.AddComponent<TComponent>();
 
         public static bool HasComponent<TComponent>(this GameObject go) where TComponent : Component
         {

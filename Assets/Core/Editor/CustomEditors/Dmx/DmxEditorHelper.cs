@@ -8,16 +8,7 @@ namespace Plml.Dmx.Editor
 {
     internal static class DmxEditorHelper
     {
-        public static void AttachDefaultTrackElements(this Component component)
-        {
-            foreach (var fixture in UObject.FindObjectsOfType<DmxFixture>())
-            {
-                GameObject trackEltObj = new(fixture.name);
-                trackEltObj.transform.SetParent(component.transform);
-                var trackElt = trackEltObj.AddComponent<DmxTrackElement>();
-                trackElt.fixture = fixture;
-            }
-        }
+        public static void AttachDefaultTrackElements(this DmxTrack track) => track.AddElements(UObject.FindObjectsOfType<DmxFixture>());
 
         public static void AttachNewDefaultTrack(this Component component)
         {

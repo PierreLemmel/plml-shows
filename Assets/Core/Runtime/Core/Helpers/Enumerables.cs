@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Plml
 {
-    public static class MoreLinq
+    public static class Enumerables
     {
         public static bool IsEmpty<T>(this IEnumerable<T> sequence) => !sequence.Any();
 
@@ -30,5 +30,14 @@ namespace Plml
         }
 
         public static IEnumerable<T> Except<T>(this IEnumerable<T> sequence, params T[] elts) => sequence.Except(elts.AsEnumerable());
+
+        public static void ForEach<T>(this IEnumerable<T> sequence, Action<T> action)
+        {
+            foreach (T elt in sequence)
+                action(elt);
+        }
+
+        public static IEnumerable<T> Merge<T>(this IEnumerable<IEnumerable<T>> sequences) => sequences.SelectMany(seq => seq);
+        public static IEnumerable<T> Merge<T>(params IEnumerable<T>[] sequences) => sequences.Merge();
     }
 }

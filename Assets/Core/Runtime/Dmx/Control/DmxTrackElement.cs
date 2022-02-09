@@ -59,21 +59,7 @@ namespace Plml.Dmx
         }
 
         public bool HasChannel(DmxChannelType chanType) => fixture.model.HasChannel(chanType);
-        public int GetChannel(DmxChannelType chanType)
-        {
-            try
-            {
-                return channels[fixture.model.GetChannelAddress(chanType)];
-            }
-            catch (Exception)
-            {
-
-                Debug.Log(channels.Length);
-                Debug.Log(chanType);
-                Debug.Log(name);
-                throw;
-            }
-        }
+        public int GetChannel(DmxChannelType chanType) => channels[fixture.model.GetChannelAddress(chanType)];
 
         public bool TryGetChannel(DmxChannelType chanType, out int channel) => fixture.model.TryGetChannelAddress(chanType, out channel);
         public bool TryGetValue(DmxChannelType chanType, out int value)
@@ -82,8 +68,8 @@ namespace Plml.Dmx
             value = hasChannel ? channels[channel] : -1;
             return hasChannel;
         }
-        public void SetChannel(DmxChannelType chanType, byte value) => channels[fixture.model.GetChannelAddress(chanType)] = value;
-        public bool TrySetChannel(DmxChannelType chanType, byte value)
+        public void SetChannel(DmxChannelType chanType, int value) => channels[fixture.model.GetChannelAddress(chanType)] = value;
+        public bool TrySetChannel(DmxChannelType chanType, int value)
         {
             bool hasChannel = TryGetChannel(chanType, out int channel);
             if (hasChannel)
@@ -124,39 +110,35 @@ namespace Plml.Dmx
         public bool TryGetPan(out int value) => TryGetValue(DmxChannelType.Pan, out value);
         public bool TryGetTilt(out int value) => TryGetValue(DmxChannelType.Tilt, out value);
 
-        public void SetDimmer(byte value) => SetChannel(DmxChannelType.Dimmer, value);
-        public void SetStroboscope(byte value) => SetChannel(DmxChannelType.Stroboscope, value);
-        public void SetWhite(byte value) => SetChannel(DmxChannelType.White, value);
-        public void SetUv(byte value) => SetChannel(DmxChannelType.Uv, value);
-        public void SetCold(byte value) => SetChannel(DmxChannelType.Cold, value);
-        public void SetWarm(byte value) => SetChannel(DmxChannelType.Warm, value);
-        public void SetAmber(byte value) => SetChannel(DmxChannelType.Amber, value);
-        public void SetPan(byte value) => SetChannel(DmxChannelType.Pan, value);
-        public void SetTilt(byte value) => SetChannel(DmxChannelType.Tilt, value);
+        public void SetDimmer(int value) => SetChannel(DmxChannelType.Dimmer, value);
+        public void SetStroboscope(int value) => SetChannel(DmxChannelType.Stroboscope, value);
+        public void SetWhite(int value) => SetChannel(DmxChannelType.White, value);
+        public void SetUv(int value) => SetChannel(DmxChannelType.Uv, value);
+        public void SetCold(int value) => SetChannel(DmxChannelType.Cold, value);
+        public void SetWarm(int value) => SetChannel(DmxChannelType.Warm, value);
+        public void SetAmber(int value) => SetChannel(DmxChannelType.Amber, value);
+        public void SetPan(int value) => SetChannel(DmxChannelType.Pan, value);
+        public void SetTilt(int value) => SetChannel(DmxChannelType.Tilt, value);
 
-        public bool TrySetDimmer(byte value) => TrySetChannel(DmxChannelType.Dimmer, value);
-        public bool TrySetStroboscope(byte value) => TrySetChannel(DmxChannelType.Stroboscope, value);
-        public bool TrySetWhite(byte value) => TrySetChannel(DmxChannelType.White, value);
-        public bool TrySetUv(byte value) => TrySetChannel(DmxChannelType.Uv, value);
-        public bool TrySetCold(byte value) => TrySetChannel(DmxChannelType.Cold, value);
-        public bool TrySetWarm(byte value) => TrySetChannel(DmxChannelType.Warm, value);
-        public bool TrySetAmber(byte value) => TrySetChannel(DmxChannelType.Amber, value);
-        public bool TrySetPan(byte value) => TrySetChannel(DmxChannelType.Pan, value);
-        public bool TrySetTilt(byte value) => TrySetChannel(DmxChannelType.Tilt, value);
+        public bool TrySetDimmer(int value) => TrySetChannel(DmxChannelType.Dimmer, value);
+        public bool TrySetStroboscope(int value) => TrySetChannel(DmxChannelType.Stroboscope, value);
+        public bool TrySetWhite(int value) => TrySetChannel(DmxChannelType.White, value);
+        public bool TrySetUv(int value) => TrySetChannel(DmxChannelType.Uv, value);
+        public bool TrySetCold(int value) => TrySetChannel(DmxChannelType.Cold, value);
+        public bool TrySetWarm(int value) => TrySetChannel(DmxChannelType.Warm, value);
+        public bool TrySetAmber(int value) => TrySetChannel(DmxChannelType.Amber, value);
+        public bool TrySetPan(int value) => TrySetChannel(DmxChannelType.Pan, value);
+        public bool TrySetTilt(int value) => TrySetChannel(DmxChannelType.Tilt, value);
         #endregion
 
-        private void Awake()
-        {
-            Debug.Log($"Awake {name}");
-            SetupLengthIfNeeded();
-        }
+        private void Awake() => SetupLengthIfNeeded();
 
         private void Update() => SetupLengthIfNeeded();
 
         private void SetupLengthIfNeeded()
         {
-            int chanCount = fixture?.model?.chanCount ?? 0;
-            Debug.Log($"{name} {chanCount}");
+            int chanCount = (fixture != null && fixture.model != null) ? fixture.model.chanCount : 0;
+            
             if (channels?.Length != chanCount)
                 channels = new int[chanCount];
         }

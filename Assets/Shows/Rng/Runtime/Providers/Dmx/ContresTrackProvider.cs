@@ -2,33 +2,59 @@
 using System;
 using UnityEngine;
 
+using URandom = UnityEngine.Random;
+
 namespace Plml.Rng.Dmx
 {
     public class ContresTrackProvider : DmxTrackProvider
     {
         [EditTimeOnly]
-        public DmxFixture facesFixtures;
+        public DmxFixture[] facesFixtures;
 
         [EditTimeOnly]
-        public DmxFixture contresFixtures;
+        public DmxFixture[] contresFixtures;
 
-        [RangeBounds(0.0f, 1.0f)]
-        public FloatRange facesDimmer;
+        [DmxRange]
+        public IntRange facesDimmerRange;
+
         public Color32 faceFromColor;
+        public Color32 faceToColor;
+
+        [DmxRange]
+        public IntRange contresDimmerRange;
+
+        [RangeBounds01]
+        public FloatRange contresSaturationRange;
 
         public override DmxTrack GetElement()
         {
-            GameObject original = GetComponentInChildren<DmxTrack>().gameObject;
+            this.AddChild("Contres")
+                .WithComponent(out DmxTrack outTrack);
 
-            GameObject clone = Instantiate(original);
-            return clone.GetComponent<DmxTrack>();
-        }
+            int facesDimmer = MoreRandom.Range(facesDimmerRange);
+            Color32 facesColor = MoreRandom.Color(faceFromColor, faceToColor);
 
-        private void Awake()
-        {
-            GameObject tracksObject = GetComponentInChildren<DmxTrack>()?.gameObject ?? new GameObject("Track")
-                .WithComponent<DmxTrack>()
-                .AttachTo(this);
+            int contresDimmer = MoreRandom.Range(contresDimmerRange);
+            float contresSaturation = MoreRandom.Range(contresSaturationRange);
+            Color32 contresColor = Color.HSVToRGB(URandom.value, contresSaturation, 1.0f);
+
+            facesFixtures.ForEach(fixture =>
+            {
+                var faceElt = outTrack.AddElement(fixture);
+
+                faceElt.TrySetDimmer(facesDimmer);
+                faceElt.TrySetColor(facesColor);
+            });
+
+            contresFixtures.ForEach(fixture =>
+            {
+                var contreElt = outTrack.AddElement(fixture);
+
+                contreElt.TrySetDimmer(contresDimmer);
+                contreElt.TrySetColor(contresColor);
+            });
+
+            return outTrack;
         }
     }
 }
