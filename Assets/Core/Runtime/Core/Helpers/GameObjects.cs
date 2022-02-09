@@ -125,5 +125,12 @@ namespace Plml
         public static bool HasChildren(this GameObject go) => go.transform.childCount > 0;
 
         public static GameObject GetChild(this GameObject go) => go.GetChildren().Single();
+
+        public static GameObject Clone(this GameObject go)
+        {
+            GameObject clone = UObject.Instantiate(go);
+            clone.name = go.name;
+            return clone;
+        }
     }
 }

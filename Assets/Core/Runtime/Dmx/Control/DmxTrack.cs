@@ -22,7 +22,7 @@ namespace Plml.Dmx
         {
             DmxTrackElement trackElt = default;
             this.AddChild(fixture.name, child => child
-                .AddComponent(elt => elt.fixture = fixture, out trackElt)
+                .AddComponent(elt => elt.InitializeFixture(fixture), out trackElt)
             );
             return trackElt;
         }

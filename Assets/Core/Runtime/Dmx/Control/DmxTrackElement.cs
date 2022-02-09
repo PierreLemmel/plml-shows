@@ -9,6 +9,12 @@ namespace Plml.Dmx
         [EditTimeOnly]
         public DmxFixture fixture;
 
+        public void InitializeFixture(DmxFixture fixture)
+        {
+            this.fixture = fixture;
+            channels = new int[fixture.model.chanCount];
+        }
+
         [ReadOnly]
         public int[] channels = Array.Empty<int>();
 

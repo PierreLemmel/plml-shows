@@ -16,8 +16,6 @@ namespace Plml.Rng
         [EditTimeOnly]
         public DmxTrackControler controler;
 
-        public Transform sceneObject;
-
         [EditTimeOnly]
         public float totalDuration = 3600.0f;
 
@@ -27,11 +25,17 @@ namespace Plml.Rng
         [ReadOnly]
         public bool isPlaying = false;
 
+        [ReadOnly]
+        public bool done = false;
+
         [EditTimeOnly]
         public RngSettings settings;
 
         [ReadOnly]
         public RngScene[] scenes = Array.Empty<RngScene>();
+
+        [ReadOnly]
+        public int currentSceneIndex;
 
         private void Awake()
         {
@@ -98,6 +102,16 @@ namespace Plml.Rng
                     $"{audioData.audioClip.name} ({audioData.musicWindow.duration:0.0}s, {audioData.audioVolume:P1})" :
                     "No Audio";
                 scene.name = $"{idx++}: {dmxLabel}, {duration:0.0}s - {audioLabel}";
+            }
+        }
+
+        public void Update()
+        {
+            if (isPlaying && !done)
+            {
+
+
+                currentTime += Time.deltaTime;
             }
         }
 

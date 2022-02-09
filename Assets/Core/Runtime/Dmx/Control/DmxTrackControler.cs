@@ -29,6 +29,8 @@ namespace Plml.Dmx
 
         private IOpenDmxInterface openDmx = new FTD2XXInterface();
 
+        private Dictionary<Guid, GameObject> addedTracks;
+
         private byte[] channels;
         private float[] currents;
         private float[] speeds;
@@ -48,6 +50,8 @@ namespace Plml.Dmx
             targets = new float[lastChannel];
 
             lastTime = Time.time;
+
+            addedTracks = new();
 
             if (enableOpenDmx)
                 openDmx.Start();
@@ -110,5 +114,17 @@ namespace Plml.Dmx
                 openDmx.Dispose();
             }
         }
+
+        public Guid AddTrack(DmxTrack track)
+        {
+            var clone = Instantiate(track.gameObject);
+            Guid trackId = Guid.NewGuid();
+            
+            addedTracks.Add(trackId, clone);
+
+            return trackId;
+        }
+
+        public void RemoveTrack(Guid trackId) => addedTracks.Remove(trackId);
     }
 }
