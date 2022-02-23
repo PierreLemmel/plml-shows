@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-using Plml.Dmx.SimpleFixtures;
+using Plml.Dmx;
 
 namespace Plml.EnChiens.Animation
 {
     public class ContresPulsation : MonoBehaviour
     {
         [HideInPlayMode]
-        public ParLedRGBW[] parsContre;
+        public DmxTrackElement[] parsContre;
 
         public Color color;
 
@@ -21,7 +18,7 @@ namespace Plml.EnChiens.Animation
         private void Update()
         {
             int pulseValue = CalculatePulseValue();
-            foreach (ParLedRGBW par in parsContre)
+            foreach (var par in parsContre)
             {
                 par.dimmer = pulseValue;
                 par.color = color;

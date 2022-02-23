@@ -3,7 +3,7 @@ using Plml.Dmx.SimpleFixtures;
 
 namespace Plml.EnChiens.Emulators
 {
-    public class FlatParEmulator : LightEmulator<FlatParLed_CW_WW_Amber>
+    public class FlatParEmulator : LightEmulator
     {
         protected override Color32 GetColor() => SumColors(
             ColorMix(fixture.cold, coldColor),

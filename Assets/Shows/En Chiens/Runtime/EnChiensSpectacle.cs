@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Playables;
+using Plml.Dmx;
 
 namespace Plml.EnChiens
 {
@@ -29,29 +30,25 @@ namespace Plml.EnChiens
         public PlayableAsset outroTimeline;
 
         [HideInPlayMode]
-        public ParLedRGBW parLedCourJardin;
+        public DmxTrackElement parLedCourJardin;
         [HideInPlayMode]
-        public ParLedRGBW parLedJardinCour;
+        public DmxTrackElement parLedJardinCour;
 
         [HideInPlayMode]
-        public ParLedRGBW parLedContre1;
+        public DmxTrackElement parLedContre1;
         [HideInPlayMode]
-        public ParLedRGBW parLedContre2;
+        public DmxTrackElement parLedContre2;
         [HideInPlayMode]
-        public ParLedRGBW parLedContre3;
+        public DmxTrackElement parLedContre3;
         [HideInPlayMode]
-        public ParLedRGBW parLedContre4;
+        public DmxTrackElement parLedContre4;
+
 
         [HideInPlayMode]
-        public FlatParLed_CW_WW_Amber parWhiteCourJardin;
-        [HideInPlayMode]
-        public FlatParLed_CW_WW_Amber parWhiteJardinCour;
+        public DmxTrackElement parServoCour;
 
-        [HideInPlayMode]
-        public ParLedServo_SharkCombi parServoCour;
-
-        private ParLedRGBW[] parsAll;
-        private ParLedRGBW[] parsContre;
+        private DmxTrackElement[] parsAll;
+        private DmxTrackElement[] parsContre;
 
 
         private ContresPulsation contresPulsation;
@@ -117,7 +114,7 @@ namespace Plml.EnChiens
 
         public bool contrePulsating = false;
         public Color pulsationColor = Color.black;
-        
+
         [Range(0, 0xff)]
         public float pulsationMinValue = 0.0f;
 
@@ -205,7 +202,7 @@ namespace Plml.EnChiens
 
         private void Update()
         {
-            foreach (ParLedRGBW par in parsAll)
+            foreach (var par in parsAll)
             {
                 par.stroboscope = 0x00;
             }
@@ -214,7 +211,7 @@ namespace Plml.EnChiens
             parLedJardinCour.color = color;
 
             Color maxContreColor = Colors.Max(color, contresColor);
-            foreach (ParLedRGBW contre in parsContre)
+            foreach (var contre in parsContre)
             {
                 contre.color = maxContreColor;
             }
@@ -227,21 +224,14 @@ namespace Plml.EnChiens
             parLedContre3.dimmer = Mathf.Max(contre3, contres);
             parLedContre4.dimmer = Mathf.Max(contre4, contres);
 
-            parWhiteCourJardin.dimmer = others;
-            parWhiteCourJardin.cold = others > 0 ? 0xff : 0x00;
-
-            parWhiteJardinCour.dimmer = others;
-            parWhiteJardinCour.cold = others > 0 ? 0xff : 0x00;
-
             int servoDim = Mathf.Max(others, servo);
-            parServoCour.dimmer = servoDim;
-            parServoCour.cold = servoDim > 0 ? 0xff : 0x00;
+            parServoCour.cold = servoDim;
             parServoCour.pan = panServo;
             parServoCour.tilt = tiltServo;
 
             if (isChasing)
             {
-                foreach (ParLedRGBW par in GetChasingSpots())
+                foreach (var par in GetChasingSpots())
                 {
                     par.dimmer = 0xff;
                     par.stroboscope = stroboscope;
@@ -252,7 +242,7 @@ namespace Plml.EnChiens
             {
                 if (IsFlickering())
                 {
-                    foreach (ParLedRGBW par in parsContre)
+                    foreach (var par in parsContre)
                     {
                         par.dimmer = flickerAmplitude;
                         par.stroboscope = flickerStrobe;
@@ -263,7 +253,7 @@ namespace Plml.EnChiens
             if (pianoPlaying)
             {
                 int pianoIndex = GetPianoIndex();
-                ParLedRGBW contre = parsContre[pianoIndex];
+                var contre = parsContre[pianoIndex];
 
                 contre.dimmer = 0xff;
                 contre.stroboscope = stroboscope;
@@ -293,7 +283,7 @@ namespace Plml.EnChiens
         }
 
 
-        private IEnumerable<ParLedRGBW> GetChasingSpots()
+        private IEnumerable<DmxTrackElement> GetChasingSpots()
         {
             if (++chaseFrame >= chasingStepDurationInFrames)
             {
@@ -305,8 +295,8 @@ namespace Plml.EnChiens
         }
 
         private int chaseFrame = 1_000_000;
-        private IEnumerator<IEnumerable<ParLedRGBW>> sequenceEnumerator;
-        private IEnumerable<IEnumerable<ParLedRGBW>> ChasingSequence
+        private IEnumerator<IEnumerable<DmxTrackElement>> sequenceEnumerator;
+        private IEnumerable<IEnumerable<DmxTrackElement>> ChasingSequence
         {
             get
             {
@@ -314,11 +304,11 @@ namespace Plml.EnChiens
                 while (true)
                 {
                     int count = Random.Range(chasingMinSpots, chasingMaxSpots);
-                    
+
                     IEnumerable<int> indices = GetRandomSequence(parsAll.Length, count, lastResult);
                     lastResult = indices;
 
-                    IEnumerable<ParLedRGBW> result = indices.Select(idx => parsAll[idx]);
+                    IEnumerable<DmxTrackElement> result = indices.Select(idx => parsAll[idx]);
                     yield return result;
                 }
             }

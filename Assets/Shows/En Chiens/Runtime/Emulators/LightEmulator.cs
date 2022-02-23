@@ -1,7 +1,5 @@
-using Plml.Dmx.SimpleFixtures;
+using Plml.Dmx;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,8 +8,7 @@ using UText = UnityEngine.UI.Text;
 
 namespace Plml.EnChiens.Emulators
 {
-    public abstract class LightEmulator<TFixture> : MonoBehaviour
-        where TFixture : SimpleDmxFixture
+    public abstract class LightEmulator : MonoBehaviour
     {
         protected static readonly Color coldColor = Color.white;
         protected static readonly Color warmColor = Color.yellow;
@@ -20,7 +17,7 @@ namespace Plml.EnChiens.Emulators
         private Image image;
         private UText text;
 
-        public TFixture fixture;
+        public DmxTrackElement fixture;
 
         private void Awake()
         {
