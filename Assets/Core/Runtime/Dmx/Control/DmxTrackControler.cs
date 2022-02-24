@@ -1,4 +1,3 @@
-using Plml.Dmx.SimpleFixtures;
 using Plml.Dmx.OpenDmx;
 using Plml.Dmx.OpenDmx.FTD2XX;
 using System;

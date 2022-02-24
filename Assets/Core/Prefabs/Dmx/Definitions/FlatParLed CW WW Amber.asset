@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a0379090f17ddc44b2300a47c8ee892, type: 3}
+  m_Script: {fileID: 11500000, guid: 572f741a08c1afc4eb9ce46a8c4abca3, type: 3}
   m_Name: FlatParLed CW WW Amber
   m_EditorClassIdentifier: 
   manufacturer: 
-  type: Par Led CW/WW/Amber
-  mode: 4 CH
+  type: 
+  mode: 
   chanCount: 4
   channels:
   - channel: 0

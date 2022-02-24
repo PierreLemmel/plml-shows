@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a0379090f17ddc44b2300a47c8ee892, type: 3}
+  m_Script: {fileID: 11500000, guid: 572f741a08c1afc4eb9ce46a8c4abca3, type: 3}
   m_Name: Par Led Servo - EagleTone
   m_EditorClassIdentifier: 
-  manufacturer: Eagletone
+  manufacturer: EagleTone
   type: Servo
   mode: 20 CH
   chanCount: 20

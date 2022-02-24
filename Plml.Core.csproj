@@ -92,7 +92,6 @@
     <Compile Include="Assets\Core\Runtime\Spout\SpoutApi.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_STATUS.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\MidiMsg.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxChannelType.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker9.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Exponentiation.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker10.cs" />
@@ -112,7 +111,6 @@
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\TokenType.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\CheckerFactory.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_Exception.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxChannelDefinition.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker14.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\IFormulaBuilder.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ConstantInfo.cs" />
@@ -133,7 +131,9 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker8.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\IChecker.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Enumerables.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\FixtureDefinition.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\FloatRange.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxChannelDefinition.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker5.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackCollection.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\GameObjects.cs" />
@@ -147,7 +147,6 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\AllPropertiesCheckerFactory.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Execution\IExecutor.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_OPEN_BY.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\FixtureDefinition.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\LessThan.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\ReadOnlyAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Execution\Interpreter.cs" />
@@ -155,6 +154,7 @@
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Variable.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\SpiesExtensions.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_PROGRAM_DATA.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxChannelType.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\Optimizer.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Collections.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Arrays.cs" />
@@ -428,9 +428,6 @@
     <Reference Include="UnityEditor.Graphs">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.Android.Extensions">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\UnityEditor.Android.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
@@ -484,12 +481,6 @@
     </Reference>
     <Reference Include="Google.JarResolver">
       <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\1.2.169\Google.JarResolver.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Android.Types">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Android.Gradle">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
@@ -868,7 +859,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\Core\Runtime\Dmx\Fixtures\Definitions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

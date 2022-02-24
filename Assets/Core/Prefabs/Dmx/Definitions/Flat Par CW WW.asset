@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a0379090f17ddc44b2300a47c8ee892, type: 3}
+  m_Script: {fileID: 11500000, guid: 572f741a08c1afc4eb9ce46a8c4abca3, type: 3}
   m_Name: Flat Par CW WW
   m_EditorClassIdentifier: 
   manufacturer: 
-  type: Par Led CW/WW
+  type: 
   mode: 6 CH
   chanCount: 6
   channels:
@@ -23,5 +23,5 @@ MonoBehaviour:
     type: 5
   - channel: 2
     type: 4
-  - channel: 3
-    type: 6
+  - channel: 5
+    type: 1
