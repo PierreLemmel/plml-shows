@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Plml.EnChiens.Emulators
+namespace Plml.Dmx.Emulators
 {
     public class ParLedRGBWEmulator : LightEmulator
     {

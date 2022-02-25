@@ -12,7 +12,7 @@ namespace Plml.Rng
 
         public float duration;
 
-        public float endTime => startTime + startTime;
+        public float endTime => startTime + duration;
 
         public float endOfFadeIn => startTime + fadeInTime;
         public float startOfFadeOut => endTime - fadeOutTime;
@@ -26,10 +26,12 @@ namespace Plml.Rng
             else if (time > endOfFadeIn && time < startOfFadeOut)
                 return 1.0f;
             else if (time > startOfFadeOut && time < endTime)
-                return (time - startOfFadeOut) / fadeOutTime;
+                return 1 - (time - startOfFadeOut) / fadeOutTime;
             else
                 return 0.0f;
         }
+
+        public bool Contains(float time) => time >= startTime && time < endTime;
 
         public TimeWindow(float startTime, float duration, float fadeInTime, float fadeOutTime)
         {

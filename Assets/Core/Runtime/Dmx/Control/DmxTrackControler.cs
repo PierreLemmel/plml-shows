@@ -114,16 +114,32 @@ namespace Plml.Dmx
             }
         }
 
-        public Guid AddTrack(DmxTrack track)
+        public DmxTrack AddTrack(DmxTrack track, out Guid trackId)
         {
             var clone = Instantiate(track.gameObject);
-            Guid trackId = Guid.NewGuid();
-            
+            trackId = Guid.NewGuid();
+            clone.AttachTo(tracksObject);
+
             addedTracks.Add(trackId, clone);
 
-            return trackId;
+            return clone.GetComponent<DmxTrack>();
         }
 
-        public void RemoveTrack(Guid trackId) => addedTracks.Remove(trackId);
+        public void RemoveTrack(Guid trackId)
+        {
+            var track = addedTracks[trackId];
+            addedTracks.Remove(trackId);
+            Destroy(track);
+        }
+
+        public void ClearTracks()
+        {
+            foreach (var track in addedTracks.Values)
+            {
+                Destroy(track);
+            }
+
+            addedTracks.Clear();
+        }
     }
 }

@@ -57,14 +57,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Shows\En Chiens\Runtime\Emulators\TimelineEmulator.cs" />
-    <Compile Include="Assets\Shows\En Chiens\Runtime\Emulators\FlatParEmulator.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\Animations\FaceButtonsActivation.cs" />
-    <Compile Include="Assets\Shows\En Chiens\Runtime\Emulators\ParLedRGBWEmulator.cs" />
-    <Compile Include="Assets\Shows\En Chiens\Runtime\Emulators\LightEmulator.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\EnChiensSpectacle.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\Animations\ContresPulsation.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\Core\Bpm.cs" />
-    <Compile Include="Assets\Shows\En Chiens\Runtime\Emulators\ServoEmulator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shows\En Chiens\Runtime\Plml.EnChiens.asmdef" />

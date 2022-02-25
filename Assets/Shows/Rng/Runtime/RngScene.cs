@@ -20,6 +20,8 @@ namespace Plml.Rng
             set => sceneWindow.startTime = value;
         }
 
+        public float endTime => sceneWindow.endTime;
+
         [EditTimeOnly]
         public TimeWindow sceneWindow;
 

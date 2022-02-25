@@ -14,9 +14,6 @@ namespace Plml.Rng
     public class RngShow : MonoBehaviour
     {
         [EditTimeOnly]
-        public DmxTrackControler controler;
-
-        [EditTimeOnly]
         public float totalDuration = 3600.0f;
 
         [PlayTimeOnly]
@@ -31,15 +28,42 @@ namespace Plml.Rng
         [EditTimeOnly]
         public RngSettings settings;
 
+
+        [EditTimeOnly]
+        public SceneDurationProvider introOutroDurationProvider;
+
+        [EditTimeOnly]
+        public DmxTrackProvider introOutroDmxProvider;
+
+        [EditTimeOnly]
+        public AudioClip introOutroMusic;
+
+        [EditTimeOnly, Range(0.0f, 1.0f)]
+        public float introOutroVolume;
+
         [ReadOnly]
         public RngScene[] scenes = Array.Empty<RngScene>();
 
-        [ReadOnly]
-        public int currentSceneIndex;
+        [PlayTimeOnly, ReadOnly]
+        public int currentSceneIndex = -1;
+
+        [PlayTimeOnly]
+        public RngScene currentScene;
+
+        private DmxTrackControler dmxControler;
+        private AudioSource audioSource;
+        
+        private DmxTrack currentTrack;
+        private Guid currentTrackId;
+        
+        private bool audioPlaying;
 
         private void Awake()
         {
-            controler = FindObjectOfType<DmxTrackControler>();
+            dmxControler = FindObjectOfType<DmxTrackControler>();
+            audioSource = FindObjectOfType<AudioSource>();
+            currentSceneIndex = -1;
+            audioPlaying = true;
         }
 
         private void Start()
@@ -59,10 +83,11 @@ namespace Plml.Rng
             AudioProviderCollection audioProviderCollection = GetComponentInChildren<AudioProviderCollection>();
 
             int sceneCount = URandom.Range(settings.minScenes, settings.maxScenes);
-            scenes = new RngScene[sceneCount];
+            scenes = new RngScene[sceneCount + 2];
 
             float targetDuration = totalDuration / sceneCount;
 
+            scenes[0] = GenerateIntroOutroScene(true);
             for (int i = 0; i < sceneCount; i++)
             {
                 GameObject sceneObj = new();
@@ -74,18 +99,16 @@ namespace Plml.Rng
                     .GetNextElement()
                     .AttachTo(sceneObj);
 
-                scenes[i] = scene;
+                scenes[i + 1] = scene;
 
                 scene.sceneWindow = durationProviderCollection.GetNextElement();
-
             }
+            scenes[sceneCount + 1] = GenerateIntroOutroScene(false);
 
             float durationFactor = totalDuration / scenes.Sum(scene => scene.duration);
-            Debug.Log(durationFactor);
+            
             float startTime = 0.0f;
-
-            int idx = 1;
-            foreach (RngScene scene in scenes)
+            foreach (var scene in scenes)
             {
                 float duration = scene.duration * durationFactor;
 
@@ -93,27 +116,126 @@ namespace Plml.Rng
                 scene.startTime = startTime;
 
                 startTime += duration;
+            }
 
-                var audioData = audioProviderCollection.GetNextElement(scene.startTime, duration);
+            int idx = 1;
+            foreach (var scene in scenes.Skip(1).Take(sceneCount))
+            {
+                var audioData = audioProviderCollection.GetNextElement(scene.startTime, scene.duration);
                 scene.audioData = audioData;
 
                 string dmxLabel = scene.track.name;
                 string audioLabel = scene.hasAudio ?
                     $"{audioData.audioClip.name} ({audioData.musicWindow.duration:0.0}s, {audioData.audioVolume:P1})" :
                     "No Audio";
-                scene.name = $"{idx++}: {dmxLabel}, {duration:0.0}s - {audioLabel}";
+                scene.name = $"{idx++}: {dmxLabel}, {scene.duration:0.0}s - {audioLabel}";
+            }
+
+
+            RngScene GenerateIntroOutroScene(bool intro)
+            {
+                GameObject sceneObj = new();
+                RngScene scene = sceneObj.AddComponent<RngScene>();
+
+                sceneObj.AttachTo(sceneCollection);
+
+                scene.track = introOutroDmxProvider
+                    .GetElement()
+                    .AttachTo(sceneObj);
+
+                TimeWindow window = introOutroDurationProvider.GetElement();
+                scene.sceneWindow = window;
+
+                scene.audioData = new()
+                {
+                    audioClip = introOutroMusic,
+                    musicWindow = window,
+                    audioVolume = introOutroVolume
+                };
+
+                scene.name = $"{(intro ? "Intro" : "Outro")}: {scene.duration:0.0}s - {introOutroMusic.name}";
+
+                return scene;
             }
         }
 
         public void Update()
         {
-            if (isPlaying && !done)
+            if (!isPlaying || done) return;
+
+            #region Scene Management
+            if (currentScene == null || currentScene.endTime < currentTime)
             {
+                currentSceneIndex++;
 
+                if (currentSceneIndex == scenes.Length)
+                {
+                    done = true;
+                    return;
+                }
+                else
+                {
+                    currentScene = scenes[currentSceneIndex];
+                }
 
-                currentTime += Time.deltaTime;
+                if (currentTrack != null)
+                {
+                    dmxControler.RemoveTrack(currentTrackId);
+                    Log($"End of track: '{currentTrack.name}'");
+                }
+
+                audioSource.Stop();
+                audioPlaying = false;
+                audioSource.clip = null;
+
+                currentTrack = dmxControler.AddTrack(currentScene.track, out currentTrackId);
+                Log($"Start of track: '{currentTrack.name}'");
             }
+            #endregion
+
+            #region Dmx
+            float dmxMaster = currentScene.sceneWindow.GetValue(currentTime);
+            currentTrack.master = dmxMaster;
+            #endregion
+
+            #region Audio
+            if (currentScene.hasAudio)
+            {
+                var audioData = currentScene.audioData;
+                var musicWindow = audioData.musicWindow;
+            
+                if (musicWindow.Contains(currentTime))
+                {
+                    if (!audioPlaying)
+                    {
+                        audioPlaying = true;
+                        audioSource.clip = audioData.audioClip;
+
+                        Log($"Playing clip '{audioSource.clip.name}'");
+                        audioSource.Play();
+                    }
+                    
+                    audioSource.volume = musicWindow.GetValue(currentTime) * audioData.audioVolume;
+                }
+                else
+                {
+                    if (audioPlaying)
+                    {
+                        Log($"End of clip '{audioSource.clip.name}'");
+
+                        audioSource.Stop();
+                        audioSource.clip = null;
+                        audioPlaying = false;
+                    }
+                }
+                
+            }
+            #endregion
+
+            currentTime += Time.deltaTime;
         }
+
+        private void Log(string msg) => Debug.Log($"{currentTime:####:##} - {msg}");
 
         public void StartShow() => isPlaying = true;
         public void StopShow() => isPlaying = false;

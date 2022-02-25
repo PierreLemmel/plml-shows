@@ -67,6 +67,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpy.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\IntRange.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\MoreReflection.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Emulators\FlatParEmulator.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_DEVICE_LIST_INFO_NODE.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\QuadraticRangeAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\FunctionInfo.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ConstantRegistry.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\IFunctionRegistry.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker12.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Emulators\ParLedRGBWEmulator.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Spy.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\EditTimeOnlyAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\HideInPlayModeAttribute.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Annotations\DmxRangeAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Function.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Or.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Emulators\LightEmulator.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Colors.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\LessOrEqualThan.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker16.cs" />
@@ -157,6 +160,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxChannelType.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\Optimizer.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Collections.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Emulators\ServoEmulator.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Arrays.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackElement.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker13.cs" />

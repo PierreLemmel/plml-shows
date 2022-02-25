@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 using UText = UnityEngine.UI.Text;
 
-namespace Plml.EnChiens.Emulators
+namespace Plml.Dmx.Emulators
 {
     public abstract class LightEmulator : MonoBehaviour
     {
