@@ -62,8 +62,10 @@ namespace Plml.Rng
         {
             dmxControler = FindObjectOfType<DmxTrackControler>();
             audioSource = FindObjectOfType<AudioSource>();
-            currentSceneIndex = -1;
-            audioPlaying = true;
+            
+            ResetTrackingVariables();
+
+            isPlaying = false;
         }
 
         private void Start()
@@ -105,6 +107,7 @@ namespace Plml.Rng
             }
             scenes[sceneCount + 1] = GenerateIntroOutroScene(false);
 
+
             float durationFactor = totalDuration / scenes.Sum(scene => scene.duration);
             
             float startTime = 0.0f;
@@ -131,6 +134,8 @@ namespace Plml.Rng
                 scene.name = $"{idx++}: {dmxLabel}, {scene.duration:0.0}s - {audioLabel}";
             }
 
+            SetupIntroOutroScene(scenes[0], true);
+            SetupIntroOutroScene(scenes[scenes.Length - 1], false);
 
             RngScene GenerateIntroOutroScene(bool intro)
             {
@@ -149,13 +154,17 @@ namespace Plml.Rng
                 scene.audioData = new()
                 {
                     audioClip = introOutroMusic,
-                    musicWindow = window,
                     audioVolume = introOutroVolume
                 };
 
-                scene.name = $"{(intro ? "Intro" : "Outro")}: {scene.duration:0.0}s - {introOutroMusic.name}";
-
                 return scene;
+            }
+
+            void SetupIntroOutroScene(RngScene scene, bool intro)
+            {
+                scene.audioData.musicWindow = scene.sceneWindow;
+
+                scene.name = $"{(intro ? "Intro" : "Outro")}: {scene.duration:0.0}s - {introOutroMusic.name}";
             }
         }
 
@@ -178,15 +187,12 @@ namespace Plml.Rng
                     currentScene = scenes[currentSceneIndex];
                 }
 
-                if (currentTrack != null)
-                {
-                    dmxControler.RemoveTrack(currentTrackId);
-                    Log($"End of track: '{currentTrack.name}'");
-                }
+                StopLights();
 
-                audioSource.Stop();
-                audioPlaying = false;
-                audioSource.clip = null;
+                if (currentTrack != null)
+                    Log($"End of track: '{currentTrack.name}'");
+
+                StopAudio();
 
                 currentTrack = dmxControler.AddTrack(currentScene.track, out currentTrackId);
                 Log($"Start of track: '{currentTrack.name}'");
@@ -222,10 +228,7 @@ namespace Plml.Rng
                     if (audioPlaying)
                     {
                         Log($"End of clip '{audioSource.clip.name}'");
-
-                        audioSource.Stop();
-                        audioSource.clip = null;
-                        audioPlaying = false;
+                        StopAudio();
                     }
                 }
                 
@@ -235,9 +238,50 @@ namespace Plml.Rng
             currentTime += Time.deltaTime;
         }
 
+        private void ResetTrackingVariables()
+        {
+            currentTrack = null;
+            currentTrackId = Guid.Empty;
+            currentSceneIndex = -1;
+            currentScene = null;
+            
+            audioPlaying = false;
+        }
+
+        private void StopLights()
+        {
+            if (currentTrack != null)
+            {
+                dmxControler.RemoveTrack(currentTrackId);
+            }
+        }
+
+        private void StopAudio()
+        {
+            audioSource.Stop();
+            audioSource.clip = null;
+            audioPlaying = false;
+        }
+
         private void Log(string msg) => Debug.Log($"{currentTime:####:##} - {msg}");
 
-        public void StartShow() => isPlaying = true;
-        public void StopShow() => isPlaying = false;
+        public void StartShow()
+        {
+            isPlaying = true;
+            Log("Show started");
+        }
+
+        public void StopShow()
+        {
+            currentTime = 0.0f;
+            isPlaying = false;
+
+            StopAudio();
+            StopLights();
+
+            ResetTrackingVariables();
+
+            Log("Show stopped");
+        }
     }
 }

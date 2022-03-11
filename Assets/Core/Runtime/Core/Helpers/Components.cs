@@ -24,10 +24,8 @@ namespace Plml
                 transform.GetChild(i).gameObject.DestroyWithChildren();
         }
 
-        public static GameObject AddChild(this Component comp, string name) => comp.gameObject.WithChild(name);
-        public static GameObject AddChild(this Component comp, string name, out GameObject child) => comp.gameObject.WithChild(name, out child);
-        public static GameObject AddChild(this Component comp, string name, Action<GameObject> setup) => comp.gameObject.WithChild(name, setup);
-        public static GameObject AddChild(this Component comp, string name, Action<GameObject> setup, out GameObject child) => comp.gameObject.WithChild(name, setup, out child);
+        public static GameObject AddChild(this Component comp, string name) => comp.gameObject.AddChild(name);
+        public static GameObject AddChild(this Component comp, string name, Action<GameObject> setup) => comp.gameObject.AddChild(name, setup);
 
         public static TComponent WithChild<TComponent>(this TComponent comp, string name) where TComponent : Component => comp.WithChild(name, out _);
         public static TComponent WithChild<TComponent>(this TComponent comp, string name, out GameObject child) where TComponent : Component

@@ -14,20 +14,26 @@ namespace Plml.Rng.Editor
         {
             RngShow show = (RngShow)target;
 
-            if (GUILayout.Button("Start Show")) show.StartShow();
-            if (GUILayout.Button("Stop Show")) show.StopShow();
-            if (GUILayout.Button("Regenerate Scenes"))
+            if (Application.isPlaying)
             {
-                Debug.Log("");
-                Debug.Log("Generating show...");
-                show.RegenerateScenes();
-                Debug.Log("Show generated");
-
-                foreach (var scene in show.scenes)
+                if (GUILayout.Button("Start Show")) show.StartShow();
+                if (GUILayout.Button("Stop Show")) show.StopShow();
+            }
+            else
+            {
+                if (GUILayout.Button("Regenerate Scenes"))
                 {
-                    Debug.Log(scene.name);
+                    Debug.Log("");
+                    Debug.Log("Generating show...");
+                    show.RegenerateScenes();
+                    Debug.Log("Show generated");
+
+                    foreach (var scene in show.scenes)
+                    {
+                        Debug.Log(scene.name);
+                    }
+                    Debug.Log("");
                 }
-                Debug.Log("");
             }
 
             base.OnInspectorGUI();

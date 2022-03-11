@@ -80,10 +80,17 @@ namespace Plml
             return go;
         }
 
-        public static GameObject AddChild(this GameObject go, string name) => go.WithChild(name);
-        public static GameObject AddChild(this GameObject go, string name, out GameObject child) => go.WithChild(name, out child);
-        public static GameObject AddChild(this GameObject go, string name, Action<GameObject> setup) => go.WithChild(name, setup);
-        public static GameObject AddChild(this GameObject go, string name, Action<GameObject> setup, out GameObject child) => go.WithChild(name, setup, out child);
+        public static GameObject AddChild(this GameObject go, string name) => new GameObject(name).AttachTo(go);
+
+        public static GameObject AddChild(this GameObject go, string name, Action<GameObject> setup)
+        {
+            GameObject child = new(name);
+
+            child.AttachTo(go);
+            setup(child);
+
+            return child;
+        }
 
         public static TComponent AddComponent<TComponent>(this GameObject go, Action<TComponent> setup)
             where TComponent : Component
