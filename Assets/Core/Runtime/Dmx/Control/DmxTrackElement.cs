@@ -135,6 +135,66 @@ namespace Plml.Dmx
         public bool TrySetAmber(int value) => TrySetChannel(DmxChannelType.Amber, value);
         public bool TrySetPan(int value) => TrySetChannel(DmxChannelType.Pan, value);
         public bool TrySetTilt(int value) => TrySetChannel(DmxChannelType.Tilt, value);
+
+        public Color color
+        {
+            get => GetColor();
+            set => SetColor(value);
+        }
+
+        public int dimmer
+        {
+            get => GetDimmer();
+            set => SetDimmer(value);
+        }
+
+        public int stroboscope
+        {
+            get => GetStroboscope();
+            set => SetStroboscope(value);
+        }
+
+        public int white
+        {
+            get => GetWhite();
+            set => SetWhite(value);
+        }
+
+        public int uv
+        {
+            get => GetUv();
+            set => SetUv(value);
+        }
+
+        public int cold
+        {
+            get => GetCold();
+            set => SetCold(value);
+        }
+
+        public int warm
+        {
+            get => GetWarm();
+            set => SetWarm(value);
+        }
+
+        public int amber
+        {
+            get => GetAmber();
+            set => SetAmber(value);
+        }
+
+        public int pan
+        {
+            get => GetPan();
+            set => SetPan(value);
+        }
+
+        public int tilt
+        {
+            get => GetTilt();
+            set => SetTilt(value);
+        }
         #endregion
 
         private void Awake() => SetupLengthIfNeeded();

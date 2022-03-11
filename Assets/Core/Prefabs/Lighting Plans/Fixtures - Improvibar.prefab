@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36adcb8a6ad11844696e0266f21b392f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 11400000, guid: 12e885856f32b894dbea8adcf6eb82d8, type: 2}
+  model: {fileID: 11400000, guid: 88b853e71a3ba8245b0426be75a95818, type: 2}
   channelOffset: 23
 --- !u!1 &1746215074457525693
 GameObject:
@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36adcb8a6ad11844696e0266f21b392f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 11400000, guid: 12e885856f32b894dbea8adcf6eb82d8, type: 2}
+  model: {fileID: 11400000, guid: 88b853e71a3ba8245b0426be75a95818, type: 2}
   channelOffset: 41
 --- !u!1 &2702507549588820760
 GameObject:
@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36adcb8a6ad11844696e0266f21b392f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 11400000, guid: 12e885856f32b894dbea8adcf6eb82d8, type: 2}
+  model: {fileID: 11400000, guid: 88b853e71a3ba8245b0426be75a95818, type: 2}
   channelOffset: 11
 --- !u!1 &4482466016657663568
 GameObject:
@@ -274,7 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36adcb8a6ad11844696e0266f21b392f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 11400000, guid: 12e885856f32b894dbea8adcf6eb82d8, type: 2}
+  model: {fileID: 11400000, guid: 88b853e71a3ba8245b0426be75a95818, type: 2}
   channelOffset: 29
 --- !u!1 &5958523388349368511
 GameObject:
@@ -320,7 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36adcb8a6ad11844696e0266f21b392f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 11400000, guid: 12e885856f32b894dbea8adcf6eb82d8, type: 2}
+  model: {fileID: 11400000, guid: 88b853e71a3ba8245b0426be75a95818, type: 2}
   channelOffset: 35
 --- !u!1 &8400337503622282309
 GameObject:
@@ -366,7 +366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36adcb8a6ad11844696e0266f21b392f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 11400000, guid: 12e885856f32b894dbea8adcf6eb82d8, type: 2}
+  model: {fileID: 11400000, guid: 88b853e71a3ba8245b0426be75a95818, type: 2}
   channelOffset: 17
 --- !u!1 &8496366065948417759
 GameObject:

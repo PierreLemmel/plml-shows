@@ -28,7 +28,7 @@ namespace Plml.Rng.Dmx
 
         public override DmxTrack GetElement()
         {
-            this.AddChild("Contres")
+            this.AddChild("Bicolor")
                 .WithComponent(out DmxTrack outTrack);
 
             float h1 = URandom.value;
