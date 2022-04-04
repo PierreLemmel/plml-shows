@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Plml.Dmx;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace Plml.Rng
@@ -11,34 +13,74 @@ namespace Plml.Rng
 
         public void SerializeShow(RngShow show)
         {
+            RngShowDataModel showDataModel = new()
+            {
+                settings = new()
+                {
+                    minScenes = show.settings.minScenes,
+                    maxScenes = show.settings.maxScenes,
+                    durationSpread = show.settings.durationSpread,
+                    showDuration = show.settings.showDuration,
+                    blackoutDuration = show.settings.blackoutDuration,
+                },
+                scenes = show
+                    .scenes
+                    .Select(scene => new RngSceneDataModel
+                    {
+                        timeWindow = scene.sceneWindow,
+                        trackName = scene.track?.name,
+                        audio = new AudioDataModel
+                        {
+                            hasAudio = scene.audioData?.audioClip != null,
+                            volume = scene.audioData?.audioVolume ?? 0,
+                            clipName = scene.audioData?.audioClip != null ? scene.audioData?.audioClip.name : null,
+                            musicWindow = scene.audioData?.musicWindow ?? TimeWindow.Empty,
+                        }
+                    })
+            };
 
+            string json = JsonUtility.ToJson(showDataModel, true);
+            
+            string filename = Path.Combine(settings.path, $"{settings.prefix}-{DateTime.Now:yyMMdd-HHmmss}.json");
+            Debug.Log($"Saving '{filename}'");
+            File.WriteAllText(filename, json);
+            Debug.Log($"'{filename}' saved");
         }
 
-
+        [Serializable]
         private class RngShowDataModel
         {
-            public RngShowSettingsDataModel Settings { get; set; }
-            public IEnumerable<RngSceneDataModel> Scenes { get; set; }
+            public RngShowSettingsDataModel settings;
+            public RngSceneDataModel[] scenes;
         }
 
+        [Serializable]
         private class RngShowSettingsDataModel
         {
+            public int minScenes;
+            public int maxScenes;
+            public float durationSpread;
+            public float showDuration;
+            public float blackoutDuration;
         }
 
-
+        [Serializable]
         private class RngSceneDataModel
         {
-            public TimeWindow TimeWindow { get; set; }
+            public TimeWindow timeWindow;
 
-            public AudioDataModel Audio { get; set; }
+            public string trackName;
+            public AudioDataModel audio;
         }
 
+        [Serializable]
         private class AudioDataModel
         {
-            public string ClipName { get; set; }
-            public float Volume { get; set; }
+            public bool hasAudio;
+            public string clipName;
+            public float volume;
 
-            public TimeWindow TimeWindow { get; set; }
+            public TimeWindow musicWindow;
         }
     }
 }
