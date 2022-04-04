@@ -14,5 +14,11 @@ namespace Plml.Rng
 
         [CubicRange(0.2f, 4.0f)]
         public float durationSpread = 1.0f;
+
+        [Range(600.0f, 7200.0f)]
+        public float showDuration = 3600.0f;
+
+        [Range(0.0f, 8.0f)]
+        public float blackoutDuration = 2.5f;
     }
 }

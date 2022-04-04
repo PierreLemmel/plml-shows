@@ -34,6 +34,12 @@ namespace Plml.Rng.Editor
                     }
                     Debug.Log("");
                 }
+
+                if (GUILayout.Button("Save show"))
+                {
+                    RngSerializer serializer = show.GetComponent<RngSerializer>();
+                    serializer.SerializeShow(show);
+                }
             }
 
             base.OnInspectorGUI();

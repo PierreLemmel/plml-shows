@@ -13,9 +13,6 @@ namespace Plml.Rng
 {
     public class RngShow : MonoBehaviour
     {
-        [EditTimeOnly]
-        public float totalDuration = 3600.0f;
-
         [PlayTimeOnly]
         public float currentTime = 0.0f;
 
@@ -87,7 +84,11 @@ namespace Plml.Rng
             int sceneCount = URandom.Range(settings.minScenes, settings.maxScenes);
             scenes = new RngScene[sceneCount + 2];
 
-            float targetDuration = totalDuration / sceneCount;
+            float totalDuration = settings.showDuration;
+            float blackoutDuration = settings.blackoutDuration;
+            
+            float effectiveDuration = totalDuration - sceneCount * blackoutDuration;
+            float targetDuration = effectiveDuration / sceneCount;
 
             scenes[0] = GenerateIntroOutroScene(true);
             for (int i = 0; i < sceneCount; i++)
@@ -118,7 +119,7 @@ namespace Plml.Rng
                 scene.duration = duration;
                 scene.startTime = startTime;
 
-                startTime += duration;
+                startTime += duration + blackoutDuration;
             }
 
             int idx = 1;

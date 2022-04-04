@@ -76,6 +76,8 @@
     <Compile Include="Assets\Shows\Rng\Runtime\RngScene.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\BicolorTrackProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\NoAudioProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Serialization\RngSerializer.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Serialization\RngSerializerSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shows\Rng\Runtime\Plml.Rng.asmdef" />
