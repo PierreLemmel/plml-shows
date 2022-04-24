@@ -469,13 +469,13 @@ MonoBehaviour:
   settings:
     minScenes: 10
     maxScenes: 30
-    durationSpread: 0.9999999
+    durationSpread: 1.8394542
     showDuration: 3600
-    blackoutDuration: 2.5
+    blackoutDuration: 4.51
   introOutroDurationProvider: {fileID: 2072030197}
   introOutroDmxProvider: {fileID: 1745109719}
   introOutroMusic: {fileID: 8300000, guid: c39a9166e6128df4fb2b49e37f3bcaa8, type: 3}
-  introOutroVolume: 0.509
+  introOutroVolume: 0.684
   scenes:
   - {fileID: 254711972}
   - {fileID: 448926048}
@@ -1255,7 +1255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c863643bb1c5c3046b288551b7ddd735, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weight: 57.8
+  weight: 24.499998
   canChain: 1
   minVolume: 0.213
   maxVolume: 0.38
@@ -2610,7 +2610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c863643bb1c5c3046b288551b7ddd735, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weight: 44.6
+  weight: 25.7
   canChain: 0
   minVolume: 0.409
   maxVolume: 0.712
@@ -2624,6 +2624,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 99135540e8ff6194fbb9496be2b28295, type: 3}
   - {fileID: 8300000, guid: 955f0a1b6e1ebc846b07d9dc1a940898, type: 3}
   - {fileID: 8300000, guid: 72ac6f4d76ea0044e9921b4bfeb3fcb5, type: 3}
+  - {fileID: 8300000, guid: 1a9ac105fd7a00148963aac28947c26e, type: 3}
+  - {fileID: 8300000, guid: 7e3a3c41eeae4f04091b49b7e4713f4c, type: 3}
+  - {fileID: 8300000, guid: 2671690396ad09d42be1e201a54f4dad, type: 3}
+  - {fileID: 8300000, guid: 05a228e37c48b7340a46e67e5fea9bc0, type: 3}
 --- !u!1 &550212386
 GameObject:
   m_ObjectHideFlags: 0
@@ -4627,19 +4631,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c863643bb1c5c3046b288551b7ddd735, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weight: 47.7
+  weight: 52.3
   canChain: 0
   minVolume: 0.829
   maxVolume: 1
-  minFadeTime: 2.01
-  maxFadeTime: 4.12
-  minDuration: 33.9
-  maxDuration: 62.7
+  minFadeTime: 1.02
+  maxFadeTime: 2.08
+  minDuration: 28.7
+  maxDuration: 74.75
   clips:
   - {fileID: 8300000, guid: 62ae957985fb4254b8c8de2ec8f41219, type: 3}
   - {fileID: 8300000, guid: 8ec92e33158c5cb4e88fa017ed211ca1, type: 3}
   - {fileID: 8300000, guid: a060a3a2df5700a43b8f4238312b2768, type: 3}
   - {fileID: 8300000, guid: 07e8cc3b281e49f4a8d67fa2235f7817, type: 3}
+  - {fileID: 8300000, guid: f52cd18e171df6d468cecd60379a2a0d, type: 3}
+  - {fileID: 8300000, guid: cc567f06f8ef2cb42925e2888b003594, type: 3}
 --- !u!1 &961158339
 GameObject:
   m_ObjectHideFlags: 0
@@ -7256,8 +7262,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 6.699999
   canChain: 0
-  minDuration: 6
-  maxDuration: 13
+  minDuration: 3.2
+  maxDuration: 12.15
   minFadeTime: 0
   maxFadeTime: 0.4
 --- !u!1 &1472052064
@@ -8642,7 +8648,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c863643bb1c5c3046b288551b7ddd735, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weight: 27.2
+  weight: 21.1
   canChain: 0
   minVolume: 0.313
   maxVolume: 1
