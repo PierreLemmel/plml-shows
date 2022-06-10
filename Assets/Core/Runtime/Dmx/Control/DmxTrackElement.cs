@@ -76,6 +76,49 @@ namespace Plml.Dmx
 
         public Color32 GetColor() => GetColor_Internal(fixture.model.GetChannelAddress(DmxChannelType.Color));
 
+        public Color32[] GetColorArray16() => GetColors_Internal(DmxChannelType.ColorArray16);
+        public void GetColorArray16(Color32[] buffer) => GetColors_Internal(DmxChannelType.ColorArray16, buffer);
+
+        public Color32[] GetColorArray32() => GetColors_Internal(DmxChannelType.ColorArray32);
+        public void GetColorArray32(Color32[] buffer) => GetColors_Internal(DmxChannelType.ColorArray32, buffer);
+
+        public Color32[] GetColors()
+        {
+            if (fixture.model.HasChannel(DmxChannelType.ColorArray16))
+                return GetColorArray16();
+            else if (fixture.model.HasChannel(DmxChannelType.ColorArray32))
+                return GetColorArray32();
+            else
+                throw new InvalidOperationException("Fixture have no color array");
+        }
+
+        public void GetColors(Color32[] buffer)
+        {
+            if (fixture.model.HasChannel(DmxChannelType.ColorArray16))
+                GetColorArray16(buffer);
+            else if (fixture.model.HasChannel(DmxChannelType.ColorArray32))
+                GetColorArray32(buffer);
+            else
+                throw new InvalidOperationException("Fixture have no color array");
+        }
+
+
+        private Color32[] GetColors_Internal(DmxChannelType chanType)
+        {
+            int baseAddr = fixture.model.GetChannelAddress(chanType);
+            int count = chanType.ColorArrayCount();
+            return Arrays.Create(count, i => GetColor_Internal(baseAddr + 3 * i));
+        }
+
+        private void GetColors_Internal(DmxChannelType chanType, Color32[] buffer)
+        {
+            int baseAddr = fixture.model.GetChannelAddress(chanType);
+            int count = chanType.ColorArrayCount();
+
+            for (int i = 0; i < count; i++)
+                buffer[i] = GetColor_Internal(baseAddr + 3 * i);
+        }
+
         public bool TryGetColor(out Color32 color32)
         {
             bool hasColor = TryGetChannel(DmxChannelType.Color, out int colorChan);

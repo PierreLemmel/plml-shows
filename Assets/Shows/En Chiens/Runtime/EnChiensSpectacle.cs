@@ -68,16 +68,13 @@ namespace Plml.EnChiens
         public int stroboscope;
 
         public bool contreFlickering = false;
-        [Range(2, 12)]
-        public int flickeringDurationInFrames = 3;
+        
         [Range(0, 0xff)]
         public int flickerAmplitude = 0xff;
         [Range(0, 0xff)]
         public int flickerStrobe = 100;
 
         public bool pianoPlaying = false;
-        [Range(2, 12)]
-        public int pianoDurationInFrames = 3;
 
         public bool contrePulsating = false;
         public Color pulsationColor = Color.black;
@@ -87,6 +84,8 @@ namespace Plml.EnChiens
 
         [Range(0, 0xff)]
         public float pulsationMaxValue = 0.0f;
+
+
 
 
         public bool stop = false;
@@ -112,7 +111,7 @@ namespace Plml.EnChiens
             director = GetComponent<PlayableDirector>();
             director.playOnAwake = false;
 
-            
+            adapter = FindObjectOfType<EnChiensAdapter>();
         }
 
         private void Start()
@@ -123,74 +122,32 @@ namespace Plml.EnChiens
 
         private void Update()
         {
-            foreach (var par in parsAll)
-            {
-                par.stroboscope = 0x00;
-            }
+            adapter.ResetLights();
 
-            parLedCourJardin.color = color;
-            parLedJardinCour.color = color;
-
-            Color maxContreColor = Colors.Max(color, contresColor);
-            foreach (var contre in parsContre)
-            {
-                contre.color = maxContreColor;
-            }
-
-            parLedJardinCour.dimmer = Mathf.Max(jardinCour, faceButtons.jardinCour);
-            parLedCourJardin.dimmer = Mathf.Max(courJardin, faceButtons.courJardin);
-
-            parLedContre1.dimmer = Mathf.Max(contre1, contres);
-            parLedContre2.dimmer = Mathf.Max(contre2, contres);
-            parLedContre3.dimmer = Mathf.Max(contre3, contres);
-            parLedContre4.dimmer = Mathf.Max(contre4, contres);
+            adapter.SetupContres(color, contresColor, contres, contre1, contre2, contre3, contre4);
+            adapter.SetupJardinCour(color, jardinCour, courJardin);
 
             int servoDim = Mathf.Max(others, servo);
-            parServoCour.cold = servoDim;
-            parServoCour.pan = panServo;
-            parServoCour.tilt = tiltServo;
+            adapter.SetupServo(servoDim, panServo, tiltServo);
+
+            adapter.SetupOthers(others);
 
             if (isChasing)
-            {
-                foreach (var par in GetChasingSpots())
-                {
-                    par.dimmer = 0xff;
-                    par.stroboscope = stroboscope;
-                }
-            }
+                adapter.Chase(stroboscope);
+
 
             if (contreFlickering)
-            {
-                if (IsFlickering())
-                {
-                    foreach (var par in parsContre)
-                    {
-                        par.dimmer = flickerAmplitude;
-                        par.stroboscope = flickerStrobe;
-                    }
-                }
-            }
+                adapter.Flicker(flickerAmplitude, flickerStrobe);
+
 
             if (pianoPlaying)
-            {
-                int pianoIndex = GetPianoIndex();
-                var contre = parsContre[pianoIndex];
+                adapter.PlayPiano(stroboscope);
 
-                contre.dimmer = 0xff;
-                contre.stroboscope = stroboscope;
-            }
 
             if (contrePulsating)
-            {
-                contresPulsation.enabled = true;
-                contresPulsation.color = pulsationColor;
-                contresPulsation.minValue = pulsationMinValue;
-                contresPulsation.maxValue = pulsationMaxValue;
-            }
+                adapter.UpdatePulsations(pulsationColor, pulsationMinValue, pulsationMaxValue);
             else
-            {
-                contresPulsation.enabled = false;
-            }
+                adapter.StopPulsations();
 
             if (stop)
             {
@@ -200,50 +157,7 @@ namespace Plml.EnChiens
 #endif
             }
 
-            faceButtons.smoothTime = faceButtonsSmoothTime;
-        }
-
-        
-
-        private bool flickerResult = true;
-        private int flickerFrameCount = 0;
-        private bool IsFlickering()
-        {
-            if (++flickerFrameCount >= flickeringDurationInFrames)
-            {
-                flickerResult = !flickerResult;
-                flickerFrameCount = 0;
-            }
-
-            return flickerResult;
-        }
-
-
-        private bool pianoAscending = true;
-        private int pianoFrameCount = 0;
-        private int pianoIndex;
-        private int GetPianoIndex()
-        {
-            if (++pianoFrameCount >= pianoDurationInFrames)
-            {
-                if (pianoAscending)
-                {
-                    pianoIndex++;
-
-                    if (pianoIndex >= parsContre.Length - 1)
-                        pianoAscending = false;
-                }
-                else
-                {
-                    pianoIndex--;
-
-                    if (pianoIndex <= 0)
-                        pianoAscending = true;
-                }
-                pianoFrameCount = 0;
-            }
-
-            return pianoIndex;
+            adapter.CommitValues();
         }
     }
 }

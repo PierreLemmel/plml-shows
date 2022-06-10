@@ -12,7 +12,7 @@ namespace Plml.EnChiens.Animations.Improvibar
 
         public float minValue;
         public float maxValue;
-        public int bpm;
+        public float bpm;
         public float smoothTime;
 
         private void Update()
@@ -51,7 +51,7 @@ namespace Plml.EnChiens.Animations.Improvibar
 
             value01 = Mathf.SmoothDamp(value01, target01, ref velocity, smoothTime);
 
-            return (int)(minValue + value01 * (maxValue - minValue));
+            return Mathf.RoundToInt(minValue + value01 * (maxValue - minValue));
         }
     }
 }

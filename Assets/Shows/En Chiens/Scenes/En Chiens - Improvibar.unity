@@ -1703,6 +1703,67 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1615973293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1615973294}
+  - component: {fileID: 1615973295}
+  m_Layer: 0
+  m_Name: Adapter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1615973294
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615973293}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1855948592}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1615973295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615973293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0f7edbeb89813347be50463e6198249, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parLedCourJardin: {fileID: 1730314036}
+  parLedJardinCour: {fileID: 294554943}
+  parLedContre1: {fileID: 1036261373}
+  parLedContre2: {fileID: 759944652}
+  parLedContre3: {fileID: 1221149245}
+  parLedContre4: {fileID: 1021734913}
+  parServoCour: {fileID: 1385609257}
+  bpm: 133
+  pulsationSmoothTime: 0.3
+  jardinCourKey: 49
+  courJardinKey: 50
+  faceButtonsSmoothTime: 0.1
+  chasingMinSpots: 1
+  chasingMaxSpots: 3
+  flickeringDurationInFrames: 3
+  chasingStepDurationInFrames: 9
+  pianoDurationInFrames: 3
 --- !u!1 &1654644125
 GameObject:
   m_ObjectHideFlags: 0
@@ -1960,13 +2021,6 @@ MonoBehaviour:
   outroStartTime: 0
   introTimeline: {fileID: 11400000, guid: 7437f6ebf140d394f884f66f01573f05, type: 2}
   outroTimeline: {fileID: 11400000, guid: 2547b3e6b406d9543ab2f3396cbce957, type: 2}
-  parLedCourJardin: {fileID: 1730314036}
-  parLedJardinCour: {fileID: 294554943}
-  parLedContre1: {fileID: 1036261373}
-  parLedContre2: {fileID: 759944652}
-  parLedContre3: {fileID: 1221149245}
-  parLedContre4: {fileID: 1021734913}
-  parServoCour: {fileID: 1385609257}
   jardinCour: 0
   courJardin: 0
   contres: 0
@@ -1981,25 +2035,15 @@ MonoBehaviour:
   tiltServo: 116
   servo: 0
   isChasing: 0
-  chasingStepDurationInFrames: 9
-  chasingMinSpots: 1
-  chasingMaxSpots: 1
   stroboscope: 47
   contreFlickering: 0
-  flickeringDurationInFrames: 2
   flickerAmplitude: 255
   flickerStrobe: 100
   pianoPlaying: 0
-  pianoDurationInFrames: 6
   contrePulsating: 0
   pulsationColor: {r: 0, g: 0, b: 0, a: 1}
   pulsationMinValue: 0
   pulsationMaxValue: 0
-  bpm: 133
-  pulsationSmoothTime: 0.3
-  jardinCourKey: 49
-  courJardinKey: 50
-  faceButtonsSmoothTime: 0.15
   stop: 0
 --- !u!4 &1855948592
 Transform:
@@ -2012,7 +2056,8 @@ Transform:
   m_LocalPosition: {x: 217.05177, y: 436.54367, z: -330.98535}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1615973294}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -12,7 +12,7 @@ namespace Plml.Dmx.Emulators
     {
         protected static readonly Color coldColor = Color.white;
         protected static readonly Color warmColor = Color.yellow;
-        protected static readonly Color amberColor = new Color(1.0f, 0.47f, 0.012f);
+        protected static readonly Color amberColor = new(1.0f, 0.47f, 0.012f);
 
         private Image image;
         private UText text;

@@ -149,5 +149,24 @@ namespace Plml
         }
 
         public static T RandomElement<T>(this T[] array) => array[URandom.Range(0, array.Length)];
+
+        public static T[] Create<T>(int length, Func<int, T> selector)
+        {
+            T[] result = new T[length];
+
+            for (int i = 0; i < length; i++)
+                result[i] = selector(i);
+
+            return result;
+        }
+
+        public static T[] Create<T>(int length, Func<T> selector) => Create(length, i => selector());
+        public static T[] Create<T>(int length, T value) => Create(length, i => value);
+
+        public static void ForEach<T>(this T[] array, Action<T, int> action)
+        {
+            for (int i = 0; i < array.Length; i++)
+                action(array[i], i);
+        }
     }
 }

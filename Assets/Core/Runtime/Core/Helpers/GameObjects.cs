@@ -139,5 +139,19 @@ namespace Plml
             clone.name = go.name;
             return clone;
         }
+
+        public static void AddChildren(this GameObject go, int count, Func<int, string> nameFunc, Action<GameObject, int> setup)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                GameObject child = new(nameFunc(i));
+
+                child.AttachTo(go);
+                setup(child, i);
+            }
+        }
+
+        public static void AddChildren(this GameObject go, int count, Func<int, string> nameFunc, Action<GameObject> setup)
+            => go.AddChildren(count, nameFunc, (go, i) => setup(go));
     }
 }

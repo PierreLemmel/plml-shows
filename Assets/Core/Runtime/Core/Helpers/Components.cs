@@ -5,6 +5,41 @@ namespace Plml
 {
     public static class Components
     {
+        public static TComponent AddComponent<TComponent>(this Component comp)
+            where TComponent : Component
+            => comp.gameObject.AddComponent<TComponent>();
+
+        public static TComponent AddComponent<TComponent>(this Component comp, Action<TComponent> setup)
+            where TComponent : Component
+        {
+            TComponent result = comp.gameObject.AddComponent<TComponent>();
+            setup(result);
+            return result;
+        }
+
+        public static void AddComponent<TComponent>(this Component comp, Action<TComponent> setup, out TComponent component)
+            where TComponent : Component
+        {
+            component = comp.gameObject.AddComponent<TComponent>();
+            setup(component);
+        }
+
+        public static void AddComponent<TComponent>(this Component comp, out TComponent component)
+            where TComponent : Component => component = comp.gameObject.AddComponent<TComponent>();
+
+        public static bool HasComponent<TComponent>(this Component comp) where TComponent : Component
+        {
+            TComponent component = comp.GetComponent<TComponent>();
+            return component != null;
+        }
+
+        public static bool HasComponentInChildren<TComponent>(this Component comp) where TComponent : Component
+        {
+            TComponent component = comp.GetComponentInChildren<TComponent>();
+            return component != null;
+        }
+
+
         public static TComponent AttachTo<TComponent>(this TComponent component, Component other) where TComponent : Component
         {
             component.transform.SetParent(other.transform);
@@ -46,5 +81,21 @@ namespace Plml
 
             return comp;
         }
+
+        public static void AddChildren(this Component comp, int count, Func<int, string> nameFunc, Action<GameObject, int> setup)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                GameObject child = new(nameFunc(i));
+
+                child.AttachTo(comp);
+                setup(child, i);
+            }
+        }
+
+        public static void AddChildren(this Component comp, int count, Func<int, string> nameFunc, Action<GameObject> setup)
+            => comp.AddChildren(count, nameFunc, (go, i) => setup(go));
+
+        public static void SetScale(this Component comp, float scale) => comp.transform.localScale = new(scale, scale, scale);
     }
 }

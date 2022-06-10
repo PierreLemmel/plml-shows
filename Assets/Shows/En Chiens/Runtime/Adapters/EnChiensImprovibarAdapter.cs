@@ -38,7 +38,7 @@ namespace Plml.EnChiens
 
 
         [HideInPlayMode]
-        public int bpm = 60;
+        public float bpm = 60;
         [HideInPlayMode]
         public float pulsationSmoothTime = 0.3f;
 
@@ -56,9 +56,14 @@ namespace Plml.EnChiens
         [Range(1, 4)]
         public int chasingMaxSpots = 3;
 
+        [Range(2, 12)]
+        public int flickeringDurationInFrames = 2;
 
         [Range(2, 12)]
         public int chasingStepDurationInFrames = 9;
+
+        [Range(2, 12)]
+        public int pianoDurationInFrames = 6;
 
         private void Awake()
         {
@@ -96,7 +101,87 @@ namespace Plml.EnChiens
             faceButtons.jardinCourKey = jardinCourKey;
             faceButtons.courJardinKey = courJardinKey;
 
+            faceButtons.smoothTime = faceButtonsSmoothTime;
+
             sequenceEnumerator = ChasingSequence.GetEnumerator();
+        }
+
+        public override void ResetLights()
+        {
+            foreach (var par in parsAll)
+            {
+                par.stroboscope = 0x00;
+            }
+        }
+
+        public override void SetupServo(int dimmer, int pan, int tilt)
+        {
+            parServoCour.cold = dimmer;
+            parServoCour.pan = pan;
+            parServoCour.tilt = tilt;
+        }
+
+        public override void SetupJardinCour(Color color, int jardinCour, int courJardin)
+        {
+            parLedCourJardin.color = color;
+            parLedJardinCour.color = color;
+
+            parLedJardinCour.dimmer = Mathf.Max(jardinCour, faceButtons.jardinCour);
+            parLedCourJardin.dimmer = Mathf.Max(courJardin, faceButtons.courJardin);
+        }
+
+        public override void SetupContres(Color globalColor, Color contresColor, int contres, int contre1, int contre2, int contre3, int contre4)
+        {
+            Color maxContreColor = Colors.Max(globalColor, contresColor);
+            foreach (var contre in parsContre)
+            {
+                contre.color = maxContreColor;
+            }
+
+            parLedContre1.dimmer = Mathf.Max(contre1, contres);
+            parLedContre2.dimmer = Mathf.Max(contre2, contres);
+            parLedContre3.dimmer = Mathf.Max(contre3, contres);
+            parLedContre4.dimmer = Mathf.Max(contre4, contres);
+        }
+
+        public override void UpdatePulsations(Color color, float pulsationMinValue, float pulsationMaxValue)
+        {
+            contresPulsation.enabled = true;
+            contresPulsation.color = color;
+            contresPulsation.minValue = pulsationMinValue;
+            contresPulsation.maxValue = pulsationMaxValue;
+        }
+
+        public override void StopPulsations() => contresPulsation.enabled = false;
+
+        public override void Chase(int strobe)
+        {
+            foreach (var par in GetChasingSpots())
+            {
+                par.dimmer = 0xff;
+                par.stroboscope = strobe;
+            }
+        }
+
+        public override void Flicker(int amplitude, int strobe)
+        {
+            if (IsFlickering())
+            {
+                foreach (var par in parsContre)
+                {
+                    par.dimmer = amplitude;
+                    par.stroboscope = strobe;
+                }
+            }
+        }
+
+        public override void PlayPiano(int strobe)
+        {
+            int pianoIndex = GetPianoIndex();
+            var contre = parsContre[pianoIndex];
+
+            contre.dimmer = 0xff;
+            contre.stroboscope = strobe;
         }
 
         private IEnumerable<DmxTrackElement> GetChasingSpots()
@@ -150,5 +235,47 @@ namespace Plml.EnChiens
             }
         }
 
+        private bool flickerResult = true;
+        private int flickerFrameCount = 0;
+        private bool IsFlickering()
+        {
+            if (++flickerFrameCount >= flickeringDurationInFrames)
+            {
+                flickerResult = !flickerResult;
+                flickerFrameCount = 0;
+            }
+
+            return flickerResult;
+        }
+
+
+        private bool pianoAscending = true;
+        private int pianoFrameCount = 0;
+        private int pianoIndex;
+        private int GetPianoIndex()
+        {
+            if (++pianoFrameCount >= pianoDurationInFrames)
+            {
+                if (pianoAscending)
+                {
+                    pianoIndex++;
+
+                    if (pianoIndex >= parsContre.Length - 1)
+                        pianoAscending = false;
+                }
+                else
+                {
+                    pianoIndex--;
+
+                    if (pianoIndex <= 0)
+                        pianoAscending = true;
+                }
+                pianoFrameCount = 0;
+            }
+
+            return pianoIndex;
+        }
+
+        
     }
 }
