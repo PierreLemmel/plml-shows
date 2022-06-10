@@ -47,7 +47,7 @@
   <PropertyGroup>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Package</UnityProjectGenerator>
-    <UnityProjectGeneratorVersion>2.0.14</UnityProjectGeneratorVersion>
+    <UnityProjectGeneratorVersion>2.0.15</UnityProjectGeneratorVersion>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2021.2.8f1</UnityVersion>
@@ -57,10 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Shows\En Chiens\Runtime\Emulators\TimelineEmulator.cs" />
-    <Compile Include="Assets\Shows\En Chiens\Runtime\Animations\FaceButtonsActivation.cs" />
+    <Compile Include="Assets\Shows\En Chiens\Runtime\Animations\Improvibar\ContresPulsation.cs" />
+    <Compile Include="Assets\Shows\En Chiens\Runtime\Adapters\EnChiensAdapter.cs" />
+    <Compile Include="Assets\Shows\En Chiens\Runtime\Adapters\EnChiensImprovibarAdapter.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\EnChiensSpectacle.cs" />
-    <Compile Include="Assets\Shows\En Chiens\Runtime\Animations\ContresPulsation.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\Core\Bpm.cs" />
+    <Compile Include="Assets\Shows\En Chiens\Runtime\Animations\Improvibar\FaceButtonsActivation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shows\En Chiens\Runtime\Plml.EnChiens.asmdef" />

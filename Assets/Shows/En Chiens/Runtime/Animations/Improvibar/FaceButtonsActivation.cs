@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Plml.EnChiens.Animation
+namespace Plml.EnChiens.Animations.Improvibar
 {
     public class FaceButtonsActivation : MonoBehaviour
     {

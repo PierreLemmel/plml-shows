@@ -1,7 +1,7 @@
 using UnityEngine;
 using Plml.Dmx;
 
-namespace Plml.EnChiens.Animation
+namespace Plml.EnChiens.Animations.Improvibar
 {
     public class ContresPulsation : MonoBehaviour
     {

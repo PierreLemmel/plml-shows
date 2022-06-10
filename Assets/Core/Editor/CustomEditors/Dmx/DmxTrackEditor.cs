@@ -1,5 +1,4 @@
-﻿using Plml.Dmx;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -28,7 +27,7 @@ namespace Plml.Dmx.Editor
                 .OrderBy(ct => (int)ct)
                 .ToArray();
 
-            foreach(var channelType in channelTypes)
+            foreach (var channelType in channelTypes)
             {
                 IReadOnlyCollection<DmxTrackElement> eltsWithChan = elements
                     .Where(elt => elt.channels?.Any() ?? false)
@@ -38,7 +37,7 @@ namespace Plml.Dmx.Editor
                 if (eltsWithChan.IsEmpty()) continue;
 
                 string label = channelType.ToString();
-                if (channelType == DmxChannelType.Color)
+                if (channelType.IsColorChannel())
                 {
                     Color maxColor = Colors.Max(eltsWithChan.Select(elt => elt.GetColor()));
                     Color newColor = EditorGUILayout.ColorField(label, maxColor);
@@ -50,6 +49,11 @@ namespace Plml.Dmx.Editor
                             elt.SetColor(newColor);
                         }
                     }
+                }
+                else if (channelType.IsColorArray())
+                {
+                    int ledCount = channelType.ColorArrayCount();
+                    EditorGUILayout.LabelField($"Color array ({ledCount}): multiple editing is not supported.");
                 }
                 else
                 {

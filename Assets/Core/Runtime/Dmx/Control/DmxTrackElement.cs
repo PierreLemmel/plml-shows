@@ -33,6 +33,34 @@ namespace Plml.Dmx
 
         public void SetColor(Color32 color32) => SetColor_Internal(color32, fixture.model.GetChannelAddress(DmxChannelType.Color));
 
+        public void SetColors(Color32[] colors)
+        {
+            switch(colors.Length)
+            {
+                case 16:
+                    SetColorArray16(colors);
+                    break;
+                case 32:
+                    SetColorArray32(colors);
+                    break;
+            }
+        }
+
+        public void SetColorArray16(Color32[] colors) => SetColorArray_Internal(colors, DmxChannelType.ColorArray16);
+        public void SetColorArray32(Color32[] colors) => SetColorArray_Internal(colors, DmxChannelType.ColorArray32);
+
+        private void SetColorArray_Internal(Color32[] colors, DmxChannelType chanType)
+        {
+            int addr = fixture.model.GetChannelAddress(chanType);
+            int expectedLength = chanType.ColorArrayCount();
+
+            if (colors.Length != expectedLength)
+                throw new InvalidOperationException($"Unexpected colors length: {colors.Length} (was expecting {expectedLength})");
+
+            for (int i = 0; i < expectedLength; i++)
+                SetColor_Internal(colors[i], addr + 3 * i);
+        }
+
         private void SetColor_Internal(Color32 color32, int colorChan)
         {
             byte r = color32.r;
