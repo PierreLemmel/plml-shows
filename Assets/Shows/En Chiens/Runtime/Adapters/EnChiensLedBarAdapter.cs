@@ -28,7 +28,10 @@ namespace Plml.EnChiens
         public int chasingStepDurationInFrames = 9;
 
         [Range(2, 12)]
-        public int chasingStrobeEffectDurationInFrames = 2;
+        public int chasingStrobeEffectDurationInFrames_On = 2;
+
+        [Range(2, 12)]
+        public int chasingStrobeEffectDurationInFrames_Off = 4;
 
         [RangeBounds(2, 16)]
         public IntRange chasingWidth = new(4, 8);
@@ -92,6 +95,9 @@ namespace Plml.EnChiens
                 chaseFrame = 0;
             }
 
+            int chasingStrobeEffectDurationInFrames = chaseStrobeIsOn ?
+                chasingStrobeEffectDurationInFrames_On :
+                chasingStrobeEffectDurationInFrames_Off;
             if (++chaseStrobeFrame >= chasingStrobeEffectDurationInFrames)
             {
                 chaseStrobeIsOn = !chaseStrobeIsOn;

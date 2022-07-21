@@ -160,6 +160,19 @@ namespace Plml
             return result;
         }
 
+        public static T[,] Create<T>(int rows, int cols, Func<int, int, T> selector)
+        {
+            T[,] result = new T[cols, rows];
+
+            for (int row = 0; row < rows; row++)
+                for (int col = 0; col < cols; col++)
+                    result[col, row] = selector(col, row);
+
+            return result;
+        }
+
+        public static T[,] Create<T>(int rows, int cols, Func<T> selector) => Create(rows, cols, (x, y) => selector());
+
         public static T[] Create<T>(int length, Func<T> selector) => Create(length, i => selector());
         public static T[] Create<T>(int length, T value) => Create(length, i => value);
 

@@ -92,6 +92,27 @@ namespace Plml
             return child;
         }
 
+        public static GameObject AddChild(this GameObject go, string name, GameObject prefab)
+        {
+            GameObject result = UObject.Instantiate(prefab);
+
+            result.name = name;
+            result.AttachTo(go);
+
+            return result;
+        }
+
+        public static GameObject AddChild<TComponent>(this GameObject go, string name, TComponent prefab)
+            where TComponent : Component
+        {
+            TComponent result = UObject.Instantiate(prefab);
+
+            result.name = name;
+            result.AttachTo(go);
+
+            return result.gameObject;
+        }
+
         public static TComponent AddComponent<TComponent>(this GameObject go, Action<TComponent> setup)
             where TComponent : Component
         {
