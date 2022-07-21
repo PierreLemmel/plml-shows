@@ -59,16 +59,21 @@
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Duration\SceneDurationProviderCollection.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\RngAudioData.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngSceneCollection.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\UI\RngTestPanelButton.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\DmxTrackProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngShow.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Serialization\RngSerializer.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\StaticTrackProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\UI\RngTestPanel.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\RngProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\RngProviderCollection.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\ContresTrackProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\AudioClipProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\UI\RngUI.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\AudioProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\UI\RngRenerateScenesButton.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\AudioProviderCollection.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\UI\RngBackgroundText.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\UI\RngPlayButton.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngSettings.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Duration\SceneDurationProvider.cs" />
@@ -78,7 +83,6 @@
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\BicolorTrackProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Serialization\RngSerializerSettings.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\NoAudioProvider.cs" />
-    <Compile Include="Assets\Shows\Rng\Runtime\UI\RngBackgroundText.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shows\Rng\Runtime\Plml.Rng.asmdef" />
