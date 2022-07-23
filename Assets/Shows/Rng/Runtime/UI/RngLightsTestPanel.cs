@@ -42,6 +42,8 @@ namespace Plml.Rng.UI
             stopBtn.interactable = false;
         }
 
+        private void OnDisable() => StopCurrentScene();
+
         public void UpdateDurationLabel(float duration) => durationLabel.text = $"{duration:F2} s";
 
         public void SetSceneIndex(int sceneIndex)

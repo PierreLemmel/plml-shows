@@ -84,6 +84,7 @@
     <Compile Include="Assets\Shows\Rng\Runtime\Serialization\RngSerializerSettings.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\UI\RngLightsTestPanel.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\NoAudioProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\UI\RngMusicsTestPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shows\Rng\Runtime\Plml.Rng.asmdef" />
