@@ -8,6 +8,8 @@ namespace Plml.Rng
         public const float MinWeight = 1.0f;
         public const float MaxWeight = 100.0f;
 
+        public bool active = true;
+
         [CubicRange(MinWeight, MaxWeight)]
         public float weight = 10.0f;
 

@@ -25,17 +25,37 @@ namespace Plml.Rng.Editor
 
             EditorGUILayout.LabelField("Weights");
 
-            TProvider[] providers = collection.GetProviders();
-            float totalWeight = providers.Any() ? providers.Sum(p => p.weight) : 0.0f;
-            foreach (TProvider provider in providers)
+            TProvider[] providers = collection.GetAllProviders();
+            TProvider[] activeProviders = collection.GetActiveProviders();
+
+            float totalWeight = activeProviders.Any() ? activeProviders
+                .Sum(p => p.weight) : 0.0f;
+
+            PlmlUI.Indented(() =>
             {
-                provider.weight = EditorGUILayout.Slider(
-                    $"{provider.name} ({provider.weight / totalWeight:P})",
-                    provider.weight,
-                    RngProviderBase.MinWeight,
-                    RngProviderBase.MaxWeight
-                );
-            }
+                foreach (TProvider provider in providers)
+                {
+                    EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+
+                    bool active = provider.active;
+                    string extraLabel = active ? (provider.weight / totalWeight).ToString("P") : "Inactive";
+
+                    PlmlUI.Disabled(() =>
+                    {
+                        provider.weight = EditorGUILayout.Slider(
+                            $"{provider.name} ({extraLabel})",
+                            provider.weight,
+                            RngProviderBase.MinWeight,
+                            RngProviderBase.MaxWeight,
+                            GUILayout.ExpandWidth(true)
+                        );
+                    }, !active);
+
+                    provider.active = EditorGUILayout.Toggle(active);
+
+                    EditorGUILayout.EndHorizontal();
+                }
+            });
         }
     }
 }

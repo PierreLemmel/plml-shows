@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -9,19 +10,27 @@ namespace Plml.Rng
     public abstract class RngProviderCollectionBase<TProvider> : MonoBehaviour
         where TProvider : RngProviderBase
     {
-        public TProvider[] GetProviders() => GetComponentsInChildren<TProvider>();
+        private IEnumerable<TProvider> GetActiveProviders_Internal() => GetAllProviders()
+            .Where(p => p.active);
+
+        public TProvider[] GetAllProviders() => GetComponentsInChildren<TProvider>();
+
+        public TProvider[] GetActiveProviders() => GetActiveProviders_Internal()
+            .ToArray();
 
         private TProvider lastProvider;
 
         protected TProvider GetNextProvider()
         {
-            TProvider[] providers = GetProviders();
+            IEnumerable<TProvider> providersEnum = GetActiveProviders_Internal();
 
             if (lastProvider != null && !lastProvider.canChain)
             {
-                providers = providers.Except(lastProvider).ToArray();
+                providersEnum = providersEnum.Except(lastProvider);
             }
             
+            TProvider[] providers = providersEnum.ToArray();
+
             float totalWeight = providers.Sum(p => p.weight);
 
             float random = URandom.Range(0.0f, totalWeight);

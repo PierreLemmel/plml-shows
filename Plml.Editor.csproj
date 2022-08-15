@@ -71,6 +71,7 @@
     <Compile Include="Assets\Core\Editor\Drawers\PlayTimeOnlyDrawer.cs" />
     <Compile Include="Assets\Core\Editor\Drawers\ReadOnlyDrawer.cs" />
     <Compile Include="Assets\Core\Editor\Drawers\EditTimeOnlyDrawer.cs" />
+    <Compile Include="Assets\Core\Editor\Helpers\PlmlUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Editor\Plml.Editor.asmdef" />

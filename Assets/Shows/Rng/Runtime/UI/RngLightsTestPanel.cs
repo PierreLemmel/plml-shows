@@ -28,11 +28,15 @@ namespace Plml.Rng.UI
         {
             durationSlider.onValueChanged.AddListener(UpdateDurationLabel);
 
-            providers = FindObjectsOfType<DmxTrackProvider>();
+            providers = FindObjectOfType<DmxTrackProviderCollection>().GetAllProviders();
             dmxControler = FindObjectOfType<DmxTrackControler>();
 
             scenesDropdown.ClearOptions();
-            scenesDropdown.options.AddRange(providers.Select(pvd => new TMP_Dropdown.OptionData(pvd.name)));
+            scenesDropdown.options.AddRange(providers.Select(pvd =>
+            {
+                string name = pvd.active ? pvd.name : $"{pvd.name} (inactive)";
+                return new TMP_Dropdown.OptionData(name);
+            }));
 
             scenesDropdown.onValueChanged.AddListener(SetSceneIndex);
 
@@ -44,12 +48,9 @@ namespace Plml.Rng.UI
 
         private void OnDisable() => StopCurrentScene();
 
-        public void UpdateDurationLabel(float duration) => durationLabel.text = $"{duration:F2} s";
+        private void UpdateDurationLabel(float duration) => durationLabel.text = $"{duration:F2} s";
 
-        public void SetSceneIndex(int sceneIndex)
-        {
-            this.sceneIndex = sceneIndex;
-        }
+        private void SetSceneIndex(int sceneIndex) => this.sceneIndex = sceneIndex;
 
         private Guid trackId = Guid.Empty;
         private DmxTrack currentTrack = null;
@@ -71,7 +72,7 @@ namespace Plml.Rng.UI
             stopBtn.interactable = currentlyPlaying;
         }
 
-        public void PlayScene()
+        private void PlayScene()
         {
             StopCurrentScene();
 
@@ -84,7 +85,7 @@ namespace Plml.Rng.UI
             dmxControler.AddTrack(currentTrack, out trackId);
         }
 
-        public void StopScene()
+        private void StopScene()
         {
             StopCurrentScene();
 

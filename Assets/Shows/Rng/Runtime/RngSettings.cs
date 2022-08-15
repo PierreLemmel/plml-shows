@@ -6,7 +6,7 @@ namespace Plml.Rng
     [Serializable]
     public class RngSettings
     {
-        [Range(5, 15)]
+        [Range(5, 25)]
         public int minScenes = 10;
 
         [Range(10, 40)]
