@@ -35,7 +35,11 @@ namespace Plml.Rng.Editor
             {
                 foreach (TProvider provider in providers)
                 {
-                    EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+
+                    EditorGUILayout.BeginHorizontal(
+                        GUILayout.ExpandWidth(true),
+                        GUILayout.MinWidth(Screen.width - 125.0f)
+                    );
 
                     bool active = provider.active;
                     string extraLabel = active ? (provider.weight / totalWeight).ToString("P") : "Inactive";
@@ -51,7 +55,7 @@ namespace Plml.Rng.Editor
                         );
                     }, !active);
 
-                    provider.active = EditorGUILayout.Toggle(active);
+                    provider.active = EditorGUILayout.Toggle(active, GUILayout.ExpandWidth(false));
 
                     EditorGUILayout.EndHorizontal();
                 }

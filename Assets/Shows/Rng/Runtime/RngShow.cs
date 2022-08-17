@@ -11,6 +11,8 @@ using URandom = UnityEngine.Random;
 
 namespace Plml.Rng
 {
+    [RequireComponent(typeof(RngSceneGenerator))]
+    [RequireComponent(typeof(RngScenePlayer))]
     public class RngShow : MonoBehaviour
     {
         [PlayTimeOnly]
@@ -49,6 +51,9 @@ namespace Plml.Rng
 
         private DmxTrackControler dmxControler;
         private AudioSource audioSource;
+
+        private RngSceneGenerator sceneGenerator;
+        private RngScenePlayer scenePlayer;
         
         private DmxTrack currentTrack;
         private Guid currentTrackId;
@@ -59,6 +64,9 @@ namespace Plml.Rng
         {
             dmxControler = FindObjectOfType<DmxTrackControler>();
             audioSource = FindObjectOfType<AudioSource>();
+
+            sceneGenerator = GetComponent<RngSceneGenerator>();
+            scenePlayer = GetComponent<RngScenePlayer>();
             
             ResetTrackingVariables();
 
