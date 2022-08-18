@@ -22,6 +22,13 @@ namespace Plml
             this.b = b;
         }
 
+        public void Deconstruct(out byte r, out byte g, out byte b)
+        {
+            r = this.r;
+            g = this.g;
+            b = this.b;
+        }
+
         public static implicit operator Color32(Color24 c24) => new(c24.r, c24.g, c24.b, 0xff);
         public static implicit operator Color24(Color32 c32) => new(c32.r, c32.g, c32.b);
 

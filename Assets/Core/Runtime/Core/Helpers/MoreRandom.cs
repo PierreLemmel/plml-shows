@@ -26,6 +26,8 @@ namespace Plml
         public static float Range(FloatRange range) => URandom.Range(range.min, range.max);
         public static int Range(IntRange range) => URandom.Range(range.min, range.max);
 
+        public static Vector2 Vector2(float maxAmplitude) => URandom.insideUnitCircle * maxAmplitude;
+
         public static bool Boolean => URandom.value >= 0.5;
     }
 }

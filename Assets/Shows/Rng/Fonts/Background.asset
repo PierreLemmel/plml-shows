@@ -166,11 +166,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-  m_Name: CONSOLA SDF
+  m_Name: Background
   m_EditorClassIdentifier: 
-  hashCode: 504193762
+  hashCode: 447333134
   material: {fileID: -7292842780907769039}
-  materialHashCode: 1980649474
+  materialHashCode: 135870958
   m_Version: 1.1.0
   m_SourceFontFileGUID: 84e39416494e53d42ac65b4183207174
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 84e39416494e53d42ac65b4183207174, type: 3}

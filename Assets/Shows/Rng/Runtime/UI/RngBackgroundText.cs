@@ -17,8 +17,10 @@ namespace Plml.Rng.UI
         public FloatRange intensityRange = new(0f, 1f);
         public Color textColor = Color.white;
 
-        public Vector2 animationSpeed = new(0.3f, 0.05f);
-        public Vector2 animationScale = new(1f, 1f);
+        public Vector2 noiseSpeed = new(0.3f, 0.05f);
+        public Vector2 noiseScale = new(1f, 1f);
+
+        private Vector2 noisePos;
 
         private ISpy spy = Spy.CreateNew();
 
@@ -36,36 +38,24 @@ namespace Plml.Rng.UI
         private TMP_Text text;
 
         private Material fontMaterial;
-        private Texture2D perlinTexture;
+        private Texture2D noiseTexture;
 
-        private const int textureSize = 512;
+        private const int textureSize = 32;
 
         private void Awake()
         {
             text = GetComponent<TMP_Text>();
 
-            fontMaterial = text.fontMaterial;
-            perlinTexture = new(textureSize, textureSize);
-
-            for (int i = 0; i < textureSize; i++)
-            {
-                for (int j = 0; j < textureSize; j++)
-                {
-                    float x = j;
-                    float y = i;
-
-                    float p = Mathf.PerlinNoise(x, y);
-                    perlinTexture.SetPixel(i, j, new(p, p, p));
-                }
-            }
-            perlinTexture.Apply();
-            fontMaterial.mainTexture = perlinTexture;
+            fontMaterial = text.fontSharedMaterial;
+            noiseTexture = new(textureSize, textureSize);
 
             spy.When(this)
                 .HasChangesOn(
                     th => nbOfBits
                 )
                 .Do(SetupBits);
+
+            noisePos = MoreRandom.Vector2(100f);
         }
 
         private void Start() => StartCoroutine(TextChangeCoroutine());
@@ -108,8 +98,36 @@ namespace Plml.Rng.UI
         private void Update()
         {
             spy.DetectChanges();
+
+            RegnerateTexture();
+            UpdateTexture();
+
+            noisePos += Time.deltaTime * noiseSpeed;
         }
 
-        
+        private void RegnerateTexture()
+        {
+            (float x0, float y0) = noisePos;
+            (float xFactor, float yFactor) = noiseScale / textureSize;
+            float min = intensityRange.min;
+            float range = intensityRange.range;
+
+            for (int i = 0; i < textureSize; i++)
+            {
+                for (int j = 0; j < textureSize; j++)
+                {
+                    float amplitude = min + range * Mathf.PerlinNoise(
+                        x0 + j * xFactor,
+                        y0 + i * yFactor
+                    );
+
+                    noiseTexture.SetPixel(i, j, amplitude * textColor);
+                }
+            }
+
+            noiseTexture.Apply();
+        }
+
+        private void UpdateTexture() => fontMaterial.SetTexture(ShaderUtilities.ID_FaceTex, noiseTexture);
     }
 }
