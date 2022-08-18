@@ -21,19 +21,19 @@ namespace Plml.Dmx
         public int Address => fixture.channelOffset;
 
         #region Getters / Setters
-        public bool TrySetColor(Color32 color32)
+        public bool TrySetColor(Color24 color24)
         {
             bool hasColor = fixture.model.TryGetChannelAddress(DmxChannelType.Color, out int channel);
             if (hasColor)
             {
-                SetColor_Internal(color32, channel);
+                SetColor_Internal(color24, channel);
             }
             return hasColor;
         }
 
-        public void SetColor(Color32 color32) => SetColor_Internal(color32, fixture.model.GetChannelAddress(DmxChannelType.Color));
+        public void SetColor(Color24 color24) => SetColor_Internal(color24, fixture.model.GetChannelAddress(DmxChannelType.Color));
 
-        public void SetColors(Color32[] colors)
+        public void SetColors(Color24[] colors)
         {
             switch(colors.Length)
             {
@@ -46,10 +46,10 @@ namespace Plml.Dmx
             }
         }
 
-        public void SetColorArray16(Color32[] colors) => SetColorArray_Internal(colors, DmxChannelType.ColorArray16);
-        public void SetColorArray32(Color32[] colors) => SetColorArray_Internal(colors, DmxChannelType.ColorArray32);
+        public void SetColorArray16(Color24[] colors) => SetColorArray_Internal(colors, DmxChannelType.ColorArray16);
+        public void SetColorArray32(Color24[] colors) => SetColorArray_Internal(colors, DmxChannelType.ColorArray32);
 
-        private void SetColorArray_Internal(Color32[] colors, DmxChannelType chanType)
+        private void SetColorArray_Internal(Color24[] colors, DmxChannelType chanType)
         {
             int addr = fixture.model.GetChannelAddress(chanType);
             int expectedLength = chanType.ColorArrayCount();
@@ -61,11 +61,11 @@ namespace Plml.Dmx
                 SetColor_Internal(colors[i], addr + 3 * i);
         }
 
-        private void SetColor_Internal(Color32 color32, int colorChan)
+        private void SetColor_Internal(Color24 color24, int colorChan)
         {
-            byte r = color32.r;
-            byte g = color32.g;
-            byte b = color32.b;
+            byte r = color24.r;
+            byte g = color24.g;
+            byte b = color24.b;
 
             channels[colorChan] = r;
             channels[colorChan + 1] = g;
@@ -74,15 +74,15 @@ namespace Plml.Dmx
 
         public bool HasColor() => HasChannel(DmxChannelType.Color);
 
-        public Color32 GetColor() => GetColor_Internal(fixture.model.GetChannelAddress(DmxChannelType.Color));
+        public Color24 GetColor() => GetColor_Internal(fixture.model.GetChannelAddress(DmxChannelType.Color));
 
-        public Color32[] GetColorArray16() => GetColors_Internal(DmxChannelType.ColorArray16);
-        public void GetColorArray16(Color32[] buffer) => GetColors_Internal(DmxChannelType.ColorArray16, buffer);
+        public Color24[] GetColorArray16() => GetColors_Internal(DmxChannelType.ColorArray16);
+        public void GetColorArray16(Color24[] buffer) => GetColors_Internal(DmxChannelType.ColorArray16, buffer);
 
-        public Color32[] GetColorArray32() => GetColors_Internal(DmxChannelType.ColorArray32);
-        public void GetColorArray32(Color32[] buffer) => GetColors_Internal(DmxChannelType.ColorArray32, buffer);
+        public Color24[] GetColorArray32() => GetColors_Internal(DmxChannelType.ColorArray32);
+        public void GetColorArray32(Color24[] buffer) => GetColors_Internal(DmxChannelType.ColorArray32, buffer);
 
-        public Color32[] GetColors()
+        public Color24[] GetColors()
         {
             if (fixture.model.HasChannel(DmxChannelType.ColorArray16))
                 return GetColorArray16();
@@ -92,7 +92,7 @@ namespace Plml.Dmx
                 throw new InvalidOperationException("Fixture have no color array");
         }
 
-        public void GetColors(Color32[] buffer)
+        public void GetColors(Color24[] buffer)
         {
             if (fixture.model.HasChannel(DmxChannelType.ColorArray16))
                 GetColorArray16(buffer);
@@ -103,14 +103,14 @@ namespace Plml.Dmx
         }
 
 
-        private Color32[] GetColors_Internal(DmxChannelType chanType)
+        private Color24[] GetColors_Internal(DmxChannelType chanType)
         {
             int baseAddr = fixture.model.GetChannelAddress(chanType);
             int count = chanType.ColorArrayCount();
             return Arrays.Create(count, i => GetColor_Internal(baseAddr + 3 * i));
         }
 
-        private void GetColors_Internal(DmxChannelType chanType, Color32[] buffer)
+        private void GetColors_Internal(DmxChannelType chanType, Color24[] buffer)
         {
             int baseAddr = fixture.model.GetChannelAddress(chanType);
             int count = chanType.ColorArrayCount();
@@ -119,21 +119,18 @@ namespace Plml.Dmx
                 buffer[i] = GetColor_Internal(baseAddr + 3 * i);
         }
 
-        public bool TryGetColor(out Color32 color32)
+        public bool TryGetColor(out Color24 color24)
         {
             bool hasColor = TryGetChannel(DmxChannelType.Color, out int colorChan);
-            color32 = hasColor ? GetColor_Internal(colorChan) : default;
+            color24 = hasColor ? GetColor_Internal(colorChan) : default;
             return hasColor;
         }
 
-        private Color32 GetColor_Internal(int colorChan)
-        {
-            byte r = (byte)channels[colorChan];
-            byte g = (byte)channels[colorChan + 1];
-            byte b = (byte)channels[colorChan + 2];
-
-            return new(r, g, b, 0xff);
-        }
+        private Color24 GetColor_Internal(int colorChan) => new(
+            channels[colorChan],
+            channels[colorChan + 1],
+            channels[colorChan + 2]
+        );
 
         public bool HasChannel(DmxChannelType chanType) => fixture.model.HasChannel(chanType);
         public int GetChannel(DmxChannelType chanType) => channels[fixture.model.GetChannelAddress(chanType)];
@@ -207,7 +204,7 @@ namespace Plml.Dmx
         public bool TrySetPan(int value) => TrySetChannel(DmxChannelType.Pan, value);
         public bool TrySetTilt(int value) => TrySetChannel(DmxChannelType.Tilt, value);
 
-        public Color color
+        public Color24 color
         {
             get => GetColor();
             set => SetColor(value);

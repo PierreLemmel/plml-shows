@@ -1,7 +1,4 @@
-﻿using Plml.Dmx;
-using System;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Plml.Rng.UI
@@ -14,59 +11,59 @@ namespace Plml.Rng.UI
         public Button outroPlayBtn;
         public Button outroStopBtn;
 
-        private DmxTrackControler dmxControler;
-        private AudioSource audioSource;
         private RngShow show;
-
-        private Coroutine introCoroutine;
-        private Coroutine outroCoroutine;
 
         private void Awake()
         {
-            dmxControler = FindObjectOfType<DmxTrackControler>();
-            audioSource = FindObjectOfType<AudioSource>();
             show = FindObjectOfType<RngShow>();
 
             introPlayBtn.onClick.AddListener(PlayIntro);
-            introPlayBtn.onClick.AddListener(StopIntro);
+            introStopBtn.onClick.AddListener(StopIntro);
 
             outroPlayBtn.onClick.AddListener(PlayOutro);
             outroStopBtn.onClick.AddListener(StopOutro);
 
-            introStopBtn.interactable = false;
-            outroStopBtn.interactable = false;
+            SetIntroPlayable(true);
+            SetOutroPlayable(true);
+        }
+
+        private void Update()
+        {
+            if (!show.isPlaying || show.done)
+            {
+                SetIntroPlayable(true);
+                SetOutroPlayable(true);
+            }
+        }
+
+        private void SetIntroPlayable(bool playable)
+        {
+            introPlayBtn.interactable = playable;
+            introStopBtn.interactable = !playable;
+        }
+
+        private void SetOutroPlayable(bool playable)
+        {
+            outroPlayBtn.interactable = playable;
+            outroStopBtn.interactable = !playable;
         }
 
         public void PlayIntro()
         {
-
+            show.PlayIntro();
+            SetIntroPlayable(false);
+            outroPlayBtn.interactable = false;
         }
 
-        private IEnumerator PlayIntroCoroutine()
-        {
-            Debug.Log("Play Intro");
-            yield return new WaitForSeconds(2f);
-            Debug.Log("Intro Done");
-        }
-
-        public void StopIntro()
-        {
-
-        }
+        public void StopIntro() => show.StopShow();
 
         public void PlayOutro()
         {
-
+            show.PlayOutro();
+            SetOutroPlayable(false);
+            introPlayBtn.interactable = false;
         }
 
-        private IEnumerator PlayOutroCoroutine()
-        {
-            yield return new WaitForSeconds(2f);
-        }
-
-        public void StopOutro()
-        {
-
-        }
+        public void StopOutro() => show.StopShow();
     }
 }

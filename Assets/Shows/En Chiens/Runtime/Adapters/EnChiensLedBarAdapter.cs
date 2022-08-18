@@ -15,8 +15,8 @@ namespace Plml.EnChiens
         [HideInPlayMode]
         public DmxTrackElement ledBar2;
 
-        private Color32[] bar1Colors;
-        private Color32[] bar2Colors;
+        private Color24[] bar1Colors;
+        private Color24[] bar2Colors;
 
         [Range(0f, 1f)]
         public float flickerAmplitudeFactor = 1f;
@@ -157,7 +157,6 @@ namespace Plml.EnChiens
         public override void PlayPiano(int strobe)
         {
             int l1 = bar1Colors.Length;
-            int l2 = bar2Colors.Length;
 
             int pianoIndex = GetPianoIndex();
 
@@ -189,8 +188,8 @@ namespace Plml.EnChiens
             ledBar2.SetColors(bar2Colors);
         }
 
-        private void ApplyColorToArray(Color32[] array, Color32 color) => array.Set(old => Colors.Max(old, color));
-        private void ApplyColorGlobally(Color32 color)
+        private void ApplyColorToArray(Color24[] array, Color24 color) => array.Set(old => Colors.Max(old, color));
+        private void ApplyColorGlobally(Color24 color)
         {
             ApplyColorToArray(bar1Colors, color);
             ApplyColorToArray(bar2Colors, color);

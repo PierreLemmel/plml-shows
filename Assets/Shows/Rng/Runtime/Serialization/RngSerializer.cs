@@ -17,11 +17,11 @@ namespace Plml.Rng
             {
                 settings = new()
                 {
-                    minScenes = show.settings.minScenes,
-                    maxScenes = show.settings.maxScenes,
-                    durationSpread = show.settings.durationSpread,
-                    showDuration = show.settings.showDuration,
-                    blackoutDuration = show.settings.blackoutDuration,
+                    minScenes = show.showSettings.minScenes,
+                    maxScenes = show.showSettings.maxScenes,
+                    durationSpread = show.showSettings.durationSpread,
+                    showDuration = show.showSettings.showDuration,
+                    blackoutDuration = show.showSettings.blackoutDuration,
                 },
                 scenes = show
                     .scenes

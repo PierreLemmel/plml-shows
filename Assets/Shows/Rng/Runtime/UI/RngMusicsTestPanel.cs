@@ -19,6 +19,8 @@ namespace Plml.Rng.UI
         private AudioProvider currentProvider;
 
         private float sceneDuration = 180.0f;
+        private AudioClip[] clips = Array.Empty<AudioClip>();
+        private AudioClip nextClip = null;
 
         private void Awake()
         {
@@ -28,23 +30,54 @@ namespace Plml.Rng.UI
             playBtn.onClick.AddListener(PlayAudio);
             stopBtn.onClick.AddListener(StopAudio);
 
-            providersDropdown.onValueChanged.AddListener(UpdateProviderIndex);
+            providersDropdown.options.Clear();
+            providersDropdown.options.AddRange(providers.Select(p => new TMP_Dropdown.OptionData(p.name)));
+
+            providersDropdown.onValueChanged.AddListener(UpdateProvider);
 
             currentProvider = providers[0];
+
+            musicsDropdown.onValueChanged.AddListener(UpdateClip);
             SetupMusicDropdown();
         }
 
         private void OnDisable() => StopCurrentMusic();
 
-        private void UpdateProviderIndex(int idx)
+        private void Update()
+        {
+            stopBtn.interactable = audioSource.isPlaying;
+        }
+
+        private void UpdateProvider(int idx)
         {
             currentProvider = providers[idx];
             SetupMusicDropdown();
         }
 
+        private void UpdateClip(int idx)
+        {
+            nextClip = clips[idx];
+        }
+
         private void SetupMusicDropdown()
         {
+            musicsDropdown.options.Clear();
+            musicsDropdown.value = 0;
 
+            if (currentProvider is AudioClipProvider acp)
+            {
+                musicsDropdown.interactable = true;
+                playBtn.interactable = true;
+                clips = acp.clips;
+                musicsDropdown.options.AddRange(clips.Select(c => new TMP_Dropdown.OptionData(c.name)));
+            }
+            else
+            {
+                playBtn.interactable = false;
+                musicsDropdown.interactable = false;
+            }
+
+            musicsDropdown.RefreshShownValue();
         }
 
         private void StopCurrentMusic()
@@ -55,12 +88,9 @@ namespace Plml.Rng.UI
 
         private void PlayAudio()
         {
-            StopCurrentMusic();
-
-            RngAudioData data = currentProvider.GetElement(0f, sceneDuration);
-
-            audioSource.volume = data.audioVolume;
-            audioSource.clip = data.audioClip;
+            audioSource.Stop();
+            audioSource.clip = nextClip;
+            audioSource.Play();
         }
 
         private void StopAudio() => StopCurrentMusic();

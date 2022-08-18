@@ -37,8 +37,7 @@ namespace Plml.Rng.Editor
 
                 if (GUILayout.Button("Save show"))
                 {
-                    RngSerializer serializer = show.GetComponent<RngSerializer>();
-                    serializer.SerializeShow(show);
+                    show.SerializeShow();
                 }
             }
 

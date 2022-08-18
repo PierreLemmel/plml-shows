@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Plml.Rng
 {
     [Serializable]
-    public class RngSettings
+    public class RngShowSettings
     {
         [Range(5, 25)]
         public int minScenes = 10;
