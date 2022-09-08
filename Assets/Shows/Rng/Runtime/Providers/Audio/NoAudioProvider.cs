@@ -2,6 +2,6 @@
 {
     public class NoAudioProvider : AudioProvider
     {
-        public override RngAudioData GetElement(float startTime, float sceneDuration) => null;
+        public override RngAudioData GetNextElement(float startTime, float sceneDuration) => null;
     }
 }

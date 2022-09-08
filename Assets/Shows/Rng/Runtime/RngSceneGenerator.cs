@@ -87,10 +87,10 @@ namespace Plml.Rng
                 sceneObj.AttachTo(sceneCollection);
 
                 scene.track = ioSettings.dmxProvider
-                    .GetElement()
+                    .GetNextElement()
                     .AttachTo(sceneObj);
 
-                TimeWindow window = ioSettings.durationProvider.GetElement();
+                TimeWindow window = ioSettings.durationProvider.GetNextElement();
                 scene.sceneWindow = window;
 
                 scene.audioData = new()

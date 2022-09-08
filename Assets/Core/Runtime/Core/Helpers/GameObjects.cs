@@ -143,6 +143,18 @@ namespace Plml
             return component != null;
         }
 
+        public static bool HasComponentInParents<TComponent>(this GameObject go) where TComponent : Component
+        {
+            TComponent component = go.GetComponentInParent<TComponent>();
+            return component != null;
+        }
+
+        public static bool HasComponentInParents(this GameObject go, Type componentType)
+        {
+            Component component = go.GetComponentInParent(componentType);
+            return component != null;
+        }
+
         public static IEnumerable<GameObject> GetChildren(this GameObject go)
         {
             Transform transform = go.transform;
@@ -174,5 +186,24 @@ namespace Plml
 
         public static void AddChildren(this GameObject go, int count, Func<int, string> nameFunc, Action<GameObject> setup)
             => go.AddChildren(count, nameFunc, (go, i) => setup(go));
+
+        public static IEnumerable<Transform> EnumerateChildren(this GameObject go)
+        {
+            var transform = go.transform;
+            return Enumerables.Sequence(transform.childCount)
+                .Select(i => transform.GetChild(i));
+        }
+
+        public static IEnumerable<TComponent> EnumerateComponentsInDirectChildren<TComponent>(this GameObject go) where TComponent : Component => go
+            .EnumerateChildren()
+            .SelectMany(child => child.GetComponents<TComponent>());
+
+        public static TComponent GetComponentInDirectChildren<TComponent>(this GameObject go) where TComponent : Component => go
+            .EnumerateComponentsInDirectChildren<TComponent>()
+            .FirstOrDefault();
+
+        public static TComponent[] GetComponentsInDirectChildren<TComponent>(this GameObject go) where TComponent : Component => go
+            .EnumerateComponentsInDirectChildren<TComponent>()
+            .ToArray();
     }
 }

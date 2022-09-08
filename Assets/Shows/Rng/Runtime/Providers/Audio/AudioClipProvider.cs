@@ -24,7 +24,7 @@ namespace Plml.Rng.Audio
 
         public AudioClip[] clips;
 
-        public override RngAudioData GetElement(float startTime, float sceneDuration)
+        public override RngAudioData GetNextElement(float startTime, float sceneDuration)
         {
             AudioClip clip = clips.RandomElement();
             float clipDuration = Random.Range(minDuration, Mathf.Min(clip.length, maxDuration));

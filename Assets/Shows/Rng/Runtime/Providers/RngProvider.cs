@@ -16,18 +16,18 @@ namespace Plml.Rng
         public bool canChain = true;
     }
 
-    public abstract class RngProvider<TProvided> : RngProviderBase
+    public abstract class RngProvider<TProvided> : RngProviderBase, IRngProvider<TProvided>
     {
-        public abstract TProvided GetElement();
+        public abstract TProvided GetNextElement();
     }
 
-    public abstract class RngProvider<TProvided, TParam> : RngProviderBase
+    public abstract class RngProvider<TProvided, TParam> : RngProviderBase, IRngProvider<TProvided, TParam>
     {
-        public abstract TProvided GetElement(TParam param);
+        public abstract TProvided GetNextElement(TParam param);
     }
 
-    public abstract class RngProvider<TProvided, T1, T2> : RngProviderBase
+    public abstract class RngProvider<TProvided, T1, T2> : RngProviderBase, IRngProvider<TProvided, T1, T2>
     {
-        public abstract TProvided GetElement(T1 p1, T2 p2);
+        public abstract TProvided GetNextElement(T1 p1, T2 p2);
     }
 }

@@ -79,7 +79,7 @@ namespace Plml.Rng.UI
             UpdateButtons(true);
 
             DmxTrackProvider provider = providers[sceneIndex];
-            currentTrack = provider.GetElement();
+            currentTrack = provider.GetNextElement();
             currentTrack.AttachTo(this);
 
             dmxControler.AddTrack(currentTrack, out trackId);
