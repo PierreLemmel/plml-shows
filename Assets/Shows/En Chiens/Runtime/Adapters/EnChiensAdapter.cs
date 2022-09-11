@@ -5,6 +5,12 @@ namespace Plml.EnChiens
 {
     public abstract class EnChiensAdapter : MonoBehaviour
     {
+        [ReadOnly]
+        public EnChiensSpectacle.Animation currentAnimation;
+
+        protected T AnimationMap<T>(T onIntro, T onConclusion) => currentAnimation == EnChiensSpectacle.Animation.Introduction ?
+            onIntro : onConclusion;
+
         public virtual void ResetLights() { }
         public virtual void CommitValues() { }
 
@@ -19,5 +25,8 @@ namespace Plml.EnChiens
 
         public virtual void UpdatePulsations(Color color, float pulsationMinValue, float pulsationMaxValue) { }
         public virtual void StopPulsations() { }
+
+        public virtual void SetupFond(int value) { }
+        public virtual void SetupEnd(int value) { }
     }
 }

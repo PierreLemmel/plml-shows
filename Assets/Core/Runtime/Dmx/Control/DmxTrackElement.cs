@@ -153,7 +153,7 @@ namespace Plml.Dmx
             return hasChannel;
         }
 
-
+        public bool IsTrad() => HasChannel(DmxChannelType.Trad);
         public bool HasDimmer() => HasChannel(DmxChannelType.Dimmer);
         public bool HasStroboscope() => HasChannel(DmxChannelType.Stroboscope);
         public bool HasWhite() => HasChannel(DmxChannelType.White);
@@ -164,6 +164,7 @@ namespace Plml.Dmx
         public bool HasPan() => HasChannel(DmxChannelType.Pan);
         public bool HasTilt() => HasChannel(DmxChannelType.Tilt);
 
+        public int GetValue() => GetChannel(DmxChannelType.Trad);
         public int GetDimmer() => GetChannel(DmxChannelType.Dimmer);
         public int GetStroboscope() => GetChannel(DmxChannelType.Stroboscope);
         public int GetWhite() => GetChannel(DmxChannelType.White);
@@ -174,6 +175,7 @@ namespace Plml.Dmx
         public int GetPan() => GetChannel(DmxChannelType.Pan);
         public int GetTilt() => GetChannel(DmxChannelType.Tilt);
 
+        public bool TryGetValue(out int value) => TryGetValue(DmxChannelType.Trad, out value);
         public bool TryGetDimmer(out int value) => TryGetValue(DmxChannelType.Dimmer, out value);
         public bool TryGetStroboscope(out int value) => TryGetValue(DmxChannelType.Stroboscope, out value);
         public bool TryGetWhite(out int value) => TryGetValue(DmxChannelType.White, out value);
@@ -184,6 +186,7 @@ namespace Plml.Dmx
         public bool TryGetPan(out int value) => TryGetValue(DmxChannelType.Pan, out value);
         public bool TryGetTilt(out int value) => TryGetValue(DmxChannelType.Tilt, out value);
 
+        public void SetValue(int value) => SetChannel(DmxChannelType.Trad, value);
         public void SetDimmer(int value) => SetChannel(DmxChannelType.Dimmer, value);
         public void SetStroboscope(int value) => SetChannel(DmxChannelType.Stroboscope, value);
         public void SetWhite(int value) => SetChannel(DmxChannelType.White, value);
@@ -194,6 +197,7 @@ namespace Plml.Dmx
         public void SetPan(int value) => SetChannel(DmxChannelType.Pan, value);
         public void SetTilt(int value) => SetChannel(DmxChannelType.Tilt, value);
 
+        public bool TrySetValue(int value) => TrySetChannel(DmxChannelType.Trad, value);
         public bool TrySetDimmer(int value) => TrySetChannel(DmxChannelType.Dimmer, value);
         public bool TrySetStroboscope(int value) => TrySetChannel(DmxChannelType.Stroboscope, value);
         public bool TrySetWhite(int value) => TrySetChannel(DmxChannelType.White, value);
@@ -208,6 +212,12 @@ namespace Plml.Dmx
         {
             get => GetColor();
             set => SetColor(value);
+        }
+
+        public int value
+        {
+            get => GetValue();
+            set => SetValue(value);
         }
 
         public int dimmer

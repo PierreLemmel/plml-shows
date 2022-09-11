@@ -85,7 +85,12 @@ namespace Plml.EnChiens
         [Range(0, 0xff)]
         public float pulsationMaxValue = 0.0f;
 
+        [Range(0, 0xff)]
+        public int fond = 0;
 
+
+        [Range(0, 0xff)]
+        public int end = 0;
 
 
         public bool stop = false;
@@ -94,6 +99,8 @@ namespace Plml.EnChiens
 
         public void PlayIntro()
         {
+            adapter.currentAnimation = Animation.Introduction;
+
             director.initialTime = introStartTime;
             director.playableAsset = introTimeline;
             director.Play();
@@ -101,6 +108,8 @@ namespace Plml.EnChiens
 
         public void PlayOutro()
         {
+            adapter.currentAnimation = Animation.Conclusion;
+
             director.initialTime = outroStartTime;
             director.playableAsset = outroTimeline;
             director.Play();
@@ -130,6 +139,8 @@ namespace Plml.EnChiens
             int servoDim = Mathf.Max(others, servo);
             adapter.SetupServo(servoDim, panServo, tiltServo);
 
+            adapter.SetupFond(fond);
+            adapter.SetupEnd(end);
             adapter.SetupOthers(others);
 
             if (isChasing)
@@ -158,6 +169,12 @@ namespace Plml.EnChiens
             }
 
             adapter.CommitValues();
+        }
+
+        public enum Animation
+        {
+            Introduction,
+            Conclusion
         }
     }
 }

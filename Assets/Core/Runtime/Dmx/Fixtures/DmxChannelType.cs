@@ -5,6 +5,7 @@ namespace Plml.Dmx
 {
     public enum DmxChannelType
     {
+        Trad,
         Dimmer,
         Stroboscope,
         White,
