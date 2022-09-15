@@ -55,10 +55,16 @@ namespace Plml.EnChiens.Gouvernail
         public DmxTrackElement fondsFroids;
 
         [HideInPlayMode]
-        public KeyCode jardinCourKey = KeyCode.Alpha1;
+        public KeyCode side1Key = KeyCode.Alpha1;
 
         [HideInPlayMode]
-        public KeyCode courJardinKey = KeyCode.Alpha2;
+        public KeyCode side2Key = KeyCode.Alpha2;
+
+        [HideInPlayMode]
+        public DmxTrack side1Track;
+
+        [HideInPlayMode]
+        public DmxTrack side2Track;
 
         [Range(0, 3)]
         public int chasingMinSpots = 1;
@@ -78,7 +84,7 @@ namespace Plml.EnChiens.Gouvernail
         public int tradMaster = 160;
 
         private GouvernailContresPulsation contresPulsation;
-        private GouvernailFaceButtonsActivation faceButtons;
+        private SidesButtonsActivation sideButtons;
 
         [Range(0f, 2f)]
         public float pulsationSmoothTime = 0.3f;
@@ -123,14 +129,15 @@ namespace Plml.EnChiens.Gouvernail
             contresPulsation.bpm = bpm;
 
 
-            faceButtons = new GameObject("Face Buttons")
-                .AddComponent<GouvernailFaceButtonsActivation>();
+            sideButtons = new GameObject("Side Buttons")
+                .AddComponent<SidesButtonsActivation>();
 
-            faceButtons.transform.parent = transform;
-            faceButtons.jardinCourKey = jardinCourKey;
-            faceButtons.courJardinKey = courJardinKey;
+            sideButtons.transform.parent = transform;
+            
+            sideButtons.side1Key = side1Key;
+            sideButtons.side2Key = side2Key;
 
-            faceButtons.smoothTime = faceButtonSmoothTime;
+            sideButtons.smoothTime = faceButtonSmoothTime;
 
             pianoSpots = faces;
 
@@ -203,6 +210,9 @@ namespace Plml.EnChiens.Gouvernail
             {
                 spot.value = Mathf.Max(spot.value, othersValue);
             }
+
+            side1Track.master = sideButtons.side1;
+            side2Track.master = sideButtons.side2;
         }
 
         public override void SetupEnd(int value)
