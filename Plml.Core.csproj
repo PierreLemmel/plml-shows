@@ -98,6 +98,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker9.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Exponentiation.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker10.cs" />
+    <Compile Include="Assets\Core\Runtime\Midi\MidiInputListenerBase.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\Mmsyserr.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ExpressionTreeBuilder.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\Token.cs" />
@@ -172,9 +173,9 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpySetupPropertiesNode.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\CubicRangeAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\IOpenDmxInterface.cs" />
+    <Compile Include="Assets\Core\Runtime\Midi\MidiNote.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackControler.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\UnaryMinus.cs" />
-    <Compile Include="Assets\Core\Runtime\Midi\Fixtures\AkaiLPD8Dispatcher.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Substraction.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\ValueArrayChecker.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Components.cs" />

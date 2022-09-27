@@ -18,10 +18,10 @@ MonoBehaviour:
   chanCount: 6
   channels:
   - channel: 0
-    type: 9
+    type: 10
   - channel: 3
-    type: 2
+    type: 3
   - channel: 4
-    type: 0
-  - channel: 5
     type: 1
+  - channel: 5
+    type: 2

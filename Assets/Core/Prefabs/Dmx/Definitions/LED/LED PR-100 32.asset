@@ -18,4 +18,4 @@ MonoBehaviour:
   chanCount: 96
   channels:
   - channel: 0
-    type: 11
+    type: 12

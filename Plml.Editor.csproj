@@ -66,6 +66,7 @@
     <Compile Include="Assets\Core\Editor\CustomEditors\Dmx\DmxEditorHelper.cs" />
     <Compile Include="Assets\Core\Editor\Drawers\QubicRangeDrawer.cs" />
     <Compile Include="Assets\Core\Editor\CustomEditors\Dmx\DmxTrackEditor.cs" />
+    <Compile Include="Assets\Core\Editor\Drawers\Midi\MidiNoteDrawer.cs" />
     <Compile Include="Assets\Core\Editor\CustomEditors\Dmx\DmxTrackElementEditor.cs" />
     <Compile Include="Assets\Core\Editor\CustomEditors\Dmx\DmxTrackCollectionEditor.cs" />
     <Compile Include="Assets\Core\Editor\Menus\DmxMenu.cs" />
