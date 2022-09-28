@@ -15,7 +15,7 @@ namespace Plml.Dmx.Emulators
         private HorizontalLayoutGroup group;
 
         private ISpy spy;
-        private Color32[] colors;
+        private Color24[] colors;
 
         private void Awake()
         {

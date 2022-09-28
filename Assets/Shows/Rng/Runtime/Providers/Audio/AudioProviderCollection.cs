@@ -1,6 +1,10 @@
 ﻿namespace Plml.Rng.Audio
 {
-    public class AudioProviderCollection : RngProviderCollection<AudioProvider, RngAudioData, float, float>
+    public class AudioProviderCollection : RngProviderCollection<
+        AudioProvider,
+        RngAudioData,
+        float,
+        float>
     {
     }
 }

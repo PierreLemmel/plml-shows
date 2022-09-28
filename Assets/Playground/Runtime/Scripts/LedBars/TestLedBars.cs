@@ -1,6 +1,4 @@
 using Plml.Dmx;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Plml.Playground
@@ -23,8 +21,8 @@ namespace Plml.Playground
         {
             float x = 0;
 
-            Color32[] ledBar1Colors = new Color32[32];
-            Color32[] ledBar2Colors = new Color32[32];
+            Color24[] ledBar1Colors = new Color24[32];
+            Color24[] ledBar2Colors = new Color24[32];
 
             for (int i = 0; i < 32; i++)
             {

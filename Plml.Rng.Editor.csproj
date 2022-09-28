@@ -758,6 +758,10 @@
       <Project>{5DED7F19-C216-8C7F-DEF8-DB1C3C7FC075}</Project>
       <Name>Plml.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="Plml.Editor.csproj">
+      <Project>{0112B026-8E18-4476-8A28-7AC526E57B1B}</Project>
+      <Name>Plml.Editor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

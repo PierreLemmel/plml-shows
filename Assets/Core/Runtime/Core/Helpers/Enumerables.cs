@@ -39,5 +39,9 @@ namespace Plml
 
         public static IEnumerable<T> Merge<T>(this IEnumerable<IEnumerable<T>> sequences) => sequences.SelectMany(seq => seq);
         public static IEnumerable<T> Merge<T>(params IEnumerable<T>[] sequences) => sequences.Merge();
+
+        public static IEnumerable<int> Sequence(int count) => Enumerable
+            .Repeat(0, count)
+            .Select((_, i) => i);
     }
 }

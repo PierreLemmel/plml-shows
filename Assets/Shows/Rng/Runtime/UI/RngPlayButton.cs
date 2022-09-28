@@ -18,6 +18,7 @@ namespace Plml.Rng.UI
             text = GetComponentInChildren<TextMeshProUGUI>();
 
             Button button = GetComponent<Button>();
+            button.interactable = true;
             button.onClick.AddListener(TogglePlay);
         }
 

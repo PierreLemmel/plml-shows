@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Plml
@@ -39,6 +41,17 @@ namespace Plml
             return component != null;
         }
 
+        public static bool HasComponentInParents<TComponent>(this Component comp) where TComponent : Component
+        {
+            TComponent component = comp.GetComponentInParent<TComponent>();
+            return component != null;
+        }
+
+        public static bool HasComponentInParents(this Component comp, Type componentType)
+        {
+            Component component = comp.GetComponentInParent(componentType);
+            return component != null;
+        }
 
         public static TComponent AttachTo<TComponent>(this TComponent component, Component other) where TComponent : Component
         {
@@ -97,5 +110,15 @@ namespace Plml
             => comp.AddChildren(count, nameFunc, (go, i) => setup(go));
 
         public static void SetScale(this Component comp, float scale) => comp.transform.localScale = new(scale, scale, scale);
+
+        public static IEnumerable<Transform> EnumerateChildren(this Component comp) => comp.gameObject.EnumerateChildren();
+        public static IEnumerable<TComponent> EnumerateComponentsInDirectChildren<TComponent>(this Component comp) where TComponent : Component
+            => comp.gameObject.EnumerateComponentsInDirectChildren<TComponent>();
+
+        public static TComponent GetComponentInDirectChildren<TComponent>(this Component comp) where TComponent : Component
+            => comp.gameObject.GetComponentInDirectChildren<TComponent>();
+
+        public static TComponent[] GetComponentsInDirectChildren<TComponent>(this Component comp) where TComponent : Component
+            => comp.gameObject.GetComponentsInDirectChildren<TComponent>();
     }
 }

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Plml.Midi
@@ -10,14 +8,26 @@ namespace Plml.Midi
     {
         private IntPtr handle = IntPtr.Zero;
 
-        private MidiInputListener[] listeners;
+        private MidiInputListenerBase[] listeners;
 
         // Can't access class members from another thread
         private static ConcurrentQueue<int> messageQueue = new ConcurrentQueue<int>();
 
+        private bool hasMidiInput = false;
+        public bool log = true;
+
         private void Awake()
         {
-            listeners = FindObjectsOfType<MidiInputListener>();
+            if (log)
+            {
+                this.AddChild("Log")
+                    .WithComponent<LogMidiListener>();
+            }
+
+            listeners = FindObjectsOfType<MidiInputListenerBase>();
+            Debug.Log(listeners.Length);
+            foreach (var listener in listeners)
+                Debug.Log(listener.name);
 
             if (FindObjectsOfType<MidiInputDispatcher>().Length > 1)
                 Debug.LogError("Multiple Midi dispatchers can cause crash. Don't do that.");
@@ -27,14 +37,20 @@ namespace Plml.Midi
         {
             Debug.Log("Searching for Midi device");
             int numDevs = WinMMDll.MidiInGetNumDevs();
-            
+
             if (numDevs == 0)
-                throw new InvalidOperationException("No MIDI device found");
-            if (numDevs > 1)
-                throw new InvalidOperationException("Multiple MIDI devices found");
+            {
+                Debug.LogWarning("No Midi device found, won't receive Midi inputs.");
+            }
+            else if (numDevs > 1)
+                throw new InvalidOperationException("Multiple Midi devices found");
+            else
+            {
+                hasMidiInput = true;
+                Debug.Log("Midi device found");
+            }
 
-            Debug.Log("Midi device found");
-
+            if (!hasMidiInput) return;
 
             Debug.Log("Opening Midi device");
             Mmsyserr openResult = WinMMDll.MidiInOpen(ref handle, 0, OnMidiMessage, 0, 0x30000);
@@ -50,6 +66,8 @@ namespace Plml.Midi
 
         private void OnDestroy()
         {
+            if (!hasMidiInput) return;
+
             Debug.Log("Stopping Midi device");
             Mmsyserr stopResult = WinMMDll.MidiInStop(handle);
             CheckResult(stopResult, nameof(WinMMDll.MidiInStop));
@@ -64,13 +82,15 @@ namespace Plml.Midi
 
         private void Update()
         {
+            if (!hasMidiInput) return;
+
             while (messageQueue.TryDequeue(out int packedMsg))
             {
                 byte status = (byte)(packedMsg & 0xff);
                 byte data1 = (byte)((packedMsg & 0xff00) >> 8);
                 byte data2 = (byte)((packedMsg & -65536) >> 0x10);
 
-                foreach (MidiInputListener listener in listeners)
+                foreach (var listener in listeners)
                 {
                     listener.OnShortMessage(status, data1, data2);
                 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -6,22 +7,33 @@ using URandom = UnityEngine.Random;
 
 namespace Plml.Rng
 {
-    public abstract class RngProviderCollectionBase<TProvider> : MonoBehaviour
-        where TProvider : RngProviderBase
+    public abstract class RngProviderCollectionBase<TProvider> : 
+        RngProviderBase, IRngProvider
+        where TProvider : RngProviderBase, IRngProvider
     {
-        public TProvider[] GetProviders() => GetComponentsInChildren<TProvider>();
+        private IEnumerable<TProvider> GetActiveProviders_Internal() => GetAllProviders()
+            .Where(p => p.active);
+
+        public TProvider[] GetAllProviders() => this.GetComponentsInDirectChildren<TProvider>();
+
+        public TProvider[] GetActiveProviders() => GetActiveProviders_Internal()
+            .ToArray();
+
+        public bool IsRoot() => this.HasComponentInParents(GetType());
 
         private TProvider lastProvider;
 
         protected TProvider GetNextProvider()
         {
-            TProvider[] providers = GetProviders();
+            IEnumerable<TProvider> providersEnum = GetActiveProviders_Internal();
 
             if (lastProvider != null && !lastProvider.canChain)
             {
-                providers = providers.Except(lastProvider).ToArray();
+                providersEnum = providersEnum.Except(lastProvider);
             }
             
+            TProvider[] providers = providersEnum.ToArray();
+
             float totalWeight = providers.Sum(p => p.weight);
 
             float random = URandom.Range(0.0f, totalWeight);
@@ -39,21 +51,24 @@ namespace Plml.Rng
         }
     }
 
-    public abstract class RngProviderCollection<TProvider, TProvided> : RngProviderCollectionBase<TProvider>
-        where TProvider : RngProvider<TProvided>
+    public abstract class RngProviderCollection<TProvider, TProvided> :
+        RngProviderCollectionBase<TProvider>, IRngProvider<TProvided>
+        where TProvider : RngProviderBase, IRngProvider<TProvided>
     {
-        public TProvided GetNextElement() => GetNextProvider().GetElement();
+        public TProvided GetNextElement() => GetNextProvider().GetNextElement();
     }
 
-    public abstract class RngProviderCollection<TProvider, TProvided, TParam> : RngProviderCollectionBase<TProvider>
-        where TProvider : RngProvider<TProvided, TParam>
+    public abstract class RngProviderCollection<TProvider, TProvided, TParam> :
+        RngProviderCollectionBase<TProvider>, IRngProvider<TProvided, TParam>
+        where TProvider : RngProviderBase, IRngProvider<TProvided, TParam>
     {
-        public TProvided GetNextElement(TParam param) => GetNextProvider().GetElement(param);
+        public TProvided GetNextElement(TParam param) => GetNextProvider().GetNextElement(param);
     }
 
-    public abstract class RngProviderCollection<TProvider, TProvided, T1, T2> : RngProviderCollectionBase<TProvider>
-       where TProvider : RngProvider<TProvided, T1, T2>
+    public abstract class RngProviderCollection<TProvider, TProvided, T1, T2> :
+        RngProviderCollectionBase<TProvider>, IRngProvider<TProvided, T1, T2>
+        where TProvider : RngProviderBase, IRngProvider<TProvided, T1, T2>
     {
-        public TProvided GetNextElement(T1 p1, T2 p2) => GetNextProvider().GetElement(p1, p2);
+        public TProvided GetNextElement(T1 p1, T2 p2) => GetNextProvider().GetNextElement(p1, p2);
     }
 }

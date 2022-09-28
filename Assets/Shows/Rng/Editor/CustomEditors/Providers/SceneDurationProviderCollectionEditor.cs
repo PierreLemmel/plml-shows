@@ -3,7 +3,7 @@
 namespace Plml.Rng.Editor
 {
     [CustomEditor(typeof(SceneDurationProviderCollection))]
-    public class SceneDurationProviderCollectionEditor : ProviderCollectionEditor<SceneDurationProviderCollection, SceneDurationProvider>
+    public class SceneDurationProviderCollectionEditor : ProviderCollectionEditor<SceneDurationProviderCollection, SceneDurationProvider, TimeWindow>
     {
 
     }

@@ -8,7 +8,7 @@ namespace Plml.Rng.Dmx
     {
         public string trackName = "";
 
-        public override DmxTrack GetElement()
+        public override DmxTrack GetNextElement()
         {
             GameObject original = GetComponentInChildren<DmxTrack>().gameObject;
 

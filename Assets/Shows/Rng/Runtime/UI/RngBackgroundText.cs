@@ -6,64 +6,73 @@ using TMPro;
 using UnityEngine.UI;
 
 using URandom = UnityEngine.Random;
+using System.Text;
 
 namespace Plml.Rng.UI
 {
-    [RequireComponent(typeof(GridLayoutGroup))]
+    [RequireComponent(typeof(TMP_Text))]
     public class RngBackgroundText : MonoBehaviour
     {
-        [Range(10f, 150f)]
-        public float cellWidth = 50f;
-
-        [Range(10f, 150f)]
-        public float cellHeight = 50f;
-
-        [Range(0f, 20f)]
-        public float hSpacing = 5f;
-
-        [Range(0f, 20f)]
-        public float vSpacing = 5f;
-
         [RangeBounds01]
         public FloatRange intensityRange = new(0f, 1f);
         public Color textColor = Color.white;
 
-        private Vector2 perlinPosition = new();
+        public Vector2 noiseSpeed = new(0.3f, 0.05f);
+        public Vector2 noiseScale = new(1f, 1f);
 
-        public Vector2 animationSpeed = new(0.3f, 0.05f);
-        public Vector2 animationScale = new(1f, 1f);
+        private Vector2 noisePos;
 
         private ISpy spy = Spy.CreateNew();
-        private GridLayoutGroup grid;
 
         private bool[] bits = Array.Empty<bool>();
-        private TMP_Text[] texts = Array.Empty<TMP_Text>();
 
-        public TMP_Text textPrefab;
-
-        [RangeBounds(1, 12)]
-        public IntRange textChanges = new(2, 5);
+        [RangeBounds(6, 50)]
+        public IntRange textChanges = new(10, 25);
 
         [RangeBounds(1f/60f, 1f)]
         public FloatRange changeInterval = new(0.05f, 0.25f);
 
+        [Range(100, 1000)]
+        public int nbOfBits = 1000;
+
+        private TMP_Text text;
+
+        private Material fontMaterial;
+        private Texture2D noiseTexture;
+
+        private const int textureSize = 32;
+
         private void Awake()
         {
-            grid = GetComponent<GridLayoutGroup>();
-            
+            text = GetComponent<TMP_Text>();
+
+            fontMaterial = text.fontSharedMaterial;
+            noiseTexture = new(textureSize, textureSize);
+
             spy.When(this)
                 .HasChangesOn(
-                    th => Screen.width,
-                    th => Screen.height,
-                    th => cellWidth, 
-                    th => cellHeight,
-                    th => hSpacing,
-                    th => vSpacing
+                    th => nbOfBits
                 )
-                .Do(SetupGrid);
+                .Do(SetupBits);
+
+            noisePos = MoreRandom.Vector2(100f);
         }
 
         private void Start() => StartCoroutine(TextChangeCoroutine());
+
+        private StringBuilder sb;
+        private void SetupBits()
+        {
+            bits = Arrays.Create(nbOfBits, () => MoreRandom.Boolean);
+            sb = new(2 * nbOfBits);
+        }
+
+        private void UpdateText()
+        {
+            sb.Clear();
+            sb.AppendJoin(" ", bits.Select(b => b ? "1" : "0"));
+            text.text = sb.ToString();
+        }
 
         private IEnumerator TextChangeCoroutine()
         {
@@ -74,16 +83,15 @@ namespace Plml.Rng.UI
 
                 int changes = MoreRandom.Range(textChanges);
 
-                int size = rows * cols;
-
                 for (int i = 0; i < changes; i++)
                 {
-                    int nextIndex = URandom.Range(0, size);
+                    int nextIndex = URandom.Range(0, nbOfBits);
 
                     bool newVal = !bits[nextIndex];
                     bits[nextIndex] = newVal;
-                    texts[nextIndex].text = newVal ? "1" : "0";
                 }
+
+                UpdateText();
             }
         }
 
@@ -91,75 +99,35 @@ namespace Plml.Rng.UI
         {
             spy.DetectChanges();
 
-            perlinPosition += Time.deltaTime * animationSpeed;
+            RegnerateTexture();
+            UpdateTexture();
 
-            int size = rows * cols;
-
-            float fRows = rows;
-            float fCols = cols;
-
-            float px0 = perlinPosition.x;
-            float py0 = perlinPosition.y;
-
-            float pw = animationScale.x;
-            float ph = animationScale.y;
-
-            float iMin = intensityRange.min;
-            float iRange = intensityRange.range;
-
-            for (int i = 0; i < size; i++)
-            {
-                int row = i / rows;
-                int col = i % cols;
-
-                float px = px0 + (col / fCols) * pw;
-                float py = py0 + (row / fRows) * ph;
-
-                float intensity = iMin + Mathf.PerlinNoise(px, py) * iRange;
-
-                texts[i].color = textColor * intensity;
-            }
+            noisePos += Time.deltaTime * noiseSpeed;
         }
 
-        private int cols;
-        private int rows;
-        public void SetupGrid()
+        private void RegnerateTexture()
         {
-            int sw = Screen.width;
-            int sh = Screen.height;
+            (float x0, float y0) = noisePos;
+            (float xFactor, float yFactor) = noiseScale / textureSize;
+            float min = intensityRange.min;
+            float range = intensityRange.range;
 
-            grid.cellSize = new(cellWidth, cellHeight);
-
-            int newCols = Mathf.FloorToInt(sw / cellWidth);
-            int newRows = Mathf.FloorToInt(sh / cellHeight);
-
-            if (rows != newRows || cols != newCols)
+            for (int i = 0; i < textureSize; i++)
             {
-                rows = newRows;
-                cols = newCols;
-
-                int size = rows * cols;
-
-                grid.ClearChildren();
-                bits = Arrays.Create(size, () => MoreRandom.Boolean);
-                texts = new TMP_Text[size];
-
-                for (int i = 0; i < size; i++)
+                for (int j = 0; j < textureSize; j++)
                 {
-                    int row = i / rows;
-                    int col = i % cols;
+                    float amplitude = min + range * Mathf.PerlinNoise(
+                        x0 + j * xFactor,
+                        y0 + i * yFactor
+                    );
 
-                    GameObject child = gameObject.AddChild($"Text ({row}, {col})", textPrefab);
-                    TMP_Text text = child.GetComponent<TMP_Text>();
-                    text.text = bits[i] ? "1" : "0";
-
-                    texts[i] = text;
+                    noiseTexture.SetPixel(i, j, amplitude * textColor);
                 }
             }
 
-            float extraHSpacing = sw % cellWidth / (cols - 1);
-            float extraVSpacing = sh % cellHeight / (rows - 1);
-            grid.spacing = new(hSpacing + extraHSpacing, vSpacing + extraVSpacing);
+            noiseTexture.Apply();
         }
+
+        private void UpdateTexture() => fontMaterial.SetTexture(ShaderUtilities.ID_FaceTex, noiseTexture);
     }
 }

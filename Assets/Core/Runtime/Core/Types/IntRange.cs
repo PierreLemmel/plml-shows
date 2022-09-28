@@ -15,5 +15,11 @@ namespace Plml
             this.min = min;
             this.max = max;
         }
+
+        public void Deconstruct(out int min, out int max)
+        {
+            min = this.min;
+            max = this.max;
+        }
     }
 }
