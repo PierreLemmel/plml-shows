@@ -1,6 +1,7 @@
 ﻿using Plml.Dmx;
 using Plml.EnChiens.Animations;
 using Plml.EnChiens.Animations.Gouvernail;
+using Plml.Midi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,10 +56,10 @@ namespace Plml.EnChiens.Gouvernail
         public DmxTrackElement fondsFroids;
 
         [HideInPlayMode]
-        public KeyCode side1Key = KeyCode.Alpha1;
+        public MidiNote side1Note = MidiNote.C2;
 
         [HideInPlayMode]
-        public KeyCode side2Key = KeyCode.Alpha2;
+        public MidiNote side2Note = MidiNote.D2;
 
         [HideInPlayMode]
         public DmxTrack side1Track;
@@ -134,8 +135,8 @@ namespace Plml.EnChiens.Gouvernail
 
             sideButtons.transform.parent = transform;
             
-            sideButtons.side1Key = side1Key;
-            sideButtons.side2Key = side2Key;
+            sideButtons.side1Note = side1Note;
+            sideButtons.side2Note = side2Note;
 
             sideButtons.smoothTime = faceButtonSmoothTime;
 
