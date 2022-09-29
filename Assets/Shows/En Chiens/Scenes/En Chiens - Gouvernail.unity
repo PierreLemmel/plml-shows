@@ -1655,11 +1655,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf7379fda2f99de42bfc4917a4dff381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notesOn:
-  - note: 23
-    action:
-      m_PersistentCalls:
-        m_Calls: []
+  notesOn: []
   notesOff: []
   polyphonicKeysPressure: []
   controlsChanged: []
@@ -1997,8 +1993,8 @@ MonoBehaviour:
   doucheJuliette: {fileID: 814218608}
   fondsChauds: {fileID: 2008743285}
   fondsFroids: {fileID: 199562954}
-  side1Key: 49
-  side2Key: 50
+  side1Note: 24
+  side2Note: 26
   side1Track: {fileID: 1378794370}
   side2Track: {fileID: 1893691397}
   chasingMinSpots: 0
