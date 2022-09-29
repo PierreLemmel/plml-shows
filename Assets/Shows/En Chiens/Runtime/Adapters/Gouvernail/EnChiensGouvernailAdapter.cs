@@ -131,13 +131,10 @@ namespace Plml.EnChiens.Gouvernail
 
 
             sideButtons = new GameObject("Side Buttons")
-                .AddComponent<SidesButtonsActivation>();
+                .AddComponent<SidesButtonsActivation>()
+                .AttachTo(this);
 
-            sideButtons.transform.parent = transform;
-            
-            sideButtons.side1Note = side1Note;
-            sideButtons.side2Note = side2Note;
-
+            sideButtons.SetupSideNotes(side1Note, side2Note);
             sideButtons.smoothTime = faceButtonSmoothTime;
 
             pianoSpots = faces;

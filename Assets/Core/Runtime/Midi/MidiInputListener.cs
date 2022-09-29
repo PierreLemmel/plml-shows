@@ -149,7 +149,10 @@ namespace Plml.Midi
             onNoteOn?.Invoke(note, velocity);
 
             if (notesOnDic != null && notesOnDic.TryGetValue(note, out var handler))
+            {
+
                 handler.Invoke(velocity);
+            }
         }
 
         public override void OnNoteOff(MidiNote note, byte velocity)

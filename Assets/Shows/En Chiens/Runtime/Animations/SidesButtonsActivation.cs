@@ -1,13 +1,11 @@
 using Plml.Midi;
+using System;
 using UnityEngine;
 
 namespace Plml.EnChiens.Animations
 {
     public class SidesButtonsActivation : MonoBehaviour
     {
-        public MidiNote side1Note;
-        public MidiNote side2Note;
-
         public float side1 => s1Value;
         public float side2 => s2Value;
 
@@ -21,8 +19,13 @@ namespace Plml.EnChiens.Animations
         private float s2Value = 0f;
         private float s2Vel = 0f;
 
-        private void Awake()
+        private bool setup = false;
+        private MidiNote side1Note;
+        private MidiNote side2Note;
+        public void SetupSideNotes(MidiNote side1Note, MidiNote side2Note)
         {
+            CleanupListeners();
+
             MidiInputListener mil = FindObjectOfType<MidiInputListener>();
 
             mil.AddNoteOnListener(side1Note, SwitchOnSide1);
@@ -30,6 +33,33 @@ namespace Plml.EnChiens.Animations
 
             mil.AddNoteOnListener(side2Note, SwitchOnSide2);
             mil.AddNoteOffListener(side2Note, SwitchOffSide2);
+
+            setup = true;
+            this.side1Note = side1Note;
+            this.side2Note = side2Note;
+        }
+
+        private void OnEnable()
+        {
+            if (setup)
+                SetupSideNotes(side1Note, side2Note);
+        }
+
+        private void OnDisable() => CleanupListeners();
+
+        private void CleanupListeners()
+        {
+            if (!setup) return;
+
+            MidiInputListener mil = FindObjectOfType<MidiInputListener>();
+
+            if (mil == null) return;
+
+            mil.RemoveNoteOnListener(side1Note, SwitchOnSide1);
+            mil.RemoveNoteOffListener(side1Note, SwitchOffSide1);
+
+            mil.RemoveNoteOnListener(side2Note, SwitchOnSide2);
+            mil.RemoveNoteOffListener(side2Note, SwitchOffSide2);
         }
 
         public void SwitchOnSide1(byte _) => s1Target = 1f;

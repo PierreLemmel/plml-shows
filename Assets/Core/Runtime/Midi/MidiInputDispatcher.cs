@@ -11,7 +11,7 @@ namespace Plml.Midi
         private MidiInputListenerBase[] listeners;
 
         // Can't access class members from another thread
-        private static ConcurrentQueue<int> messageQueue = new ConcurrentQueue<int>();
+        private static ConcurrentQueue<int> messageQueue = new();
 
         private bool hasMidiInput = false;
         public bool log = true;
@@ -25,9 +25,6 @@ namespace Plml.Midi
             }
 
             listeners = FindObjectsOfType<MidiInputListenerBase>();
-            Debug.Log(listeners.Length);
-            foreach (var listener in listeners)
-                Debug.Log(listener.name);
 
             if (FindObjectsOfType<MidiInputDispatcher>().Length > 1)
                 Debug.LogError("Multiple Midi dispatchers can cause crash. Don't do that.");
@@ -97,13 +94,13 @@ namespace Plml.Midi
             }
         }
 
-        private void CheckResult(Mmsyserr result, string function)
+        private static void CheckResult(Mmsyserr result, string function)
         {
             if (result != Mmsyserr.MmsyserrNoerror)
                 throw new InvalidOperationException($"{function} - Unexpected Midi result: {result} ({(int)result:X4})");
         }
 
-        private void OnMidiMessage(IntPtr handle, MidiMsg msg, int instance, int param1, int param2)
+        private static void OnMidiMessage(IntPtr handle, MidiMsg msg, int instance, int param1, int param2)
         {
             switch (msg)
             {
@@ -119,6 +116,6 @@ namespace Plml.Midi
             }
         }
 
-        private void HandleShortMessage(int packedMsg) => messageQueue.Enqueue(packedMsg);
+        private static void HandleShortMessage(int packedMsg) => messageQueue.Enqueue(packedMsg);
     }
 }

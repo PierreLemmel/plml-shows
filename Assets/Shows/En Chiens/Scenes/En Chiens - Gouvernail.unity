@@ -1627,7 +1627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6133954f9682b2e4ab99dea7f52ec7b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  log: 1
+  log: 0
 --- !u!4 &1329720263
 Transform:
   m_ObjectHideFlags: 0
@@ -1993,8 +1993,8 @@ MonoBehaviour:
   doucheJuliette: {fileID: 814218608}
   fondsChauds: {fileID: 2008743285}
   fondsFroids: {fileID: 199562954}
-  side1Note: 24
-  side2Note: 26
+  side1Note: 43
+  side2Note: 45
   side1Track: {fileID: 1378794370}
   side2Track: {fileID: 1893691397}
   chasingMinSpots: 0
