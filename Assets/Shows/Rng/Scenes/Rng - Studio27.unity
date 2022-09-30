@@ -4870,7 +4870,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 539808804}
+  - {fileID: 1613840768}
   - {fileID: 2064127806}
   - {fileID: 1808074114}
   - {fileID: 240881255}
@@ -6193,7 +6193,7 @@ Transform:
   - {fileID: 1338194373}
   - {fileID: 202958657}
   - {fileID: 962968620}
-  m_Father: {fileID: 464475372}
+  m_Father: {fileID: 1613840768}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &539808805
@@ -6209,21 +6209,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixturesColor1:
-  - {fileID: 884777597}
+  - {fileID: 962968621}
   fixturesColor2:
-  - {fileID: 1338194374}
+  - {fileID: 202958658}
   fixturesColor3:
   - {fileID: 1338194374}
   - {fileID: 884777597}
   saturationRange:
-    min: 0.66101694
+    min: 0.5677966
     max: 1
   valueRange12:
-    min: 0.61016965
-    max: 1
+    min: 0.4491527
+    max: 0.83898306
   valueRange3:
-    min: 0.40677977
-    max: 0.76271176
+    min: 0.6440676
+    max: 1
 --- !u!114 &539808806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6501,7 +6501,7 @@ MonoBehaviour:
   - {fileID: 87825496}
   channel: 7
   range:
-    min: 110
+    min: 0
     max: 255
   period: 0.5
   smoothTime: 0.6
@@ -17454,6 +17454,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fixture: {fileID: 0}
   channels: 
+--- !u!1 &1613840767
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1613840768}
+  - component: {fileID: 1613840769}
+  m_Layer: 0
+  m_Name: Tricolor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1613840768
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1613840767}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 539808804}
+  m_Father: {fileID: 464475372}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1613840769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1613840767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd8fb3608159af34a9135096f03699b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  weight: 9.999997
+  canChain: 1
+  trackName: 
 --- !u!1 &1619083160
 GameObject:
   m_ObjectHideFlags: 0
