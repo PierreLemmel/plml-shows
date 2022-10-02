@@ -18,8 +18,8 @@ namespace Plml.Rng.UI
         public Button stopBtn;
 
         private AudioSource audioSource;
-        private AudioProvider[] providers;
-        private AudioProvider currentProvider;
+        private RngProvider<RngAudioData, float, float>[] providers;
+        private RngProvider<RngAudioData, float, float> currentProvider;
 
         private AudioClip[] clips = Array.Empty<AudioClip>();
         private AudioClip nextClip = null;

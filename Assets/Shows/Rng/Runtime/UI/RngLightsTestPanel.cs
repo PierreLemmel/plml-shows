@@ -19,7 +19,7 @@ namespace Plml.Rng.UI
         public Button playBtn;
         public Button stopBtn;
 
-        private DmxTrackProvider[] providers;
+        private RngProvider<DmxTrack>[] providers;
         private DmxTrackControler dmxControler;
 
         private int sceneIndex = 0;
@@ -28,7 +28,7 @@ namespace Plml.Rng.UI
         {
             durationSlider.onValueChanged.AddListener(UpdateDurationLabel);
 
-            providers = FindObjectOfType<DmxTrackProviderCollection>().GetAllProviders();
+            providers = FindObjectOfType<DmxTrackProviderCollection>().GetProvidersInHierarchy();
             dmxControler = FindObjectOfType<DmxTrackControler>();
 
             scenesDropdown.ClearOptions();
@@ -78,7 +78,7 @@ namespace Plml.Rng.UI
 
             UpdateButtons(true);
 
-            DmxTrackProvider provider = providers[sceneIndex];
+            RngProvider<DmxTrack> provider = providers[sceneIndex];
             currentTrack = provider.GetNextElement();
             currentTrack.AttachTo(this);
 

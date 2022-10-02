@@ -5,9 +5,9 @@ using UEditor = UnityEditor.Editor;
 
 namespace Plml.Rng.Editor
 {
-    public abstract class ProviderCollectionEditor<TProviderCollection, TProvider, TProvided> : UEditor
+    public abstract class ProviderCollectionEditor<TProviderCollection, TProvider> : UEditor
         where TProvider : RngProviderBase, IRngProvider
-        where TProviderCollection : RngProviderCollectionBase<TProvider>
+        where TProviderCollection : MonoBehaviour, IRngProviderCollection<TProvider>
     {
         public override void OnInspectorGUI()
         {

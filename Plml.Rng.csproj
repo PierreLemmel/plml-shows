@@ -57,13 +57,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Duration\SceneDurationProviderCollection.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Animations\DmxColorRandomizer.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\RngProviderCollections.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\RngAudioData.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngSceneCollection.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\UI\RngTestPanelButton.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\DmxTrackProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Animations\DmxBicolorRandomizer.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngShow.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Serialization\RngSerializer.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Improvibar\ContresTrackProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Animations\DmxChanRandomizer.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\StaticTrackProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\UI\RngTestPanel.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\RngProvider.cs" />
@@ -78,7 +82,9 @@
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\IRngProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\AudioProviderCollection.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\UI\RngBackgroundText.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Animations\DmxTricolorRandomizer.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\UI\RngPlayButton.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\IRngProviderCollection.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\UI\RngIntroOutroPanel.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngScenePlayer.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Duration\SceneDurationProvider.cs" />
@@ -91,10 +97,6 @@
     <Compile Include="Assets\Shows\Rng\Runtime\Settings\RngIntroOutroSettings.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Improvibar\BicolorTrackProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\NoAudioProvider.cs" />
-    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Animations\DmxChanRandomizer.cs" />
-    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Animations\DmxColorRandomizer.cs" />
-    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Animations\DmxTricolorRandomizer.cs" />
-    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Animations\DmxBicolorRandomizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shows\Rng\Runtime\Plml.Rng.asmdef" />
@@ -346,6 +348,9 @@
     <Reference Include="UnityEditor.Graphs">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.Android.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\UnityEditor.Android.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
@@ -399,6 +404,12 @@
     </Reference>
     <Reference Include="Google.JarResolver">
       <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\1.2.169\Google.JarResolver.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Android.Types">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Android.Gradle">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>

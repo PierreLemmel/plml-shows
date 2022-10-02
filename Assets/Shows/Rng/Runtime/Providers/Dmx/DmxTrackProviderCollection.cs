@@ -2,7 +2,7 @@
 
 namespace Plml.Rng.Dmx
 {
-    public class DmxTrackProviderCollection : RngProviderCollection<DmxTrackProvider, DmxTrack>
+    public class DmxTrackProviderCollection : RngProviderCollection<DmxTrack>
     {
     }
 }

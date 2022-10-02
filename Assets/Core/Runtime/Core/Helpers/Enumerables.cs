@@ -43,5 +43,7 @@ namespace Plml
         public static IEnumerable<int> Sequence(int count) => Enumerable
             .Repeat(0, count)
             .Select((_, i) => i);
+
+        public static IEnumerable<T> Create<T>(params T[] elts) => elts;
     }
 }

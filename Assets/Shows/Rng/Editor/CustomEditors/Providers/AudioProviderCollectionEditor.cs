@@ -4,7 +4,8 @@ using UnityEditor;
 namespace Plml.Rng.Editor
 {
     [CustomEditor(typeof(AudioProviderCollection))]
-    public class AudioProviderCollectionEditor : ProviderCollectionEditor<
-        AudioProviderCollection, AudioProvider, RngAudioData
-    > { }
+    public class AudioProviderCollectionEditor : ProviderCollectionEditor<AudioProviderCollection, RngProvider<RngAudioData, float, float>>
+    {
+
+    }
 }

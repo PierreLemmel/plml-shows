@@ -151,7 +151,6 @@ namespace Plml.Rng
             }
 
             Range range = new(startIndex ?? Index.Start, stopIndex ?? Index.End);
-            Debug.Log(range);
 
             this.scenes = scenes.AsSpan(range).ToArray();
             isPlaying = true;
