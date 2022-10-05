@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Plml.Dmx
@@ -28,6 +29,8 @@ namespace Plml.Dmx
         }
 
         public void AddElements(IEnumerable<DmxFixture> fixtures) => fixtures.ForEach(fixture => AddElement(fixture));
+
+        public void AddElements(params DmxFixture[] fixtures) => AddElements(fixtures.AsEnumerable());
 
         public IEnumerable<DmxTrackElement> Elements => elements;
     }

@@ -8,11 +8,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
-    <ProjectGuid>{14356CCF-CE58-6388-884D-19A9EB5C5158}</ProjectGuid>
+    <RootNamespace>Plml.Tests</RootNamespace>
+    <ProjectGuid>{CA266FE8-E09E-A13E-9577-9E476D848151}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Plml.Rng.Editor</AssemblyName>
+    <AssemblyName>Plml.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -48,7 +48,7 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Package</UnityProjectGenerator>
     <UnityProjectGeneratorVersion>2.0.15</UnityProjectGeneratorVersion>
-    <UnityProjectType>Editor:5</UnityProjectType>
+    <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2021.2.8f1</UnityVersion>
   </PropertyGroup>
@@ -56,15 +56,10 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Shows\Rng\Editor\CustomEditors\Providers\SceneDurationProviderCollectionEditor.cs" />
-    <Compile Include="Assets\Shows\Rng\Editor\CustomEditors\RngSceneEditor.cs" />
-    <Compile Include="Assets\Shows\Rng\Editor\CustomEditors\Providers\AudioProviderCollectionEditor.cs" />
-    <Compile Include="Assets\Shows\Rng\Editor\CustomEditors\RngShowEditor.cs" />
-    <Compile Include="Assets\Shows\Rng\Editor\CustomEditors\Providers\DmxTrackProviderCollectionEditor.cs" />
-    <Compile Include="Assets\Shows\Rng\Editor\CustomEditors\Providers\ProviderCollectionEditor.cs" />
+    <Compile Include="Assets\Core\Tests\Dmx\LightScript\LightScriptCompilatorShould.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Shows\Rng\Editor\Plml.Rng.Editor.asmdef" />
+    <None Include="Assets\Core\Tests\Plml.Core.Tests.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -736,31 +731,20 @@
     <Reference Include="System.Xml.XPath.XDocument">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.TestRunner">
+      <HintPath>Library\ScriptAssemblies\UnityEngine.TestRunner.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.TestRunner">
-      <HintPath>Library\ScriptAssemblies\UnityEngine.TestRunner.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.TestRunner">
-      <HintPath>Library\ScriptAssemblies\UnityEditor.TestRunner.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Plml.Rng.csproj">
-      <Project>{8F0EBABD-EF43-5DEE-7561-5A0F23631976}</Project>
-      <Name>Plml.Rng</Name>
-    </ProjectReference>
     <ProjectReference Include="Plml.Core.csproj">
       <Project>{5DED7F19-C216-8C7F-DEF8-DB1C3C7FC075}</Project>
       <Name>Plml.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="Plml.Editor.csproj">
-      <Project>{0112B026-8E18-4476-8A28-7AC526E57B1B}</Project>
-      <Name>Plml.Editor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

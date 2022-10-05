@@ -1,0 +1,19 @@
+{
+    "name": "Plml.Core.Tests",
+    "rootNamespace": "Plml.Tests",
+    "references": [
+        "GUID:69d67a94e5f017c4aacb0ead26935355",
+        "GUID:27619889b8ba8c24980f49ee34dbb44a"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
