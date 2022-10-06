@@ -2,10 +2,10 @@
 {
     internal enum LightScriptTokenType
     {
-        Text,
-        Integer,
-        FloatingPoint,
+        Identifier,
+        Number,
         Operator,
+        Assignation,
         DotNotation,
         StatementEnding,
         LeftBracket,

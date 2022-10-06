@@ -1,11 +1,12 @@
 using NUnit.Framework;
 using Plml.Dmx;
 using Plml.Dmx.Scripting;
+using System.Collections.Generic;
 using UnityEngine;
 
 using UObject = UnityEngine.Object;
 
-namespace Plml.Tests.Dmx.Scripting
+namespace Plml.Tests.Dmx.Scripting.Compilation
 {
     public class LightScriptCompilatorShould
     {

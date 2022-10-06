@@ -13,6 +13,6 @@
 
         public LightScriptToken(LightScriptTokenType type) : this(type, "") { }
 
-        public override string ToString() => $"{type}: {content}";
+        public override string ToString() => $"{type}" + (string.IsNullOrEmpty(content) ? "" : $": {content}");
     }
 }

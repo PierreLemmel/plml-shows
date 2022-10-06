@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\ValueChecker.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptTokenizationContext.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptCompilationOptions.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\And.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\Color24.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\MoreRandom.cs" />
@@ -65,6 +65,7 @@
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Addition.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Modulo.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Multiplication.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptCompilation.cs" />
     <Compile Include="Assets\Core\Runtime\Spout\TextureFormat.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpy.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\IntRange.cs" />
@@ -96,6 +97,8 @@
     <Compile Include="Assets\Core\Runtime\Midi\MidiInputDispatcher.cs" />
     <Compile Include="Assets\Core\Runtime\Spout\SpoutApi.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_STATUS.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\AbstractSyntaxTree.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptTokenType.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\MidiMsg.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker9.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Exponentiation.cs" />
@@ -103,16 +106,20 @@
     <Compile Include="Assets\Core\Runtime\Midi\MidiInputListenerBase.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\Mmsyserr.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ExpressionTreeBuilder.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptCompilator.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\Token.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FTD2XXDll.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker15.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\MidiInputListener.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptTokenizationContext.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker1.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Annotations\DmxRangeAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxFixtureGroup.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Function.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Or.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Emulators\LightEmulator.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptCompilationResult.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptAction.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Colors.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Vectors.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\LessOrEqualThan.cs" />
@@ -120,7 +127,9 @@
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\TokenType.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\CheckerFactory.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_Exception.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptToken.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker14.cs" />
+    <Compile Include="Assets\Core\Runtime\InternalsVisibleToTestAssembly.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\IFormulaBuilder.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ConstantInfo.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\LogMidiListener.cs" />
@@ -143,6 +152,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Enumerables.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\FixtureDefinition.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\FloatRange.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\TokenizationException.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxChannelDefinition.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker5.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackCollection.cs" />
@@ -167,9 +177,11 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxChannelType.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\Optimizer.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Collections.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptData.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Emulators\ServoEmulator.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Arrays.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackElement.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptContext.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker13.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\GreaterOrEqualThan.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpySetupPropertiesNode.cs" />
@@ -188,17 +200,6 @@
     <Compile Include="Assets\Core\Runtime\Core\Helpers\RunInBackground.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptCompilator.cs" />
-    <Compile Include="Assets\Core\Runtime\InternalsVisibleToTestAssembly.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptCompilation.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptData.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptCompilationResult.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptContext.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptCompilationOptions.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptAction.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\AbstractSyntaxTree.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptTokenType.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptToken.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />
@@ -450,6 +451,9 @@
     <Reference Include="UnityEditor.Graphs">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.Android.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\UnityEditor.Android.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
@@ -503,6 +507,12 @@
     </Reference>
     <Reference Include="Google.JarResolver">
       <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\1.2.169\Google.JarResolver.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Android.Types">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Android.Gradle">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
