@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace Plml.Dmx.Scripting.Compilation
+﻿namespace Plml.Dmx.Scripting.Compilation
 {
-    internal class TokenizationException : Exception
+    internal class TokenizationException : CompilationException
     {
-        public TokenizationException(string message) : base(message) { }
+        public TokenizationException(CompilationErrorType errorType, string message) : base(errorType, message) { }
     }
 }

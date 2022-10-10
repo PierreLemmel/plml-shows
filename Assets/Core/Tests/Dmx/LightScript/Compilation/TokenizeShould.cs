@@ -3,20 +3,42 @@ using Plml.Dmx.Scripting;
 using Plml.Dmx.Scripting.Compilation;
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
+using UnityEngine;
 using TokenType = Plml.Dmx.Scripting.Compilation.LightScriptTokenType;
 
 namespace Plml.Tests.Dmx.Scripting.Compilation
 {
     internal class TokenizeShould
     {
+        private static string Stringify(IEnumerable<LightScriptToken> tokens) => string.Join(", ", tokens.Select(t => t.ToString()));
+
         [Test]
         [TestCaseSource(nameof(TokenizeTestCaseSource))]
         public void Return_Expected_Result(string input, LightScriptToken[] expected)
         {
             IReadOnlyCollection<LightScriptToken> result = LightScriptCompilation.Tokenize(input);
 
+            Debug.Log("expected:\n" + Stringify(expected) + "\nresult:\n" + Stringify(result));
             CollectionAssert.AreEquivalent(expected, result);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(ValidateTokensTestCaseSource))]
+        public void Validate_Valid_Input(string input)
+        {
+            IReadOnlyCollection<LightScriptToken> tokens = LightScriptCompilation.Tokenize(input);
+            Assert.DoesNotThrow(() => LightScriptCompilation.ValidateTokens(tokens));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(TokenizeErrorsTestCaseSource))]
+        public void Invalidate_When_Invalid_Tokens(string input, CompilationErrorType expectedErrorType)
+        {
+            IReadOnlyCollection<LightScriptToken> tokens = LightScriptCompilation.Tokenize(input);
+
+            var exception = Assert.Throws<TokenizationException>(() => LightScriptCompilation.ValidateTokens(tokens));
+            Assert.AreEqual(expectedErrorType, exception.ErrorType);
         }
 
         public static IEnumerable<object[]> TokenizeTestCaseSource => new object[][]
@@ -161,6 +183,101 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Operator, "*"),
                     new(TokenType.Number, "255"),
                 }
+            },
+
+            // Multiline
+            new object[]
+            {
+                @"parLed1.dimmer = 255
+                parLed2.dimmer = 255",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignation),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.StatementEnding),
+                    new(TokenType.Identifier, "parLed2"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignation),
+                    new(TokenType.Number, "255"),
+                }
+            },
+
+            // Multiline (semicolons)
+            new object[]
+            {
+                @"parLed1.dimmer = 255;
+                parLed2.dimmer = 255;",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignation),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.StatementEnding),
+                    new(TokenType.Identifier, "parLed2"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignation),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.StatementEnding),
+                }
+            },
+
+            // Multiline (empty lines)
+            new object[]
+            {
+                @"
+                parLed1.dimmer = 255;
+
+                parLed2.dimmer = 255;
+                ",
+                new LightScriptToken[]
+                {
+                    new(TokenType.StatementEnding),
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignation),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.StatementEnding),
+                    new(TokenType.Identifier, "parLed2"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignation),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.StatementEnding),
+                }
+            },
+        };
+
+        public static IEnumerable<object> ValidateTokensTestCaseSource => TokenizeTestCaseSource.Select(objArr => objArr[0]);
+
+        public static IEnumerable<object[]> TokenizeErrorsTestCaseSource => new object[][]
+        {
+            new object[]
+            {
+                "parLed.dimmer = 0.7.7 * 255",
+                CompilationErrorType.InvalidNumberFormat
+            },
+            new object[]
+            {
+                "parLed.dimmer = 2S5",
+                CompilationErrorType.InvalidNumberFormat
+            },
+            new object[]
+            {
+                "parLed.dimmer = 0xfg",
+                CompilationErrorType.InvalidNumberFormat
+            },
+            new object[]
+            {
+                "parLed.dimmer = 0x0xff",
+                CompilationErrorType.InvalidNumberFormat
             },
         };
     }

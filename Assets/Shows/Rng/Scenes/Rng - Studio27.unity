@@ -6318,7 +6318,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30.65
+  m_fontSize: 30.45
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10231,8 +10231,8 @@ MonoBehaviour:
   - {fileID: 1671542212}
   channel: 0
   range:
-    min: 24
-    max: 39
+    min: 18
+    max: 45
 --- !u!114 &924572598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17813,7 +17813,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30.65
+  m_fontSize: 30.45
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -21155,10 +21155,10 @@ MonoBehaviour:
   active: 1
   weight: 9.999997
   canChain: 1
-  minDuration: 15.35
+  minDuration: 25
   maxDuration: 90
   minFadeTime: 0
-  maxFadeTime: 4.55
+  maxFadeTime: 3.29
 --- !u!1 &2072635482
 GameObject:
   m_ObjectHideFlags: 0
@@ -22269,7 +22269,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3727991642785649135, guid: 483413b98c99a6a4d9cb593e3face74e, type: 3}
       propertyPath: enableOpenDmx
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3727991642785649135, guid: 483413b98c99a6a4d9cb593e3face74e, type: 3}
       propertyPath: fixturesObject

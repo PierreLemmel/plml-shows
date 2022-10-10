@@ -69,8 +69,8 @@ namespace Plml.Dmx.Scripting
 
                 bool charIsValidInCurrentContext = tokenContext switch
                 {
-                    TokenizationContext.Identifier => IsIdentifierCharacter(c),
-                    TokenizationContext.Number => IsNumberCharacter(c),
+                    TokenizationContext.Identifier => char.IsLetterOrDigit(c),
+                    TokenizationContext.Number => char.IsLetterOrDigit(c) || c == '.',
                     _ => false
                 };
 
@@ -79,12 +79,13 @@ namespace Plml.Dmx.Scripting
                     charContext = c switch
                     {
                         ' ' => TokenizationContext.TokenEnd,
-                        '\n' or ';' => TokenizationContext.StatementEnding,
+                        '\r' or '\n' or ';' => TokenizationContext.StatementEnding,
                         _ when char.IsDigit(c) => TokenizationContext.Number,
                         _ when IsSingleChar(c) => TokenizationContext.SingleChar,
                         _ when char.IsLetter(c) => TokenizationContext.Identifier,
                         _ when IsOperator(c) => TokenizationContext.Operator,
-                        _ => throw new TokenizationException($"Unexpected character: '{c}'")
+                        
+                        _ => throw new TokenizationException(CompilationErrorType.InvalidCharacter, $"Unexpected character: '{c}'")
                     };
                 }
 
@@ -140,7 +141,7 @@ namespace Plml.Dmx.Scripting
                             ')' => TokenType.RightBracket,
                             '.' => TokenType.DotNotation,
                             '=' => TokenType.Assignation,
-                            _ => throw new TokenizationException($"Unexpected single char: '{sc}'")
+                            _ => throw new TokenizationException(CompilationErrorType.InvalidCharacter, $"Unexpected single char: '{sc}'")
                         };
                         result.Add(new(type));
 
@@ -153,41 +154,24 @@ namespace Plml.Dmx.Scripting
             
             string GetCurrentString() => src[startPosition..i];
 
-            bool IsNumberCharacter(char c)
-            {
-                if (char.IsDigit(c))
-                    return true;
-                else if (tokenContext == TokenizationContext.Number)
-                {
-                    if (numberType == NumberType.Integer)
-                    {
-                        if (c == '.' || c == 'x')
-                            return true;
-                    }
-                    else if (numberType == NumberType.Hexadecimal)
-                    {
-                        if ("abcdef".Contains(char.ToLower(c)))
-                            return true;
-                    }
-                }
-
-                return false;
-            }
-
-            bool IsIdentifierCharacter(char c)
-            {
-                if (char.IsLetter(c))
-                    return true;
-                else if (tokenContext == TokenizationContext.Identifier)
-                {
-                    if (char.IsDigit(c))
-                        return true;
-                }
-
-                return false;
-            }
-
             return result;
+        }
+
+        public static void ValidateTokens(IReadOnlyCollection<LightScriptToken> tokens)
+        {
+            tokens
+                .Where(token => token.type == TokenType.Number)
+                .Select(token => token.content)
+                .ForEach(str =>
+                {
+                    Debug.Log(str);
+                    bool result = Regex.IsMatch(str, "^[0-9]+$")
+                            || Regex.IsMatch(str, @"^[0-9]+\.[0-9]*$")
+                            || Regex.IsMatch(str, @"^0x([0-9]|[a-f]|[A-F])+$");
+                    
+                    if (!result)
+                        throw new TokenizationException(CompilationErrorType.InvalidNumberFormat, $"Invalid number format: '{str}'");
+                });
         }
 
         public static AbstractSyntaxTree BuildAst(IReadOnlyCollection<LightScriptToken> tokens, LightScriptData data)

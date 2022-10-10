@@ -1056,7 +1056,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 4837730802345479010}
-  channels: ff000000
+  channels: 00000000
 --- !u!1 &633656688
 GameObject:
   m_ObjectHideFlags: 0
@@ -1106,7 +1106,7 @@ MonoBehaviour:
   master: 1
   fade: 0
   refreshRate: 30
-  enableOpenDmx: 0
+  enableOpenDmx: 1
 --- !u!1 &687705166
 GameObject:
   m_ObjectHideFlags: 0
@@ -1627,7 +1627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6133954f9682b2e4ab99dea7f52ec7b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  log: 0
+  log: 1
 --- !u!4 &1329720263
 Transform:
   m_ObjectHideFlags: 0
@@ -2672,7 +2672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 4837730802345479010}
-  channels: ff000000
+  channels: 00000000
 --- !u!1 &2018661949
 GameObject:
   m_ObjectHideFlags: 0

@@ -68,6 +68,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptCompilation.cs" />
     <Compile Include="Assets\Core\Runtime\Spout\TextureFormat.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpy.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\ConstantNode.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\IntRange.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\MoreReflection.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Emulators\FlatParEmulator.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_Exception.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptToken.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker14.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\UnaryOperatorNode.cs" />
     <Compile Include="Assets\Core\Runtime\InternalsVisibleToTestAssembly.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\IFormulaBuilder.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ConstantInfo.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpyConfig.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\IBindPropertiesSourceNode.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Emulators\LedBarEmulator.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\BinaryOperatorNode.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\FloatingPointConstant.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\VariableNotDefinedException.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\FormulaBuilder.cs" />
@@ -151,6 +154,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\IChecker.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Enumerables.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\FixtureDefinition.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\CompilationException.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\FloatRange.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\TokenizationException.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxChannelDefinition.cs" />
@@ -160,6 +164,8 @@
     <Compile Include="Assets\Core\Runtime\Jace\CalculationEngine.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxFixture.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpySetupActionNode.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\MemberAccessNode.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\SyntaxNode.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\RangeBounds01Attribute.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker11.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\NotEqual.cs" />
@@ -192,6 +198,7 @@
     <Compile Include="Assets\Core\Runtime\Jace\Operations\UnaryMinus.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Substraction.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\ValueArrayChecker.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\CompilationErrorType.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Components.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker7.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\SpyImpl.cs" />
@@ -451,9 +458,6 @@
     <Reference Include="UnityEditor.Graphs">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.Android.Extensions">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\UnityEditor.Android.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
@@ -507,12 +511,6 @@
     </Reference>
     <Reference Include="Google.JarResolver">
       <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\1.2.169\Google.JarResolver.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Android.Types">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Android.Gradle">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
