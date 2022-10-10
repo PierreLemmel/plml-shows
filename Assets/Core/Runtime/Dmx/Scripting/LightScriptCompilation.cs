@@ -8,7 +8,7 @@ using UnityEngine;
 using TokenType = Plml.Dmx.Scripting.Compilation.LightScriptTokenType;
 using TokenizationContext = Plml.Dmx.Scripting.Compilation.LightScriptTokenizationContext;
 using NumberType = Plml.Dmx.Scripting.Compilation.LightScriptTokenizationNumberTypeContext;
-
+using Plml.Dmx.Scripting.Compilation.Nodes;
 
 namespace Plml.Dmx.Scripting
 {
@@ -157,26 +157,26 @@ namespace Plml.Dmx.Scripting
             return result;
         }
 
-        public static void ValidateTokens(IReadOnlyCollection<LightScriptToken> tokens)
-        {
-            tokens
-                .Where(token => token.type == TokenType.Number)
-                .Select(token => token.content)
-                .ForEach(str =>
-                {
-                    Debug.Log(str);
-                    bool result = Regex.IsMatch(str, "^[0-9]+$")
-                            || Regex.IsMatch(str, @"^[0-9]+\.[0-9]*$")
-                            || Regex.IsMatch(str, @"^0x([0-9]|[a-f]|[A-F])+$");
-                    
-                    if (!result)
-                        throw new TokenizationException(CompilationErrorType.InvalidNumberFormat, $"Invalid number format: '{str}'");
-                });
-        }
+        public static void ValidateTokens(IReadOnlyCollection<LightScriptToken> tokens) => tokens
+            .Where(token => token.type == TokenType.Number)
+            .Select(token => token.content)
+            .ForEach(str =>
+            {
+                bool result = Regex.IsMatch(str, "^[0-9]+$")
+                        || Regex.IsMatch(str, @"^[0-9]+\.[0-9]*$")
+                        || Regex.IsMatch(str, @"^0x([0-9]|[a-f]|[A-F])+$");
+
+                if (!result)
+                    throw new TokenizationException(CompilationErrorType.InvalidNumberFormat, $"Invalid number format: '{str}'");
+            });
 
         public static AbstractSyntaxTree BuildAst(IReadOnlyCollection<LightScriptToken> tokens, LightScriptData data)
         {
-            throw new NotImplementedException();
+            SyntaxNode[] statements = new SyntaxNode[] { };
+
+            AbstractSyntaxTree result = new(statements);
+
+            return result;
         }
 
         private static LightScriptAction CompileAst(AbstractSyntaxTree ast, LightScriptData data)

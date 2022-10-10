@@ -2,15 +2,17 @@
 
 namespace Plml.Dmx.Scripting.Compilation.Nodes
 {
-    internal class MemberAccessNode : SyntaxNode
+    internal class MemberAccessNode : SyntaxNode<MemberAccessNode>
     {
-        public SyntaxNode Object { get; }
-        public SyntaxNode Property { get; }
+        public SyntaxNode Target { get; }
+        public string Property { get; }
 
-        public MemberAccessNode(SyntaxNode @object, SyntaxNode property)
+        public MemberAccessNode(SyntaxNode target, string property)
         {
-            Object = @object;
+            Target = target;
             Property = property;
         }
+
+        protected override bool Equals(MemberAccessNode other) => Target == other.Target && Property == other.Property;
     }
 }

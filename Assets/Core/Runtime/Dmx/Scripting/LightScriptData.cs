@@ -5,7 +5,7 @@ namespace Plml.Dmx.Scripting
     [Serializable]
     public class LightScriptData
     {
-        public DmxTrackElement[] fixtures;
+        public LightScriptFixtureData[] fixtures;
 
         public string text;
     }

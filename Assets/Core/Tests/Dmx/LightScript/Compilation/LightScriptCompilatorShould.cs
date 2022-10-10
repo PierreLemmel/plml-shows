@@ -1,34 +1,35 @@
 using NUnit.Framework;
 using Plml.Dmx;
 using Plml.Dmx.Scripting;
+using Plml.Dmx.Scripting.Compilation;
+using Plml.Dmx.Scripting.Compilation.Nodes;
 using System.Collections.Generic;
 using UnityEngine;
 
+using TokenType = Plml.Dmx.Scripting.Compilation.LightScriptTokenType;
 using UObject = UnityEngine.Object;
 
 namespace Plml.Tests.Dmx.Scripting.Compilation
 {
-    public class LightScriptCompilatorShould
+    internal class LightScriptCompilatorShould
     {
         private LightScriptCompilationOptions defaultCompilationOptions;
 
-        private (GameObject fixtures, DmxFixture parLed1, DmxFixture parLed2) CreateSimpleLightingPlan()
+        private static (GameObject fixtures, DmxFixture parLed1, DmxFixture parLed2) CreateSimpleLightingPlan()
         {
             GameObject fixtures = new("Fixtures");
 
-            FixtureDefinition parLedFixtureDefinition = new()
+            FixtureDefinition parLedFixtureDefinition = ScriptableObject.CreateInstance<FixtureDefinition>();
+            parLedFixtureDefinition.name = "Par Led Test";
+            parLedFixtureDefinition.manufacturer = "test";
+            parLedFixtureDefinition.mode = "6CH";
+            parLedFixtureDefinition.chanCount = 6;
+            parLedFixtureDefinition.channels = new DmxChannelDefinition[]
             {
-                name = "Par Led Test",
-                manufacturer = "test",
-                mode = "6CH",
-                chanCount = 6,
-                channels = new DmxChannelDefinition[]
-                {
-                    new() { channel = 0, type = DmxChannelType.Color },
-                    new() { channel = 3, type = DmxChannelType.White },
-                    new() { channel = 4, type = DmxChannelType.Dimmer },
-                    new() { channel = 5, type = DmxChannelType.Stroboscope },
-                }
+                new() { channel = 0, type = DmxChannelType.Color },
+                new() { channel = 3, type = DmxChannelType.White },
+                new() { channel = 4, type = DmxChannelType.Dimmer },
+                new() { channel = 5, type = DmxChannelType.Stroboscope },
             };
 
             fixtures.AddChild("Par Led 1")
@@ -36,7 +37,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 {
                     pr.model = parLedFixtureDefinition;
                     pr.channelOffset = 1;
-                },out DmxFixture parLed1);
+                }, out DmxFixture parLed1);
 
             fixtures.AddChild("Par Led 2")
                 .WithComponent(pr =>
@@ -48,7 +49,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             return (fixtures, parLed1, parLed2);
         }
 
-        private (DmxTrack track, DmxTrackElement parLed1TrackElement, DmxTrackElement parLed2TrackElement) CreateSimpleLightingPlanTrackElements()
+        private static (DmxTrack track, DmxTrackElement parLed1TrackElement, DmxTrackElement parLed2TrackElement) CreateSimpleLightingPlanTrackElements()
         {
             (_, DmxFixture parLed1Fixture, DmxFixture parLed2Fixture) = CreateSimpleLightingPlan();
 
@@ -60,6 +61,57 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             return (track, parLed1TrackElement, parLed2TrackElement);
         }
 
+        private static LightScriptFixtureData[] GetFixtures(string name1, string name2 = null)
+        {
+            (_, var parLed1, var parLed2) = CreateSimpleLightingPlanTrackElements();
+
+            return new LightScriptFixtureData[]
+            {
+                new(name1, parLed1),
+                new(name2, parLed2)
+            };
+        }
+
+        [Test]
+        [TestCaseSource(nameof(BuildASTTestCaseSource))]
+        public void Return_Expected_Result(LightScriptToken[] input, LightScriptData data, AbstractSyntaxTree expected)
+        {
+            AbstractSyntaxTree result = LightScriptCompilation.BuildAst(input, data);
+
+            Debug.Log("expected:\n" + expected.Stringify() + "\n\nresult:\n" + result.Stringify());
+
+            Assert.That(expected, Is.EqualTo(result));
+        }
+
+        public static IEnumerable<object[]> BuildASTTestCaseSource => new object[][]
+        {
+            new object[]
+            {
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignation),
+                    new(TokenType.Number, "255")
+                },
+                new LightScriptData()
+                {
+                    text = "parLed.dimmer = 255",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed"),
+                            "dimmer"
+                        ),
+                        rhs: new ConstantNode(255)
+                    )
+                )
+            }
+        };
+
         [Test]
         public void Compile_Without_Errors_For__Set_Dimmer_To_A_Constant_Value()
         {
@@ -68,9 +120,9 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             LightScriptData data = new()
             {
                 text = "parLed.dimmer = 120",
-                fixtures = new[]
+                fixtures = new LightScriptFixtureData[]
                 {
-                    parLed
+                    new("parLed", parLed)
                 }
             };
             LightScriptCompilationOptions options = defaultCompilationOptions;
