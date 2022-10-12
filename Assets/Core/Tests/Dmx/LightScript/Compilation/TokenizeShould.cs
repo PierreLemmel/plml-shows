@@ -17,7 +17,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         [TestCaseSource(nameof(TokenizeTestCaseSource))]
         public void Return_Expected_Result(string input, LightScriptToken[] expected)
         {
-            IReadOnlyCollection<LightScriptToken> result = LightScriptCompilation.Tokenize(input);
+            var result = LightScriptCompilation.Tokenize(input);
 
             Debug.Log("expected:\n" + Stringify(expected) + "\nresult:\n" + Stringify(result));
             CollectionAssert.AreEquivalent(expected, result);
@@ -27,7 +27,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         [TestCaseSource(nameof(ValidateTokensTestCaseSource))]
         public void Validate_Valid_Input(string input)
         {
-            IReadOnlyCollection<LightScriptToken> tokens = LightScriptCompilation.Tokenize(input);
+            var tokens = LightScriptCompilation.Tokenize(input);
             Assert.DoesNotThrow(() => LightScriptCompilation.ValidateTokens(tokens));
         }
 
@@ -35,7 +35,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         [TestCaseSource(nameof(TokenizeErrorsTestCaseSource))]
         public void Invalidate_When_Invalid_Tokens(string input, CompilationErrorType expectedErrorType)
         {
-            IReadOnlyCollection<LightScriptToken> tokens = LightScriptCompilation.Tokenize(input);
+            var tokens = LightScriptCompilation.Tokenize(input);
 
             var exception = Assert.Throws<TokenizationException>(() => LightScriptCompilation.ValidateTokens(tokens));
             Assert.AreEqual(expectedErrorType, exception.ErrorType);

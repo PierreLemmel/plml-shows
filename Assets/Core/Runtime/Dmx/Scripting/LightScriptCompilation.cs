@@ -23,7 +23,7 @@ namespace Plml.Dmx.Scripting
                 Log($"Compiling source:\n'{src}'");
 
                 Log("Tokenizing source");
-                IReadOnlyCollection<LightScriptToken> tokens = Tokenize(src);
+                LightScriptToken[] tokens = Tokenize(src);
                 Log("Source tokenized");
 
                 Log("Building abstract syntax tree");
@@ -50,7 +50,7 @@ namespace Plml.Dmx.Scripting
             }
         }
 
-        public static IReadOnlyCollection<LightScriptToken> Tokenize(string text)
+        public static LightScriptToken[] Tokenize(string text)
         {
             string src = Regex.Replace(text, "( )+", " ");
 
@@ -154,10 +154,10 @@ namespace Plml.Dmx.Scripting
             
             string GetCurrentString() => src[startPosition..i];
 
-            return result;
+            return result.ToArray();
         }
 
-        public static void ValidateTokens(IReadOnlyCollection<LightScriptToken> tokens) => tokens
+        public static void ValidateTokens(LightScriptToken[] tokens) => tokens
             .Where(token => token.type == TokenType.Number)
             .Select(token => token.content)
             .ForEach(str =>
@@ -170,13 +170,23 @@ namespace Plml.Dmx.Scripting
                     throw new TokenizationException(CompilationErrorType.InvalidNumberFormat, $"Invalid number format: '{str}'");
             });
 
-        public static AbstractSyntaxTree BuildAst(IReadOnlyCollection<LightScriptToken> tokens, LightScriptData data)
+        public static AbstractSyntaxTree BuildAst(LightScriptToken[] tokens, LightScriptData data)
         {
-            SyntaxNode[] statements = new SyntaxNode[] { };
+            LightScriptToken[][] scriptTokens = tokens
+                .Split(token => token.type == TokenType.StatementEnding);
+
+            SyntaxNode[] statements = scriptTokens.Select(BuildSyntaxNodeFromTokens);
 
             AbstractSyntaxTree result = new(statements);
 
             return result;
+        }
+
+        private static SyntaxNode BuildSyntaxNodeFromTokens(LightScriptToken[] tokens)
+        {
+            
+
+            return new ConstantNode(255);
         }
 
         private static LightScriptAction CompileAst(AbstractSyntaxTree ast, LightScriptData data)

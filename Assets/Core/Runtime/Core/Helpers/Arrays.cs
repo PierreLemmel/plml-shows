@@ -32,7 +32,16 @@ namespace Plml
             }
         }
 
-        public static int IndexOf<T>(this T[] array, T item) => Array.IndexOf(array, item);
+        public static int IndexOf<T>(this T[] array, Func<T, bool> predicate)
+        {
+            for (int i = 0; i < array.Length; i++)
+                if (predicate(array[i]))
+                    return i;
+
+            throw new InvalidOperationException($"No item found matching predicate");
+        }
+
+        public static int FirstIndexOf<T>(this T[] array, T item) => array.IndexOf(t => Equals(t, item));
 
         public static T[] Merge<T>(IEnumerable<T[]> arrays)
         {
@@ -180,6 +189,38 @@ namespace Plml
         {
             for (int i = 0; i < array.Length; i++)
                 action(array[i], i);
+        }
+
+        public static T[][] Split<T>(this T[] array, Func<T, bool> separatorFunc)
+        {
+            int i0 = 0;
+
+            ICollection<T[]> chunks = new LinkedList<T[]>();
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (separatorFunc(array[i]))
+                {
+                    chunks.Add(array[i0..i]);
+                    i0 = i + 1;
+                }
+            }
+
+            chunks.Add(array[i0..^0]);
+
+            return chunks
+                .Where(chunk => chunk.Any())
+                .ToArray();
+        }
+
+        public static T[][] Split<T>(this T[] array, T separator) => array
+            .Split(t => Equals(t, separator));
+
+        public static (Span<T> lhs, Span<T> rhs) Separate<T>(this T[] array, Func<T, bool> separatorFunc)
+        {
+            int index = array.IndexOf(separatorFunc);
+
+            return (array[0..index], array[(index + 1)..^0]);
         }
     }
 }
