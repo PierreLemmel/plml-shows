@@ -140,7 +140,7 @@ namespace Plml.Dmx.Scripting
                             '(' => TokenType.LeftBracket,
                             ')' => TokenType.RightBracket,
                             '.' => TokenType.DotNotation,
-                            '=' => TokenType.Assignation,
+                            '=' => TokenType.Assignment,
                             _ => throw new TokenizationException(CompilationErrorType.InvalidCharacter, $"Unexpected single char: '{sc}'")
                         };
                         result.Add(new(type));
@@ -170,6 +170,19 @@ namespace Plml.Dmx.Scripting
                     throw new TokenizationException(CompilationErrorType.InvalidNumberFormat, $"Invalid number format: '{str}'");
             });
 
+        public static ILightScriptContext BuildContext(LightScriptData data)
+        {
+            LightScriptContext context = new();
+
+            context.AddVariable(new(LightScriptType.Float, "t"));
+            context.AddVariable(new(LightScriptType.Float, "dt"));
+            context.AddVariable(new(LightScriptType.Integer, "frame"));
+
+            data.fixtures.ForEach(fixture => context.AddVariable(new(LightScriptType.Fixture, fixture.name)));
+
+            return context;
+        }
+
         public static AbstractSyntaxTree BuildAst(LightScriptToken[] tokens, LightScriptData data)
         {
             LightScriptToken[][] scriptTokens = tokens
@@ -182,12 +195,71 @@ namespace Plml.Dmx.Scripting
             return result;
         }
 
+        
+
         private static SyntaxNode BuildSyntaxNodeFromTokens(LightScriptToken[] tokens)
         {
-            
+            // Assertion made here : all statements are assignments
+            (var leftSegment, var rightSegment) = tokens.Separate(token => token.type == TokenType.Assignment);
 
-            return new ConstantNode(255);
+            var lhs = BuildSyntaxNodeFromArraySegment(leftSegment);
+            var rhs = BuildSyntaxNodeFromArraySegment(rightSegment);
+
+            return new AssignmentNode(
+                lhs,
+                rhs
+            );
         }
+
+        private enum OperationStack
+        {
+            Addition,
+            Substraction,
+            Multiplication,
+            Division,
+            Group
+        }
+
+        private static SyntaxNode BuildSyntaxNodeFromArraySegment(ArraySegment<LightScriptToken> tokens)
+        {
+            Stack<TokenType> operationStack = new();
+            Stack<SyntaxNode> resultStack = new();
+
+            foreach (var token in tokens)
+            {
+                string content = token.content;
+
+                switch (token.type)
+                {
+                    case TokenType.Identifier:
+                        throw new NotImplementedException();
+                        break;
+                    case TokenType.Number:
+                        ConstantNode constantNode = int.TryParse(content, out int intResult) ?
+                            new(intResult) :
+                            new(float.Parse(content));
+                            
+                        resultStack.Push(constantNode);
+                        
+                        break;
+                    case TokenType.Operator:
+                        throw new NotImplementedException();
+                        break;
+                    case TokenType.DotNotation:
+                        throw new NotImplementedException();
+                        break;
+                    case TokenType.LeftBracket:
+                        throw new NotImplementedException();
+                        break;
+                    case TokenType.RightBracket:
+                        throw new NotImplementedException();
+                        break;
+                }
+            }
+
+            return resultStack.First();
+        }
+
 
         private static LightScriptAction CompileAst(AbstractSyntaxTree ast, LightScriptData data)
         {

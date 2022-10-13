@@ -3,6 +3,6 @@
     internal enum CompilationErrorType
     {
         InvalidCharacter,
-        InvalidNumberFormat
+        InvalidNumberFormat,
     }
 }

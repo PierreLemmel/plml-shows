@@ -73,6 +73,49 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         }
 
         [Test]
+        public void Build_Context_As_Expected()
+        {
+            (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
+
+            LightScriptData data = new()
+            {
+                text = "parLed1.dimmer = 120",
+                fixtures = new LightScriptFixtureData[]
+                {
+                    new("parLed1", parLed1),
+                    new("parLed2", parLed2),
+                }
+            };
+
+            ILightScriptContext context = LightScriptCompilation.BuildContext(data);
+
+            bool hasTime = context.TryGetVariable("t", out var timeVariable);
+            Assert.That(hasTime, Is.True);
+            Assert.That(timeVariable.Name, Is.EqualTo("t"));
+            Assert.That(timeVariable.Type, Is.EqualTo(LightScriptType.Float));
+
+            bool hasDeltaTime = context.TryGetVariable("dt", out var deltaTimeVariable);
+            Assert.That(hasDeltaTime, Is.True);
+            Assert.That(deltaTimeVariable.Name, Is.EqualTo("dt"));
+            Assert.That(deltaTimeVariable.Type, Is.EqualTo(LightScriptType.Float));
+
+            bool hasFrame = context.TryGetVariable("frame", out var frameVariable);
+            Assert.That(hasFrame, Is.True);
+            Assert.That(frameVariable.Name, Is.EqualTo("frame"));
+            Assert.That(frameVariable.Type, Is.EqualTo(LightScriptType.Integer));
+
+            bool hasParLed1 = context.TryGetVariable("parLed1", out var parLed1Variable);
+            Assert.That(hasParLed1, Is.True);
+            Assert.That(parLed1Variable.Name, Is.EqualTo("parLed1"));
+            Assert.That(parLed1Variable.Type, Is.EqualTo(LightScriptType.Fixture));
+
+            bool hasParLed2 = context.TryGetVariable("parLed2", out var parLed2Variable);
+            Assert.That(hasParLed2, Is.True);
+            Assert.That(parLed2Variable.Name, Is.EqualTo("parLed2"));
+            Assert.That(parLed2Variable.Type, Is.EqualTo(LightScriptType.Fixture));
+        }
+
+        [Test]
         [TestCaseSource(nameof(BuildASTTestCaseSource))]
         public void Return_Expected_Result(LightScriptToken[] input, LightScriptData data, AbstractSyntaxTree expected)
         {
@@ -92,7 +135,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed1"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "255")
                 },
                 new LightScriptData()

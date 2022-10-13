@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Plml.Dmx.Scripting;
 using Plml.Dmx.Scripting.Compilation;
 using Plml.Dmx.Scripting.Compilation.Nodes;
 using System;

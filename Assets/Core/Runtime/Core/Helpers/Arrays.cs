@@ -216,7 +216,7 @@ namespace Plml
         public static T[][] Split<T>(this T[] array, T separator) => array
             .Split(t => Equals(t, separator));
 
-        public static (Span<T> lhs, Span<T> rhs) Separate<T>(this T[] array, Func<T, bool> separatorFunc)
+        public static (ArraySegment<T> lhs, ArraySegment<T> rhs) Separate<T>(this T[] array, Func<T, bool> separatorFunc)
         {
             int index = array.IndexOf(separatorFunc);
 

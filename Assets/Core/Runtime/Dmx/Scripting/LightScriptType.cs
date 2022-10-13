@@ -1,6 +1,6 @@
-﻿namespace Plml.Dmx.Scripting.Compilation
+﻿namespace Plml.Dmx.Scripting
 {
-    internal enum LightScriptType
+    public enum LightScriptType
     {
         Integer,
         Float,

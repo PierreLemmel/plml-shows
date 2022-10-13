@@ -5,7 +5,7 @@
         Identifier,
         Number,
         Operator,
-        Assignation,
+        Assignment,
         DotNotation,
         StatementEnding,
         LeftBracket,

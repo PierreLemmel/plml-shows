@@ -52,7 +52,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "255")
                 }
             },
@@ -66,7 +66,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "255"),
                     new(TokenType.StatementEnding)
                 }
@@ -81,7 +81,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "0.7"),
                     new(TokenType.Operator, "*"),
                     new(TokenType.Number, "255")
@@ -97,7 +97,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "0x00"),
                 }
             },
@@ -111,7 +111,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "0xff"),
                 }
             },
@@ -125,7 +125,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "0xFF"),
                 }
             },
@@ -139,7 +139,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "0.7"),
                     new(TokenType.Operator, "*"),
                     new(TokenType.Number, "0xff")
@@ -155,7 +155,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed1"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "255")
                 }
             },
@@ -169,7 +169,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed1"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.LeftBracket),
                     new(TokenType.Number, "1"),
                     new(TokenType.Operator, "+"),
@@ -195,13 +195,13 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed1"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "255"),
                     new(TokenType.StatementEnding),
                     new(TokenType.Identifier, "parLed2"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "255"),
                 }
             },
@@ -216,13 +216,13 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed1"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "255"),
                     new(TokenType.StatementEnding),
                     new(TokenType.Identifier, "parLed2"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "255"),
                     new(TokenType.StatementEnding),
                 }
@@ -242,13 +242,13 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Identifier, "parLed1"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "255"),
                     new(TokenType.StatementEnding),
                     new(TokenType.Identifier, "parLed2"),
                     new(TokenType.DotNotation),
                     new(TokenType.Identifier, "dimmer"),
-                    new(TokenType.Assignation),
+                    new(TokenType.Assignment),
                     new(TokenType.Number, "255"),
                     new(TokenType.StatementEnding),
                 }
