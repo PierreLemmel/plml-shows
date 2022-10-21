@@ -631,7 +631,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 1792648962}
-  channels: 00000000000000000000000000000000ff00000000000000
+  channels: 000000000000000000000000000000000000000000000000
 --- !u!1 &94040360
 GameObject:
   m_ObjectHideFlags: 0
@@ -2839,7 +2839,7 @@ MonoBehaviour:
   active: 1
   weight: 29.999996
   canChain: 1
-  trackName: 
+  trackName: Contres
 --- !u!1 &276434510
 GameObject:
   m_ObjectHideFlags: 0
@@ -3207,7 +3207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 1656281126}
-  channels: ff000000fc0000007300000000000000
+  channels: 00000000000000000000000000000000
 --- !u!1 &317100004
 GameObject:
   m_ObjectHideFlags: 0
@@ -6318,7 +6318,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30.45
+  m_fontSize: 29.15
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7358,7 +7358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 205704715}
-  channels: ff000000
+  channels: 00000000
 --- !u!1 &666709564
 GameObject:
   m_ObjectHideFlags: 0
@@ -9862,7 +9862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 1935916774}
-  channels: 000000000000000000000000ff000000
+  channels: 00000000000000000000000000000000
 --- !u!1 &884777595
 GameObject:
   m_ObjectHideFlags: 0
@@ -10156,7 +10156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 2006674160}
-  channels: 960000005d0000000000000064000000
+  channels: 00000000000000000000000000000000
 --- !u!1 &924572594
 GameObject:
   m_ObjectHideFlags: 0
@@ -12938,7 +12938,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 2006674160}
-  channels: ff000000fc0000007300000000000000
+  channels: 00000000000000000000000000000000
 --- !u!1 &1212545120
 GameObject:
   m_ObjectHideFlags: 0
@@ -13379,7 +13379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 690459189}
-  channels: 00000000000000000000000000000000ff00000000000000
+  channels: 000000000000000000000000000000000000000000000000
 --- !u!1 &1250124127
 GameObject:
   m_ObjectHideFlags: 0
@@ -13488,7 +13488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 1356674644}
-  channels: 000000000000000000000000ff000000
+  channels: 00000000000000000000000000000000
 --- !u!1 &1262340805
 GameObject:
   m_ObjectHideFlags: 0
@@ -16570,7 +16570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 205704715}
-  channels: 8c000000
+  channels: 00000000
 --- !u!1 &1496446119
 GameObject:
   m_ObjectHideFlags: 0
@@ -17120,7 +17120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 1656281126}
-  channels: 960000005d0000000000000064000000
+  channels: 00000000000000000000000000000000
 --- !u!1 &1530754254
 GameObject:
   m_ObjectHideFlags: 0
@@ -17813,7 +17813,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30.45
+  m_fontSize: 29.15
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -19705,7 +19705,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 1356674644}
-  channels: 000000000000000000000000ff000000
+  channels: 00000000000000000000000000000000
 --- !u!1 &1905532928
 GameObject:
   m_ObjectHideFlags: 0
@@ -20173,7 +20173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 890508919}
-  channels: 410000002d0000000000000000000000
+  channels: 00000000000000000000000000000000
 --- !u!1 &1979263526
 GameObject:
   m_ObjectHideFlags: 0
@@ -22166,6 +22166,54 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1083523320}
     m_Modifications:
+    - target: {fileID: 2940444781582489097, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: 8c3db687e3ee34c43bce9c85f6db11ef, type: 2}
+    - target: {fileID: 2940444781582489097, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: channelOffset
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940444781683443551, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: 7197b234aef3c9842a763312f468a6a7, type: 2}
+    - target: {fileID: 2940444781683443551, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: channelOffset
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940444781811464315, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: 8c3db687e3ee34c43bce9c85f6db11ef, type: 2}
+    - target: {fileID: 2940444781811464315, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: channelOffset
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940444781998131885, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: 8c3db687e3ee34c43bce9c85f6db11ef, type: 2}
+    - target: {fileID: 2940444781998131885, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: channelOffset
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940444782060543675, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: 8c3db687e3ee34c43bce9c85f6db11ef, type: 2}
+    - target: {fileID: 2940444782060543675, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: channelOffset
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940444782180167254, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: 07e8fb281d71bad4f98a0796733db794, type: 2}
+    - target: {fileID: 2940444782180167254, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: channelOffset
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 2940444782495397497, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -22214,6 +22262,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fixtures - Studio27
       objectReference: {fileID: 0}
+    - target: {fileID: 2940444782760735336, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: 7197b234aef3c9842a763312f468a6a7, type: 2}
+    - target: {fileID: 2940444782760735336, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: channelOffset
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940444783097230890, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: 8c3db687e3ee34c43bce9c85f6db11ef, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d07effad0d2b6a45836373004f87a9f, type: 3}
 --- !u!1001 &7667304000186821973

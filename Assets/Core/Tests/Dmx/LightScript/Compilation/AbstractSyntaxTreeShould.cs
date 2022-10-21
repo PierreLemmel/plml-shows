@@ -2,6 +2,7 @@
 using Plml.Dmx.Scripting;
 using Plml.Dmx.Scripting.Compilation;
 using Plml.Dmx.Scripting.Compilation.Nodes;
+using Plml.Dmx.Scripting.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -3,11 +3,11 @@ using Plml.Dmx;
 using Plml.Dmx.Scripting;
 using Plml.Dmx.Scripting.Compilation;
 using Plml.Dmx.Scripting.Compilation.Nodes;
+using Plml.Dmx.Scripting.Types;
 using System.Collections.Generic;
 using UnityEngine;
 
 using TokenType = Plml.Dmx.Scripting.Compilation.LightScriptTokenType;
-using UObject = UnityEngine.Object;
 
 namespace Plml.Tests.Dmx.Scripting.Compilation
 {
@@ -119,7 +119,8 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         [TestCaseSource(nameof(BuildASTTestCaseSource))]
         public void Return_Expected_Result(LightScriptToken[] input, LightScriptData data, AbstractSyntaxTree expected)
         {
-            AbstractSyntaxTree result = LightScriptCompilation.BuildAst(input, data);
+            ILightScriptContext context = LightScriptCompilation.BuildContext(data);
+            AbstractSyntaxTree result = LightScriptCompilation.BuildAst(input, context);
 
             Debug.Log("expected:\n" + expected.Stringify() + "\n\nresult:\n" + result.Stringify());
 

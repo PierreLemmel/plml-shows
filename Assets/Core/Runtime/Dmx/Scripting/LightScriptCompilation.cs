@@ -9,6 +9,7 @@ using TokenType = Plml.Dmx.Scripting.Compilation.LightScriptTokenType;
 using TokenizationContext = Plml.Dmx.Scripting.Compilation.LightScriptTokenizationContext;
 using NumberType = Plml.Dmx.Scripting.Compilation.LightScriptTokenizationNumberTypeContext;
 using Plml.Dmx.Scripting.Compilation.Nodes;
+using Plml.Dmx.Scripting.Types;
 
 namespace Plml.Dmx.Scripting
 {
@@ -26,12 +27,16 @@ namespace Plml.Dmx.Scripting
                 LightScriptToken[] tokens = Tokenize(src);
                 Log("Source tokenized");
 
+                Log("Building context");
+                ILightScriptContext context = BuildContext(data);
+                Log("Context built");
+
                 Log("Building abstract syntax tree");
-                AbstractSyntaxTree ast = BuildAst(tokens, data);
+                AbstractSyntaxTree ast = BuildAst(tokens, context);
                 Log("Abstract syntax tree built");
 
                 Log("Compiling abstract syntax tree");
-                LightScriptAction action = CompileAst(ast, data);
+                LightScriptAction action = CompileAst(ast, context);
                 Log("Abstract syntax tree compiled");
 
                 Log($"Source compiled:\n'{src}'");
@@ -183,12 +188,12 @@ namespace Plml.Dmx.Scripting
             return context;
         }
 
-        public static AbstractSyntaxTree BuildAst(LightScriptToken[] tokens, LightScriptData data)
+        public static AbstractSyntaxTree BuildAst(LightScriptToken[] tokens, ILightScriptContext context)
         {
             LightScriptToken[][] scriptTokens = tokens
                 .Split(token => token.type == TokenType.StatementEnding);
 
-            SyntaxNode[] statements = scriptTokens.Select(BuildSyntaxNodeFromTokens);
+            SyntaxNode[] statements = scriptTokens.Select(t => BuildSyntaxNodeFromTokens(t, context));
 
             AbstractSyntaxTree result = new(statements);
 
@@ -197,13 +202,13 @@ namespace Plml.Dmx.Scripting
 
         
 
-        private static SyntaxNode BuildSyntaxNodeFromTokens(LightScriptToken[] tokens)
+        private static SyntaxNode BuildSyntaxNodeFromTokens(LightScriptToken[] tokens, ILightScriptContext context)
         {
             // Assertion made here : all statements are assignments
             (var leftSegment, var rightSegment) = tokens.Separate(token => token.type == TokenType.Assignment);
 
-            var lhs = BuildSyntaxNodeFromArraySegment(leftSegment);
-            var rhs = BuildSyntaxNodeFromArraySegment(rightSegment);
+            var lhs = BuildSyntaxNodeFromArraySegment(leftSegment, context);
+            var rhs = BuildSyntaxNodeFromArraySegment(rightSegment, context);
 
             return new AssignmentNode(
                 lhs,
@@ -211,19 +216,12 @@ namespace Plml.Dmx.Scripting
             );
         }
 
-        private enum OperationStack
-        {
-            Addition,
-            Substraction,
-            Multiplication,
-            Division,
-            Group
-        }
-
-        private static SyntaxNode BuildSyntaxNodeFromArraySegment(ArraySegment<LightScriptToken> tokens)
+        private static SyntaxNode BuildSyntaxNodeFromArraySegment(ArraySegment<LightScriptToken> tokens, ILightScriptContext context)
         {
             Stack<TokenType> operationStack = new();
             Stack<SyntaxNode> resultStack = new();
+
+            ASTBuilderContext astContext = ASTBuilderContext.Default;
 
             foreach (var token in tokens)
             {
@@ -232,7 +230,24 @@ namespace Plml.Dmx.Scripting
                 switch (token.type)
                 {
                     case TokenType.Identifier:
-                        throw new NotImplementedException();
+                        
+                        switch (astContext)
+                        {
+                            case ASTBuilderContext.Default:
+
+                                if (!context.TryGetVariable(content, out var variable))
+                                    throw new SyntaxTreeException(CompilationErrorType.UnknownVariable, $"Unknown variable '{content}'");
+
+                                VariableNode variableNode = new(variable.Type, variable.Name);
+
+                                resultStack.Push(variableNode);
+
+                                break;
+
+                            case ASTBuilderContext.Object:
+                                break;
+                        }
+
                         break;
                     case TokenType.Number:
                         ConstantNode constantNode = int.TryParse(content, out int intResult) ?
@@ -261,7 +276,7 @@ namespace Plml.Dmx.Scripting
         }
 
 
-        private static LightScriptAction CompileAst(AbstractSyntaxTree ast, LightScriptData data)
+        private static LightScriptAction CompileAst(AbstractSyntaxTree ast, ILightScriptContext context)
         {
             throw new NotImplementedException();
         }

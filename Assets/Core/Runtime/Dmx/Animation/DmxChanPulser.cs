@@ -12,12 +12,16 @@ namespace Plml.Dmx.Animations
         [DmxRange]
         public IntRange range;
 
-        [Min(0f)]
+        [Min(0.01f)]
         public float period = 1f;
 
         [Min(0f)]
         public float smoothTime = 0.3f;
 
+        [Min(0f)]
+        public float offset = 0f;
+
+        private float t;
         private bool goUp;
         private float target;
         private float current;
@@ -25,13 +29,13 @@ namespace Plml.Dmx.Animations
 
         private void Awake()
         {
-            target = range.max;
-            current = range.min;
-            goUp = true;
+            t = offset;
+            goUp = Mathf.FloorToInt(t / period) % 2 == 0;
+            current = goUp ? range.min : range.max;
+            target = goUp ? range.max : range.min;
             velocity = 0f;
         }
 
-        private float t = 0f;
         private void Update()
         {
             t += Time.deltaTime;

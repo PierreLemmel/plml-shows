@@ -1,4 +1,6 @@
-﻿namespace Plml.Dmx.Scripting.Compilation.Nodes
+﻿using Plml.Dmx.Scripting.Types;
+
+namespace Plml.Dmx.Scripting.Compilation.Nodes
 {
     internal class ConstantNode : SyntaxNode<ConstantNode>
     {

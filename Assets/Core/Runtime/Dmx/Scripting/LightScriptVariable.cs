@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plml.Dmx.Scripting.Types;
+using System;
 
 namespace Plml.Dmx.Scripting
 {

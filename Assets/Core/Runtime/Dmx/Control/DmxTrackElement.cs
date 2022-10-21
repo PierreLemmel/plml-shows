@@ -214,6 +214,8 @@ namespace Plml.Dmx
             set => SetColor(value);
         }
 
+
+
         public int value
         {
             get => GetValue();
