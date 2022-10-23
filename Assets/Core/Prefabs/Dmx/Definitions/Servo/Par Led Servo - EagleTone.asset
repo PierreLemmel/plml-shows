@@ -22,7 +22,7 @@ MonoBehaviour:
   - channel: 2
     type: 9
   - channel: 5
-    type: 1
+    type: 2
   - channel: 6
     type: 10
   - channel: 9
