@@ -6,11 +6,16 @@ namespace Plml.Dmx.Scripting.Types
     {
         public string Name { get; }
         public LightScriptType Type { get; }
+        public string UnderlyingProperty { get; }
 
-        public LightScriptPropertyInfo(string name, LightScriptType type)
+        public LightScriptPropertyInfo(string name, LightScriptType type, string property)
         {
             Name = name;
             Type = type;
+            UnderlyingProperty = property;
         }
+
+        public LightScriptPropertyInfo(string name, LightScriptType type)
+            : this(name, type, name) { }
     }
 }

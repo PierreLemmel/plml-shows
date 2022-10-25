@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Plml.Dmx.Scripting.Compilation.Nodes
 {
@@ -14,5 +15,7 @@ namespace Plml.Dmx.Scripting.Compilation.Nodes
         }
 
         protected override bool Equals(MemberAccessNode other) => Target == other.Target && Property == other.Property;
+
+        public override IEnumerable<SyntaxNode> EnumerateChildren() => Enumerables.Create(Target);
     }
 }

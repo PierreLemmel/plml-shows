@@ -117,7 +117,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
 
         [Test]
         [TestCaseSource(nameof(BuildASTTestCaseSource))]
-        public void Return_Expected_Result(LightScriptToken[] input, LightScriptData data, AbstractSyntaxTree expected)
+        public void Build_AST_As_Expected(string formula, LightScriptToken[] input, LightScriptData data, AbstractSyntaxTree expected)
         {
             ILightScriptContext context = LightScriptCompilation.BuildContext(data);
             AbstractSyntaxTree result = LightScriptCompilation.BuildAst(input, context);
@@ -131,6 +131,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         {
             new object[]
             {
+                "parLed1.dimmer = 255",
                 new LightScriptToken[]
                 {
                     new(TokenType.Identifier, "parLed1"),
@@ -141,19 +142,146 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 },
                 new LightScriptData()
                 {
-                    text = "parLed.dimmer = 255",
+                    text = "parLed1.dimmer = 255",
                     fixtures = GetFixtures("parLed1", "parLed2")
                 },
                 new AbstractSyntaxTree(
                     new AssignmentNode(
                         lhs: new MemberAccessNode(
-                            new VariableNode(LightScriptType.Fixture, "parLed"),
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
                             "dimmer"
                         ),
                         rhs: new ConstantNode(255)
                     )
                 )
+            },
+            new object[]
+            {
+                "parLed1.dimmer = 255 - 100",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.Operator, "-"),
+                    new(TokenType.Number, "100"),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = 255 - 100",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            "dimmer"
+                        ),
+                        rhs: new SubstractionNode(
+                            new ConstantNode(255),
+                            new ConstantNode(100)
+                        )
+                    )
+                )
+            },
+            new object[]
+            {
+                "parLed1.dimmer.red = 255",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "color"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "red"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "255"),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer.red = 255",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode( 
+                            new MemberAccessNode(
+                                new VariableNode(LightScriptType.Fixture, "parLed1"),
+                                "color"
+                            ),
+                            "red"
+                        ),
+                        rhs:new ConstantNode(255)
+                    )
+                )
             }
+        };
+
+        [Test]
+        [TestCaseSource(nameof(OptimizeASTTestCaseSource))]
+        public void Optimize_AST_As_Expected(AbstractSyntaxTree input, AbstractSyntaxTree expected)
+        {
+            AbstractSyntaxTree result = LightScriptCompilation.OptimizeAst(input);
+
+            Debug.Log("expected:\n" + expected.Stringify() + "\n\nresult:\n" + result.Stringify());
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
+        public static IEnumerable<object[]> OptimizeASTTestCaseSource => new object[][]
+        {
+            new object[]
+            {
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            "dimmer"
+                        ),
+                        rhs: new SubstractionNode(
+                            new ConstantNode(255),
+                            new ConstantNode(100)
+                        )
+                    )
+                ),
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            "dimmer"
+                        ),
+                        rhs: new ConstantNode(155)
+                    )
+                )
+            },
+            new object[]
+            {
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            "dimmer"
+                        ),
+                        rhs: new AdditionNode(
+                            new MultiplicationNode(
+                                new ConstantNode(2),
+                                new ConstantNode(100)
+                            ),
+                            new ConstantNode(55)
+                        )
+                    )
+                ),
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            "dimmer"
+                        ),
+                        rhs: new ConstantNode(255)
+                    )
+                )
+            },
         };
 
         [Test]

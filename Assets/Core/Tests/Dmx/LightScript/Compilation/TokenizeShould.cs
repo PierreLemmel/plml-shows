@@ -279,6 +279,32 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 "parLed.dimmer = 0x0xff",
                 CompilationErrorType.InvalidNumberFormat
             },
+            new object[]
+            {
+                "parLed.dimmer = (50 + 60))",
+                CompilationErrorType.InvalidBrackets
+            },
+            new object[]
+            {
+                "parLed.dimmer = (50 + 60",
+                CompilationErrorType.InvalidBrackets
+            },
+            new object[]
+            {
+                "parLed.dimmer = 50 + 60)",
+                CompilationErrorType.InvalidBrackets
+            },
+            new object[]
+            {
+                "parLed.dimmer = )50 + 60(",
+                CompilationErrorType.InvalidBrackets
+            },
+            new object[]
+            {
+                @"parLed1.dimmer = (50 + 60
+                parLed2.dimmer = 50 + 60)",
+                CompilationErrorType.InvalidBrackets
+            },
         };
     }
 }

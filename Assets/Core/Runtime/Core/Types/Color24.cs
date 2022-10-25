@@ -8,6 +8,50 @@ namespace Plml
         public byte g;
         public byte b;
 
+        public float hue
+        {
+            get => Hsv().h;
+            set
+            {
+                (_, float s, float v) = Hsv();
+                ApplyHsv(value, s, v);
+            }
+        }
+
+        public float saturation
+        {
+            get => Hsv().s;
+            set
+            {
+                (float h, _, float v) = Hsv();
+                ApplyHsv(h, value, v);
+            }
+        }
+
+        public float value
+        {
+            get => Hsv().v;
+            set
+            {
+                (float h, float s, _) = Hsv();
+                ApplyHsv(h, s, value);
+            }
+        }
+
+        private void ApplyHsv(float h, float s, float v)
+        {
+            Color24 c = Color.HSVToRGB(h, s, v);
+            r = c.r;
+            g = c.g;
+            b = c.b;
+        }
+
+        public (float h, float s, float v) Hsv()
+        {
+            Color.RGBToHSV(this, out float h, out float s, out float v);
+            return (h, s, v);
+        }
+
         public Color24(int r, int g, int b)
         {
             this.r = (byte)r;

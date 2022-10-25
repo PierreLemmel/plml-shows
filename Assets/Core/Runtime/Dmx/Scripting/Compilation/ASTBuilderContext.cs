@@ -3,6 +3,7 @@
     internal enum ASTBuilderContext
     {
         Default,
-        Object
+        Object,
+        MemberAccess,
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Plml.Dmx.Scripting.Compilation.Nodes
+﻿using System.Collections.Generic;
+
+namespace Plml.Dmx.Scripting.Compilation.Nodes
 {
     internal abstract class UnaryOperatorNode : SyntaxNode<UnaryOperatorNode>
     {
@@ -13,6 +15,8 @@
         }
 
         protected override bool Equals(UnaryOperatorNode other) => Operand == other.Operand;
+
+        public override IEnumerable<SyntaxNode> EnumerateChildren() => Enumerables.Create(Operand);
     }
 
     internal class UnaryPlusNode : UnaryOperatorNode

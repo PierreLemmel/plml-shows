@@ -1,4 +1,6 @@
 ﻿using Plml.Dmx.Scripting.Types;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Plml.Dmx.Scripting.Compilation.Nodes
 {
@@ -15,6 +17,8 @@ namespace Plml.Dmx.Scripting.Compilation.Nodes
 
         protected override bool Equals(VariableNode other) => Type == other.Type
                                                             && Name == other.Name;
+
+        public override IEnumerable<SyntaxNode> EnumerateChildren() => Enumerable.Empty<SyntaxNode>();
     }
 
 }

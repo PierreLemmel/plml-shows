@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Plml.Dmx.Scripting.Compilation.Nodes
 {
@@ -12,6 +13,8 @@ namespace Plml.Dmx.Scripting.Compilation.Nodes
         public override bool Equals(object other) => base.Equals(other);
 
         public override int GetHashCode() => base.GetHashCode();
+
+        public abstract IEnumerable<SyntaxNode> EnumerateChildren();
     }
 
     internal abstract class SyntaxNode<TNode> : SyntaxNode where TNode : SyntaxNode<TNode>

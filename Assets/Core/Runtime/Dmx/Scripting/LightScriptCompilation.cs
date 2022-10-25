@@ -162,7 +162,14 @@ namespace Plml.Dmx.Scripting
             return result.ToArray();
         }
 
-        public static void ValidateTokens(LightScriptToken[] tokens) => tokens
+
+        public static void ValidateTokens(LightScriptToken[] tokens)
+        {
+            ValidateNumberFormats(tokens);
+            ValidateBrackets(tokens);
+        }
+
+        private static void ValidateNumberFormats(LightScriptToken[] tokens) => tokens
             .Where(token => token.type == TokenType.Number)
             .Select(token => token.content)
             .ForEach(str =>
@@ -174,6 +181,35 @@ namespace Plml.Dmx.Scripting
                 if (!result)
                     throw new TokenizationException(CompilationErrorType.InvalidNumberFormat, $"Invalid number format: '{str}'");
             });
+
+        private static void ValidateBrackets(LightScriptToken[] tokens)
+        {
+            var statements = tokens.Split(t => t.type == TokenType.StatementEnding);
+
+            const string ErrorMsg = "Error in brackets";
+
+            foreach (var statement in statements)
+            {
+                int opened = 0;
+
+                foreach (LightScriptToken token in statement)
+                {
+                    switch (token.type)
+                    {
+                        case TokenType.LeftBracket:
+                            opened++;
+                            break;
+                        case TokenType.RightBracket:
+                            if (--opened < 0)
+                                throw new TokenizationException(CompilationErrorType.InvalidBrackets, ErrorMsg);
+                            break;
+                    }
+                }
+
+                if (opened != 0)
+                    throw new TokenizationException(CompilationErrorType.InvalidBrackets, ErrorMsg);
+            }
+        }
 
         public static ILightScriptContext BuildContext(LightScriptData data)
         {
@@ -218,16 +254,21 @@ namespace Plml.Dmx.Scripting
 
         private static SyntaxNode BuildSyntaxNodeFromArraySegment(ArraySegment<LightScriptToken> tokens, ILightScriptContext context)
         {
-            Stack<TokenType> operationStack = new();
+            Stack<BinaryOperatorType> operationStack = new();
             Stack<SyntaxNode> resultStack = new();
 
             ASTBuilderContext astContext = ASTBuilderContext.Default;
+            LightScriptType currentObjectType = LightScriptType.Undefined;
 
             foreach (var token in tokens)
             {
                 string content = token.content;
+                TokenType type = token.type;
 
-                switch (token.type)
+                ASTBuilderContext newContext;
+                LightScriptType newObjectType = LightScriptType.Undefined;
+
+                switch (type)
                 {
                     case TokenType.Identifier:
                         
@@ -239,40 +280,135 @@ namespace Plml.Dmx.Scripting
                                     throw new SyntaxTreeException(CompilationErrorType.UnknownVariable, $"Unknown variable '{content}'");
 
                                 VariableNode variableNode = new(variable.Type, variable.Name);
+                                newObjectType = variable.Type;
 
-                                resultStack.Push(variableNode);
+                                AppendToResultStack(variableNode);
 
                                 break;
 
-                            case ASTBuilderContext.Object:
+                            case ASTBuilderContext.MemberAccess:
+
+                                if (currentObjectType.HasProperty(content, out LightScriptType propertyType))
+                                {
+                                    newObjectType = propertyType;
+                                    newContext = ASTBuilderContext.Object;
+
+                                    MemberAccessNode memberAccess = new(resultStack.Peek(), content);
+                                    AppendToResultStack(memberAccess);
+                                }
+                                else
+                                    throw new SyntaxTreeException(CompilationErrorType.MissingProperty, $"Missing property '{content}' on type {currentObjectType}");
+                                
                                 break;
                         }
+                        newContext = ASTBuilderContext.Object;
 
                         break;
                     case TokenType.Number:
                         ConstantNode constantNode = int.TryParse(content, out int intResult) ?
                             new(intResult) :
                             new(float.Parse(content));
-                            
-                        resultStack.Push(constantNode);
+
+                        AppendToResultStack(constantNode);
+                        newContext = ASTBuilderContext.Default;
                         
                         break;
+
                     case TokenType.Operator:
-                        throw new NotImplementedException();
+
+                        BinaryOperatorType @operator = content switch
+                        {
+                            "+" => BinaryOperatorType.Addition,
+                            "-" => BinaryOperatorType.Substraction,
+                            "/" => BinaryOperatorType.Division,
+                            "*" => BinaryOperatorType.Multiplication,
+                            _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unknown operator '{content}'")
+                        };
+
+                        operationStack.Push(@operator);
+
+                        newContext = ASTBuilderContext.Default;
+
                         break;
+
                     case TokenType.DotNotation:
-                        throw new NotImplementedException();
+
+                        if (astContext != ASTBuilderContext.Object)
+                            throw new SyntaxTreeException(CompilationErrorType.InvalidContext, "Member access is not valid in the current context");
+
+                        newContext = ASTBuilderContext.MemberAccess;
+                        newObjectType = currentObjectType;
+
                         break;
+
                     case TokenType.LeftBracket:
                         throw new NotImplementedException();
-                        break;
+                        //break;
                     case TokenType.RightBracket:
                         throw new NotImplementedException();
-                        break;
+                        //break;
+                    default:
+                        throw new SyntaxTreeException(CompilationErrorType.UnsupportedToken, $"Unsupported token '{token.type}'");
                 }
+
+                astContext = newContext;
+                currentObjectType = newObjectType;
+            }
+
+            void AppendToResultStack(SyntaxNode node)
+            {
+                SyntaxNode resultNode = node;
+
+                if (operationStack.TryPop(out BinaryOperatorType @operator))
+                {
+                    if (!resultStack.TryPop(out SyntaxNode lhs))
+                        throw new SyntaxTreeException(CompilationErrorType.NoLeftHandSideForOperator, $"Missing left hand side for {@operator} operator");
+
+                    var rhs = node;
+
+                    BinaryOperatorNode operatorNode = @operator switch
+                    {
+                        BinaryOperatorType.Addition => new AdditionNode(lhs, rhs),
+                        BinaryOperatorType.Substraction => new SubstractionNode(lhs, rhs),
+                        BinaryOperatorType.Multiplication => new MultiplicationNode(lhs, rhs),
+                        BinaryOperatorType.Division => new DivisionNode(lhs, rhs),
+                        _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unexpected operator '{@operator}'")
+                    };
+
+                    resultNode = operatorNode;
+                }
+
+                resultStack.Push(resultNode);
             }
 
             return resultStack.First();
+        }
+
+
+        public static AbstractSyntaxTree OptimizeAst(AbstractSyntaxTree syntaxTree)
+        {
+            SyntaxNode[] optimizedStatements = syntaxTree.Statements.Select(OptimizeNode);
+
+            SyntaxNode OptimizeNode(SyntaxNode node)
+            {
+                if (node is BinaryOperatorNode binaryOperator)
+                {
+                    var lhs = OptimizeNode(binaryOperator.LeftHandSide);
+                    var rhs = OptimizeNode(binaryOperator.RightHandSide);
+
+                    if (lhs is ConstantNode lhsConstant && rhs is ConstantNode rhsConstant)
+                    {
+                        ConstantNode result = binaryOperator switch
+                        {
+                            _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unsupported operator: {binaryOperator.Operator}")
+                        };
+                    }
+                }
+
+                return node;
+            }
+
+            return new(optimizedStatements);
         }
 
 

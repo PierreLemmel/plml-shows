@@ -1,4 +1,6 @@
-﻿namespace Plml.Dmx.Scripting.Compilation.Nodes
+﻿using System.Collections.Generic;
+
+namespace Plml.Dmx.Scripting.Compilation.Nodes
 {
     internal abstract class BinaryOperatorNode : SyntaxNode<BinaryOperatorNode>
     {
@@ -17,6 +19,11 @@
         protected override bool Equals(BinaryOperatorNode other) => Operator == other.Operator
                                                                 && LeftHandSide == other.LeftHandSide
                                                                 && RightHandSide == other.RightHandSide;
+
+        public override IEnumerable<SyntaxNode> EnumerateChildren() => Enumerables.Create(
+            LeftHandSide,
+            RightHandSide
+        );
     }
 
     internal class AssignmentNode : BinaryOperatorNode
