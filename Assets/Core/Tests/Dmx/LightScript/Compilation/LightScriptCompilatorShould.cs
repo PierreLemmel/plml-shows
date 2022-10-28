@@ -222,6 +222,36 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             },
             new object[]
             {
+                "dimmer1 = dimmer2 = 255",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "dimmer1"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Identifier, "dimmer2"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "255"),
+                },
+                new LightScriptData()
+                {
+                    text = "dimmer1 = dimmer2 = 255",
+                    integers = new LightScriptIntegerData[]
+                    {
+                        new("dimmer1"),
+                        new("dimmer2"),
+                    },
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new VariableNode(LightScriptType.Integer, "dimmer1"),
+                        rhs: new AssignmentNode(
+                            lhs: new VariableNode(LightScriptType.Integer, "dimmer2"),
+                            rhs: new ConstantNode(255)
+                        )
+                    )
+                )
+            },
+            new object[]
+            {
                 "parLed1.dimmer = parLed2.dimmer = 255",
                 new LightScriptToken[]
                 {
@@ -243,13 +273,13 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 new AbstractSyntaxTree(
                     new AssignmentNode(
                         lhs: new MemberAccessNode(
-                                new VariableNode(LightScriptType.Fixture, "parLed1"),
-                                "dimmer"
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            "dimmer"
                         ),
                         rhs: new AssignmentNode(
                             lhs: new MemberAccessNode(
-                                    new VariableNode(LightScriptType.Fixture, "parLed2"),
-                                    "dimmer"
+                                new VariableNode(LightScriptType.Fixture, "parLed2"),
+                                "dimmer"
                             ),
                             rhs: new ConstantNode(255)
                         )
@@ -319,7 +349,50 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                         )
                     )
                 )
-            }
+            },
+            new object[]
+            {
+                "parLed1.dimmer = 255 - 100 * 2 + 30",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.Operator, "-"),
+                    new(TokenType.Number, "100"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Number, "2"),
+                    new(TokenType.Operator, "+"),
+                    new(TokenType.Number, "30"),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = 255 - 100 * 2 + 30",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        LightScriptType.Integer,
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        rhs: new AdditionNode(
+                            rhs: new SubstractionNode(
+                                new ConstantNode(255),
+                                new MultiplicationNode(
+                                    new ConstantNode(100),
+                                    new ConstantNode(2)
+                                )
+                            ),
+                            lhs: new ConstantNode(30)
+                        )
+                    )
+                )
+            },
         };
 
         [Test]

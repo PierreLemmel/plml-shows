@@ -172,6 +172,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Helpers\GameObjects.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\CalculationEngine.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Fixtures\DmxFixture.cs" />
+    <Compile Include="Assets\Core\Runtime\Core\Helpers\Enums.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpySetupActionNode.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\MemberAccessNode.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\SyntaxNode.cs" />
@@ -220,7 +221,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Helpers\RunInBackground.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
-    <Compile Include="Assets\Core\Runtime\Core\Helpers\Enums.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptIntegerData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />

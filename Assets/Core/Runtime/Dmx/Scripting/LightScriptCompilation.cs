@@ -220,6 +220,7 @@ namespace Plml.Dmx.Scripting
             context.AddVariable(new(LightScriptType.Integer, "frame"));
 
             data.fixtures.ForEach(fixture => context.AddVariable(new(LightScriptType.Fixture, fixture.name)));
+            data.integers.ForEach(integer => context.AddVariable(new(LightScriptType.Integer, integer.name)));
 
             return context;
         }
@@ -240,7 +241,7 @@ namespace Plml.Dmx.Scripting
 
         private static SyntaxNode BuildSyntaxNodeFromTokens(LightScriptToken[] tokens, ILightScriptContext context)
         {
-            Stack<BinaryOperatorType> operationStack = new();
+            Stack<BinaryOperatorType> operatorStack = new();
             Stack<SyntaxNode> resultStack = new();
 
             ASTBuilderContext astContext = ASTBuilderContext.Default;
@@ -279,7 +280,7 @@ namespace Plml.Dmx.Scripting
                                     newObjectType = propertyType;
                                     newContext = ASTBuilderContext.Object;
 
-                                    MemberAccessNode memberAccess = new(resultStack.Peek(), propertyType, content);
+                                    MemberAccessNode memberAccess = new(resultStack.Pop(), propertyType, content);
                                     PushResultToStack(memberAccess);
                                 }
                                 else
@@ -347,50 +348,48 @@ namespace Plml.Dmx.Scripting
                 currentObjectType = newObjectType;
             }
 
+            while (operatorStack.Any())
+                PopOperatorStack();
+
             void PushResultToStack(SyntaxNode node) => resultStack.Push(node);
 
             void PushOperatorToStack(BinaryOperatorType @operator)
             {
-                if (operationStack.Any())
+                int operatorPrecedence = @operator.GetPrecedence();
+                while (operatorStack.TryPeek(out BinaryOperatorType lastOperator)
+                    && operatorPrecedence < lastOperator.GetPrecedence())
                 {
-
+#warning Problem with left associaticity here, @todo: create LightScriptOperatorInfo class
+                    PopOperatorStack();
                 }
-                else
-                {
-                    operationStack.Push(@operator);
-                }
+                
+                operatorStack.Push(@operator);
             }
 
-            void AppendToResultStack2(SyntaxNode node)
+            void PopOperatorStack()
             {
-                SyntaxNode resultNode = node;
+                BinaryOperatorType @operator = operatorStack.Pop();
+                if (!resultStack.TryPop(out SyntaxNode rhs))
+                    throw new SyntaxTreeException(CompilationErrorType.NoLeftHandSideForOperator, $"Missing left hand side for {@operator} operator");
+                if (!resultStack.TryPop(out SyntaxNode lhs))
+                    throw new SyntaxTreeException(CompilationErrorType.NoLeftHandSideForOperator, $"Missing right hand side for {@operator} operator");
 
-                if (operationStack.TryPop(out BinaryOperatorType @operator))
+                if (LightScriptTypeSystem.IsValidOperatorType(@operator, lhs.Type, rhs.Type, out var operatorResultType))
                 {
-                    if (!resultStack.TryPop(out SyntaxNode lhs))
-                        throw new SyntaxTreeException(CompilationErrorType.NoLeftHandSideForOperator, $"Missing left hand side for {@operator} operator");
-
-                    var rhs = node;
-
-                    if (LightScriptTypeSystem.IsValidOperatorType(@operator, lhs.Type, rhs.Type, out var operatorResultType))
+                    SyntaxNode operationNode = @operator switch
                     {
-                        BinaryOperatorNode operatorNode = @operator switch
-                        {
-                            BinaryOperatorType.Addition => new AdditionNode(operatorResultType, lhs, rhs),
-                            BinaryOperatorType.Substraction => new SubstractionNode(operatorResultType, lhs, rhs),
-                            BinaryOperatorType.Multiplication => new MultiplicationNode(operatorResultType, lhs, rhs),
-                            BinaryOperatorType.Division => new DivisionNode(operatorResultType, lhs, rhs),
-                            BinaryOperatorType.Assignment => new AssignmentNode(operatorResultType, lhs, rhs),
-                            _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unexpected operator '{@operator}'")
-                        };
-                        
-                        resultNode = operatorNode;
-                    }
-                    else
-                        throw new SyntaxTreeException(CompilationErrorType.TypeError, $"Operator '{@operator}' does not exist between types '{lhs.Type}' and '{rhs.Type}'");
-                }
+                        BinaryOperatorType.Addition => new AdditionNode(operatorResultType, lhs, rhs),
+                        BinaryOperatorType.Substraction => new SubstractionNode(operatorResultType, lhs, rhs),
+                        BinaryOperatorType.Multiplication => new MultiplicationNode(operatorResultType, lhs, rhs),
+                        BinaryOperatorType.Division => new DivisionNode(operatorResultType, lhs, rhs),
+                        BinaryOperatorType.Assignment => new AssignmentNode(operatorResultType, lhs, rhs),
+                        _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unexpected operator '{@operator}'")
+                    };
 
-                resultStack.Push(resultNode);
+                    resultStack.Push(operationNode);
+                }
+                else
+                    throw new SyntaxTreeException(CompilationErrorType.TypeError, $"Operator '{@operator}' does not exist between types '{lhs.Type}' and '{rhs.Type}'");
             }
 
             return resultStack.First();
