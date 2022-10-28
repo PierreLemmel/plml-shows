@@ -149,6 +149,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new AssignmentNode(
                         lhs: new MemberAccessNode(
                             new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
                             "dimmer"
                         ),
                         rhs: new ConstantNode(255)
@@ -175,8 +176,10 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 },
                 new AbstractSyntaxTree(
                     new AssignmentNode(
+                        LightScriptType.Integer,
                         lhs: new MemberAccessNode(
                             new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
                             "dimmer"
                         ),
                         rhs: new SubstractionNode(
@@ -188,7 +191,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             },
             new object[]
             {
-                "parLed1.dimmer.red = 255",
+                "parLed1.color.red = 255",
                 new LightScriptToken[]
                 {
                     new(TokenType.Identifier, "parLed1"),
@@ -201,7 +204,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 },
                 new LightScriptData()
                 {
-                    text = "parLed1.dimmer.red = 255",
+                    text = "parLed1.color.red = 255",
                     fixtures = GetFixtures("parLed1", "parLed2")
                 },
                 new AbstractSyntaxTree(
@@ -213,7 +216,107 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                             ),
                             "red"
                         ),
-                        rhs:new ConstantNode(255)
+                        rhs: new ConstantNode(255)
+                    )
+                )
+            },
+            new object[]
+            {
+                "parLed1.dimmer = parLed2.dimmer = 255",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Identifier, "parLed2"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "255"),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = parLed2.dimmer = 255",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                                new VariableNode(LightScriptType.Fixture, "parLed1"),
+                                "dimmer"
+                        ),
+                        rhs: new AssignmentNode(
+                            lhs: new MemberAccessNode(
+                                    new VariableNode(LightScriptType.Fixture, "parLed2"),
+                                    "dimmer"
+                            ),
+                            rhs: new ConstantNode(255)
+                        )
+                    )
+                )
+            },
+            new object[]
+            {
+                "parLed1.color.red = parLed1.color.green = parLed1.color.blue = 255",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "color"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "red"),
+                    new(TokenType.Assignment),
+
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "color"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "green"),
+                    new(TokenType.Assignment),
+
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "color"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "blue"),
+                    new(TokenType.Assignment),
+
+                    new(TokenType.Number, "255"),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.color.red = parLed1.color.green = parLed1.color.blue = 255",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new MemberAccessNode(
+                                new VariableNode(LightScriptType.Fixture, "parLed1"),
+                                "color"
+                            ),
+                            "red"
+                        ),
+                        rhs: new AssignmentNode(
+                            lhs: new MemberAccessNode(
+                                new MemberAccessNode(
+                                    new VariableNode(LightScriptType.Fixture, "parLed1"),
+                                    "color"
+                                ),
+                                "green"
+                            ),
+                            rhs: new AssignmentNode(
+                                lhs: new MemberAccessNode(
+                                    new MemberAccessNode(
+                                        new VariableNode(LightScriptType.Fixture, "parLed1"),
+                                        "color"
+                                    ),
+                                    "blue"
+                                ),
+                                rhs: new ConstantNode(255)
+                            )
+                        )
                     )
                 )
             }

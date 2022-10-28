@@ -67,5 +67,40 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 )
             }
         };
+
+        [Test]
+        [TestCaseSource(nameof(CloneNodesTestCaseSource))]
+        public void Clone_Nodes_Are_Equal_To_Themselves(SyntaxNode node)
+        {
+            var clone = node.Clone();
+            Assert.That(clone, Is.EqualTo(node));
+        }
+
+        public static IEnumerable<SyntaxNode> CloneNodesTestCaseSource => new SyntaxNode[]
+        {
+            new ConstantNode(new Color24(0xff, 0xff, 0xff)),
+            new ConstantNode(245),
+            new VariableNode(LightScriptType.Fixture, "parLed"),
+            new MemberAccessNode(
+                new VariableNode(LightScriptType.Fixture, "parLed"),
+                "dimmer"
+            ),
+            new AdditionNode(
+                new ConstantNode(20),
+                new ConstantNode(10)
+            ),
+            new SubstractionNode(
+                new ConstantNode(20),
+                new ConstantNode(10)
+            ),
+            new DivisionNode(
+                new ConstantNode(20),
+                new ConstantNode(10)
+            ),
+            new MultiplicationNode(
+                new ConstantNode(20),
+                new ConstantNode(10)
+            ),
+        };
     }
 }

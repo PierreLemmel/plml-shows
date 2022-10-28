@@ -240,20 +240,6 @@ namespace Plml.Dmx.Scripting
 
         private static SyntaxNode BuildSyntaxNodeFromTokens(LightScriptToken[] tokens, ILightScriptContext context)
         {
-            // Assertion made here : all statements are assignments
-            (var leftSegment, var rightSegment) = tokens.Separate(token => token.type == TokenType.Assignment);
-
-            var lhs = BuildSyntaxNodeFromArraySegment(leftSegment, context);
-            var rhs = BuildSyntaxNodeFromArraySegment(rightSegment, context);
-
-            return new AssignmentNode(
-                lhs,
-                rhs
-            );
-        }
-
-        private static SyntaxNode BuildSyntaxNodeFromArraySegment(ArraySegment<LightScriptToken> tokens, ILightScriptContext context)
-        {
             Stack<BinaryOperatorType> operationStack = new();
             Stack<SyntaxNode> resultStack = new();
 
@@ -282,7 +268,7 @@ namespace Plml.Dmx.Scripting
                                 VariableNode variableNode = new(variable.Type, variable.Name);
                                 newObjectType = variable.Type;
 
-                                AppendToResultStack(variableNode);
+                                PushResultToStack(variableNode);
 
                                 break;
 
@@ -293,8 +279,8 @@ namespace Plml.Dmx.Scripting
                                     newObjectType = propertyType;
                                     newContext = ASTBuilderContext.Object;
 
-                                    MemberAccessNode memberAccess = new(resultStack.Peek(), content);
-                                    AppendToResultStack(memberAccess);
+                                    MemberAccessNode memberAccess = new(resultStack.Peek(), propertyType, content);
+                                    PushResultToStack(memberAccess);
                                 }
                                 else
                                     throw new SyntaxTreeException(CompilationErrorType.MissingProperty, $"Missing property '{content}' on type {currentObjectType}");
@@ -309,7 +295,7 @@ namespace Plml.Dmx.Scripting
                             new(intResult) :
                             new(float.Parse(content));
 
-                        AppendToResultStack(constantNode);
+                        PushResultToStack(constantNode);
                         newContext = ASTBuilderContext.Default;
                         
                         break;
@@ -325,8 +311,14 @@ namespace Plml.Dmx.Scripting
                             _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unknown operator '{content}'")
                         };
 
-                        operationStack.Push(@operator);
+                        PushOperatorToStack(@operator);
 
+                        newContext = ASTBuilderContext.Default;
+
+                        break;
+
+                    case TokenType.Assignment:
+                        PushOperatorToStack(BinaryOperatorType.Assignment);
                         newContext = ASTBuilderContext.Default;
 
                         break;
@@ -355,7 +347,21 @@ namespace Plml.Dmx.Scripting
                 currentObjectType = newObjectType;
             }
 
-            void AppendToResultStack(SyntaxNode node)
+            void PushResultToStack(SyntaxNode node) => resultStack.Push(node);
+
+            void PushOperatorToStack(BinaryOperatorType @operator)
+            {
+                if (operationStack.Any())
+                {
+
+                }
+                else
+                {
+                    operationStack.Push(@operator);
+                }
+            }
+
+            void AppendToResultStack2(SyntaxNode node)
             {
                 SyntaxNode resultNode = node;
 
@@ -366,16 +372,22 @@ namespace Plml.Dmx.Scripting
 
                     var rhs = node;
 
-                    BinaryOperatorNode operatorNode = @operator switch
+                    if (LightScriptTypeSystem.IsValidOperatorType(@operator, lhs.Type, rhs.Type, out var operatorResultType))
                     {
-                        BinaryOperatorType.Addition => new AdditionNode(lhs, rhs),
-                        BinaryOperatorType.Substraction => new SubstractionNode(lhs, rhs),
-                        BinaryOperatorType.Multiplication => new MultiplicationNode(lhs, rhs),
-                        BinaryOperatorType.Division => new DivisionNode(lhs, rhs),
-                        _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unexpected operator '{@operator}'")
-                    };
-
-                    resultNode = operatorNode;
+                        BinaryOperatorNode operatorNode = @operator switch
+                        {
+                            BinaryOperatorType.Addition => new AdditionNode(operatorResultType, lhs, rhs),
+                            BinaryOperatorType.Substraction => new SubstractionNode(operatorResultType, lhs, rhs),
+                            BinaryOperatorType.Multiplication => new MultiplicationNode(operatorResultType, lhs, rhs),
+                            BinaryOperatorType.Division => new DivisionNode(operatorResultType, lhs, rhs),
+                            BinaryOperatorType.Assignment => new AssignmentNode(operatorResultType, lhs, rhs),
+                            _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unexpected operator '{@operator}'")
+                        };
+                        
+                        resultNode = operatorNode;
+                    }
+                    else
+                        throw new SyntaxTreeException(CompilationErrorType.TypeError, $"Operator '{@operator}' does not exist between types '{lhs.Type}' and '{rhs.Type}'");
                 }
 
                 resultStack.Push(resultNode);
@@ -389,23 +401,76 @@ namespace Plml.Dmx.Scripting
         {
             SyntaxNode[] optimizedStatements = syntaxTree.Statements.Select(OptimizeNode);
 
-            SyntaxNode OptimizeNode(SyntaxNode node)
+            static SyntaxNode OptimizeNode(SyntaxNode node)
             {
                 if (node is BinaryOperatorNode binaryOperator)
                 {
-                    var lhs = OptimizeNode(binaryOperator.LeftHandSide);
-                    var rhs = OptimizeNode(binaryOperator.RightHandSide);
-
-                    if (lhs is ConstantNode lhsConstant && rhs is ConstantNode rhsConstant)
+                    if (binaryOperator.Operator != BinaryOperatorType.Assignment)
                     {
-                        ConstantNode result = binaryOperator switch
+                        var lhs = OptimizeNode(binaryOperator.LeftHandSide);
+                        var rhs = OptimizeNode(binaryOperator.RightHandSide);
+
+                        if (lhs is ConstantNode lhsConstant && rhs is ConstantNode rhsConstant)
                         {
+                            var resultType = binaryOperator.Operator.GetOperatorResultType(lhs.Type, rhs.Type);
+                            if (resultType == LightScriptType.Integer)
+                            {
+                                int lhsVal = lhsConstant.IntValue;
+                                int rhsVal = rhsConstant.IntValue;
+
+                                int constValue = binaryOperator.Operator switch
+                                {
+                                    BinaryOperatorType.Addition => lhsVal + rhsVal,
+                                    BinaryOperatorType.Substraction => lhsVal - rhsVal,
+                                    BinaryOperatorType.Multiplication => lhsVal * rhsVal,
+                                    BinaryOperatorType.Division => lhsVal * rhsVal,
+                                    _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unsupported operator: {binaryOperator.Operator}")
+                                };
+
+                                return new ConstantNode(constValue);
+                            }
+                            else if (resultType == LightScriptType.Float)
+                            {
+                                float lhsVal = lhsConstant.FloatValue;
+                                float rhsVal = rhsConstant.FloatValue;
+
+                                float constValue = binaryOperator.Operator switch
+                                {
+                                    BinaryOperatorType.Addition => lhsVal + rhsVal,
+                                    BinaryOperatorType.Substraction => lhsVal - rhsVal,
+                                    BinaryOperatorType.Multiplication => lhsVal * rhsVal,
+                                    BinaryOperatorType.Division => lhsVal * rhsVal,
+                                    _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unsupported operator: {binaryOperator.Operator}")
+                                };
+
+                                return new ConstantNode(constValue);
+                            }
+                        }
+
+                        BinaryOperatorNode resultNode = binaryOperator.Operator switch
+                        {
+                            BinaryOperatorType.Addition => new AdditionNode(lhs, rhs),
+                            BinaryOperatorType.Substraction => new SubstractionNode(lhs, rhs),
+                            BinaryOperatorType.Multiplication => new MultiplicationNode(lhs, rhs),
+                            BinaryOperatorType.Division => new DivisionNode(lhs, rhs),
                             _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unsupported operator: {binaryOperator.Operator}")
                         };
+
+                        return resultNode;
+                    }
+                    else
+                    {
+                        return new AssignmentNode(
+                            binaryOperator.LeftHandSide.Clone(),
+                            OptimizeNode(binaryOperator.RightHandSide)
+                        );
                     }
                 }
-
-                return node;
+                else
+                {
+                    return node.Clone();
+                }
+                
             }
 
             return new(optimizedStatements);
@@ -417,10 +482,10 @@ namespace Plml.Dmx.Scripting
             throw new NotImplementedException();
         }
 
-        private static char[] operatorChars = "-+*/%<>".ToCharArray();
+        private static readonly char[] operatorChars = "-+*/%<>".ToCharArray();
         private static bool IsOperator(char c) => operatorChars.Contains(c);
 
-        private static char[] singleChars = "().=".ToCharArray();
+        private static readonly char[] singleChars = "().=".ToCharArray();
         private static bool IsSingleChar(char c) => singleChars.Contains(c);
 
     }

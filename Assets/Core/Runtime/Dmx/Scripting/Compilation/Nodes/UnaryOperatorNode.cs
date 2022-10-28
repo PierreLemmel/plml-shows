@@ -8,7 +8,7 @@ namespace Plml.Dmx.Scripting.Compilation.Nodes
 
         public SyntaxNode Operand { get; }
 
-        public UnaryOperatorNode(UnaryOperatorType @operator, SyntaxNode operand)
+        public UnaryOperatorNode(UnaryOperatorType @operator, SyntaxNode operand) : base(operand.Type)
         {
             Operator = @operator;
             Operand = operand;
@@ -22,11 +22,15 @@ namespace Plml.Dmx.Scripting.Compilation.Nodes
     internal class UnaryPlusNode : UnaryOperatorNode
     {
         public UnaryPlusNode(SyntaxNode operand) : base(UnaryOperatorType.Plus, operand) { }
+
+        public override SyntaxNode Clone() => new UnaryPlusNode(Operand.Clone());
     }
 
     internal class UnaryMinusNode : UnaryOperatorNode
     {
         public UnaryMinusNode(SyntaxNode operand) : base(UnaryOperatorType.Minus, operand) { }
+
+        public override SyntaxNode Clone() => new UnaryMinusNode(Operand.Clone());
     }
 
     internal enum UnaryOperatorType

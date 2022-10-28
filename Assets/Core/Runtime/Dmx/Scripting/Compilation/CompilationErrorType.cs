@@ -14,6 +14,7 @@
         MissingProperty,
         UnknownOperator,
         NoLeftHandSideForOperator,
+        TypeError,
 
         // Type System
         UnsupportedType,

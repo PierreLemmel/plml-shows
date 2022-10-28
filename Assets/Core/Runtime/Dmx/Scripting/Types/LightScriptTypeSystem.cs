@@ -81,6 +81,10 @@ namespace Plml.Dmx.Scripting.Types
             return result;
         }
 
+        public static LightScriptType GetPropertyType(this LightScriptType type, string property) => type.HasProperty(property, out var propertyType) ?
+            propertyType :
+            throw new LightScriptTypeException($"Missing property '{property}' on type {type}");
+
         public static bool IsValidOperatorType(this BinaryOperatorType @operator, LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType)
         {
             switch (lhsType)
@@ -111,8 +115,12 @@ namespace Plml.Dmx.Scripting.Types
                             resultType = LightScriptType.Integer;
                             return true;
                         case LightScriptType.Float:
-                            resultType = LightScriptType.Float;
-                            return true;
+                            if (@operator != BinaryOperatorType.Assignment)
+                            {
+                                resultType = LightScriptType.Float;
+                                return true;
+                            }
+                            break;
 
                         case LightScriptType.Color:
 
@@ -136,6 +144,13 @@ namespace Plml.Dmx.Scripting.Types
                                 return true;
                             }
                             break;
+                        case LightScriptType.Color:
+                            if (@operator == BinaryOperatorType.Addition || @operator == BinaryOperatorType.Substraction)
+                            {
+                                resultType = LightScriptType.Color;
+                                return true;
+                            }
+                            break;
                     }
 
                     break;
@@ -144,8 +159,19 @@ namespace Plml.Dmx.Scripting.Types
                     break;
             }
 
+            if (@operator == BinaryOperatorType.Assignment && lhsType == rhsType)
+            {
+                resultType = lhsType;
+                return true;
+            }
+
+
             resultType = LightScriptType.Undefined;
             return false;
         }
+
+        public static LightScriptType GetOperatorResultType(this BinaryOperatorType @operator, LightScriptType lhsType, LightScriptType rhsType) => @operator.IsValidOperatorType(lhsType, rhsType, out var result) ?
+            result :
+            throw new LightScriptException($"Result of operator '{@operator}' on types '{lhsType}' and '{rhsType}' cannot be inferred from usage");
     }
 }

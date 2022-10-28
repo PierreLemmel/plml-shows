@@ -88,6 +88,14 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             // Integer + Integer
             new object[]
             {
+                BinaryOperatorType.Assignment,
+                LightScriptType.Integer,
+                LightScriptType.Integer,
+                true,
+                LightScriptType.Integer
+            },
+            new object[]
+            {
                 BinaryOperatorType.Addition,
                 LightScriptType.Integer,
                 LightScriptType.Integer,
@@ -122,6 +130,14 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             // Float + Float
             new object[]
             {
+                BinaryOperatorType.Assignment,
+                LightScriptType.Float,
+                LightScriptType.Float,
+                true,
+                LightScriptType.Float
+            },
+            new object[]
+            {
                 BinaryOperatorType.Addition,
                 LightScriptType.Float,
                 LightScriptType.Float,
@@ -154,6 +170,22 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             },
 
             // Float + Integer
+            new object[]
+            {
+                BinaryOperatorType.Assignment,
+                LightScriptType.Float,
+                LightScriptType.Integer,
+                true,
+                LightScriptType.Float
+            },
+            new object[]
+            {
+                BinaryOperatorType.Assignment,
+                LightScriptType.Integer,
+                LightScriptType.Float,
+                false,
+                LightScriptType.Undefined
+            },
             new object[]
             {
                 BinaryOperatorType.Addition,
@@ -246,6 +278,14 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             },
 
             // Color + Color
+            new object[]
+            {
+                BinaryOperatorType.Assignment,
+                LightScriptType.Color,
+                LightScriptType.Color,
+                true,
+                LightScriptType.Color
+            },
             new object[]
             {
                 BinaryOperatorType.Addition,

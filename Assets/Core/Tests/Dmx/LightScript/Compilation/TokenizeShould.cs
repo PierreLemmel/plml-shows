@@ -253,6 +253,55 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.StatementEnding),
                 }
             },
+
+            // Multiple assignments 1
+            new object[]
+            {
+                "parLed1.dimmer = parLed2.dimmer = 255",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Identifier, "parLed2"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "255"),
+                }
+            },
+
+            // Multiple assignments 2
+            new object[]
+            {
+                "parLed1.color.red = parLed1.color.green = parLed1.color.blue = 255",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "color"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "red"),
+                    new(TokenType.Assignment),
+
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "color"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "green"),
+                    new(TokenType.Assignment),
+
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "color"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "blue"),
+                    new(TokenType.Assignment),
+
+                    new(TokenType.Number, "255"),
+                }
+            },
         };
 
         public static IEnumerable<object> ValidateTokensTestCaseSource => TokenizeTestCaseSource.Select(objArr => objArr[0]);
