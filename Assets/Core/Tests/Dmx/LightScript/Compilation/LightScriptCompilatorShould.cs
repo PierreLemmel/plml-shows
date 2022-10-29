@@ -381,14 +381,130 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                             "dimmer"
                         ),
                         rhs: new AdditionNode(
-                            rhs: new SubstractionNode(
+                            lhs: new SubstractionNode(
                                 new ConstantNode(255),
                                 new MultiplicationNode(
                                     new ConstantNode(100),
                                     new ConstantNode(2)
                                 )
                             ),
-                            lhs: new ConstantNode(30)
+                            rhs: new ConstantNode(30)
+                        )
+                    )
+                )
+            },
+            new object[]
+            {
+                "parLed1.dimmer = (255 - 155) * 2 + 30",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.Operator, "-"),
+                    new(TokenType.Number, "155"),
+                    new(TokenType.RightBracket),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Number, "2"),
+                    new(TokenType.Operator, "+"),
+                    new(TokenType.Number, "30"),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = (255 - 155) * 2 + 30",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        LightScriptType.Integer,
+                        new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        new AdditionNode(
+                            new MultiplicationNode(
+                                new SubstractionNode(
+                                    new ConstantNode(255),
+                                    new ConstantNode(155)
+                                ),
+                                new ConstantNode(2)
+                            ),
+                            new ConstantNode(30)
+                        )
+                    )
+                )
+            },
+            new object[]
+            {
+                "parLed1.dimmer = (50 + (2 + 1) * (5 + 5)) * 2 + 30",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "50"),
+                    new(TokenType.Operator, "+"),
+                    
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "2"),
+                    new(TokenType.Operator, "+"),
+                    new(TokenType.Number, "1"),
+                    new(TokenType.RightBracket),
+
+                    new(TokenType.Operator, "*"),
+
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "5"),
+                    new(TokenType.Operator, "+"),
+                    new(TokenType.Number, "5"),
+                    new(TokenType.RightBracket),
+
+                    new(TokenType.RightBracket),
+
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Number, "2"),
+
+                    new(TokenType.Operator, "+"),
+                    new(TokenType.Number, "30"),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = (50 + (2 + 1) * (5 + 5)) * 2 + 30",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        LightScriptType.Integer,
+                        new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        new AdditionNode(
+                            new MultiplicationNode(
+                                new AdditionNode(
+                                    new ConstantNode(50),
+                                    new MultiplicationNode(
+                                        new AdditionNode(
+                                            new ConstantNode(2),
+                                            new ConstantNode(1)
+                                        ),
+                                        new AdditionNode(
+                                            new ConstantNode(5),
+                                            new ConstantNode(5)
+                                        )
+                                    )
+                                ),
+                                new ConstantNode(2)
+                            ),
+                            new ConstantNode(30)
                         )
                     )
                 )

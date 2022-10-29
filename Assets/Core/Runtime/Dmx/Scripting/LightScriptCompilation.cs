@@ -238,10 +238,16 @@ namespace Plml.Dmx.Scripting
         }
 
         
+        private enum OperationStackElementType
+        {
+            BinaryOperator,
+            LeftBracket,
+            RightBracket,
+        }
 
         private static SyntaxNode BuildSyntaxNodeFromTokens(LightScriptToken[] tokens, ILightScriptContext context)
         {
-            Stack<BinaryOperatorType> operatorStack = new();
+            Stack<(OperationStackElementType Type, BinaryOperatorType? Operator)> operationStack = new();
             Stack<SyntaxNode> resultStack = new();
 
             ASTBuilderContext astContext = ASTBuilderContext.Default;
@@ -335,11 +341,19 @@ namespace Plml.Dmx.Scripting
                         break;
 
                     case TokenType.LeftBracket:
-                        throw new NotImplementedException();
-                        //break;
+
+                        PushLeftBracket();
+                        newContext = ASTBuilderContext.Default;
+
+                        break;
+
                     case TokenType.RightBracket:
-                        throw new NotImplementedException();
-                        //break;
+                        
+                        PushRightBracket();
+                        newContext = ASTBuilderContext.Default;
+
+                        break;
+
                     default:
                         throw new SyntaxTreeException(CompilationErrorType.UnsupportedToken, $"Unsupported token '{token.type}'");
                 }
@@ -348,27 +362,51 @@ namespace Plml.Dmx.Scripting
                 currentObjectType = newObjectType;
             }
 
-            while (operatorStack.Any())
-                PopOperatorStack();
+            while (operationStack.Any())
+                PopOperationStack();
 
             void PushResultToStack(SyntaxNode node) => resultStack.Push(node);
 
             void PushOperatorToStack(BinaryOperatorType @operator)
             {
-                int operatorPrecedence = @operator.GetPrecedence();
-                while (operatorStack.TryPeek(out BinaryOperatorType lastOperator)
-                    && operatorPrecedence < lastOperator.GetPrecedence())
+                var operatorInfo = @operator.GetOperatorInfo();
+                int operatorPrecedence = operatorInfo.Precedence;
+                
+                while (operationStack.TryPeek(out var lastElt))
                 {
-#warning Problem with left associaticity here, @todo: create LightScriptOperatorInfo class
-                    PopOperatorStack();
+                    if (lastElt.Type != OperationStackElementType.BinaryOperator)
+                        break;
+
+                    BinaryOperatorType lastOperator = lastElt.Operator.Value;
+                    int lastPrecedence = lastOperator.GetOperatorInfo().Precedence;
+                    if (!(operatorPrecedence < lastPrecedence || operatorInfo.IsLeftAssociative && operatorPrecedence == lastPrecedence))
+                        break;
+
+                    PopOperationStack();
                 }
                 
-                operatorStack.Push(@operator);
+                operationStack.Push((OperationStackElementType.BinaryOperator, @operator));
             }
 
-            void PopOperatorStack()
+            void PushLeftBracket() => operationStack.Push((OperationStackElementType.LeftBracket, null));
+
+            void PushRightBracket()
             {
-                BinaryOperatorType @operator = operatorStack.Pop();
+                while (operationStack.Peek().Type != OperationStackElementType.LeftBracket)
+                    PopOperationStack();
+
+                operationStack.Pop();
+            }
+
+            void PopOperationStack()
+            {
+                var topElt = operationStack.Pop();
+
+                if (topElt.Type != OperationStackElementType.BinaryOperator)
+                    throw new SyntaxTreeException(CompilationErrorType.InternalSyntaxTreeError, $"Unexpected operation element type: '{topElt.Type}'");
+
+                var @operator = topElt.Operator.Value;
+
                 if (!resultStack.TryPop(out SyntaxNode rhs))
                     throw new SyntaxTreeException(CompilationErrorType.NoLeftHandSideForOperator, $"Missing left hand side for {@operator} operator");
                 if (!resultStack.TryPop(out SyntaxNode lhs))

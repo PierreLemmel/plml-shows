@@ -85,90 +85,180 @@ namespace Plml.Dmx.Scripting.Types
             propertyType :
             throw new LightScriptTypeException($"Missing property '{property}' on type {type}");
 
-        public static bool IsValidOperatorType(this BinaryOperatorType @operator, LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType)
+        private static IDictionary<BinaryOperatorType, LightScriptOperatorInfo> operators = new Dictionary<BinaryOperatorType, LightScriptOperatorInfo>()
+        {
+            [BinaryOperatorType.Assignment] = new(BinaryOperatorType.Assignment, 0, false, IsValidAssignment),
+            
+            [BinaryOperatorType.Addition] = new(BinaryOperatorType.Addition, 10, true, IsValidAddition),
+            [BinaryOperatorType.Substraction] = new(BinaryOperatorType.Substraction, 10, true, IsValidSubstraction),
+            
+            [BinaryOperatorType.Multiplication] = new(BinaryOperatorType.Multiplication, 20, true, IsValidMultiplication),
+            [BinaryOperatorType.Division] = new(BinaryOperatorType.Division, 20, true, IsValidDivision),
+        };
+
+        private static bool IsValidAssignment(LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType)
+        {
+            if (lhsType == rhsType)
+            {
+                resultType = lhsType;
+                return true;
+            }
+            else if (lhsType == LightScriptType.Float && rhsType == LightScriptType.Integer)
+            {
+                resultType = LightScriptType.Float;
+                return true;
+            }
+
+            resultType = LightScriptType.Undefined;
+            return false;
+        }
+
+        private static bool IsValidAdditionSubstraction(LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType)
+        {
+            switch (lhsType)
+            {
+                case LightScriptType.Float:
+                    if (rhsType == LightScriptType.Integer || rhsType == LightScriptType.Float)
+                    {
+                        resultType = LightScriptType.Float;
+                        return true;
+                    }
+                    break;
+
+                case LightScriptType.Integer:
+                    if (rhsType == LightScriptType.Integer)
+                    {
+                        resultType = LightScriptType.Integer;
+                        return true;
+                    }
+                    else if (rhsType == LightScriptType.Float)
+                    {
+                        resultType = LightScriptType.Float;
+                        return true;
+                    }
+                    break;
+
+                case LightScriptType.Color:
+                    if (rhsType == LightScriptType.Color)
+                    {
+                        resultType = LightScriptType.Color;
+                        return true;
+                    }
+                    break;
+            }
+
+            resultType = LightScriptType.Undefined;
+            return false;
+        }
+
+        private static bool IsValidAddition(LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType) => IsValidAdditionSubstraction(lhsType, rhsType, out resultType);
+        private static bool IsValidSubstraction(LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType) => IsValidAdditionSubstraction(lhsType, rhsType, out resultType);
+
+        private static bool IsValidMultiplication(LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType)
         {
             switch (lhsType)
             {
                 case LightScriptType.Float:
                     switch (rhsType)
                     {
-                        case LightScriptType.Integer:
                         case LightScriptType.Float:
+                        case LightScriptType.Integer:
                             resultType = LightScriptType.Float;
                             return true;
 
                         case LightScriptType.Color:
-
-                            if (@operator == BinaryOperatorType.Multiplication)
-                            {
-                                resultType = LightScriptType.Color;
-                                return true;
-                            }
-                            break;
+                            resultType = LightScriptType.Color;
+                            return true;
                     }
+
                     break;
 
                 case LightScriptType.Integer:
+
                     switch (rhsType)
                     {
+                        case LightScriptType.Float:
+                            resultType = LightScriptType.Float;
+                            return true;
+
                         case LightScriptType.Integer:
                             resultType = LightScriptType.Integer;
                             return true;
-                        case LightScriptType.Float:
-                            if (@operator != BinaryOperatorType.Assignment)
-                            {
-                                resultType = LightScriptType.Float;
-                                return true;
-                            }
-                            break;
 
                         case LightScriptType.Color:
-
-                            if (@operator == BinaryOperatorType.Multiplication)
-                            {
-                                resultType = LightScriptType.Color;
-                                return true;
-                            }
-                            break;
+                            resultType = LightScriptType.Color;
+                            return true;
                     }
-                    break;
 
+                    break;
+                    
                 case LightScriptType.Color:
+
                     switch (rhsType)
                     {
-                        case LightScriptType.Integer:
                         case LightScriptType.Float:
-                            if (@operator == BinaryOperatorType.Multiplication || @operator == BinaryOperatorType.Division)
-                            {
-                                resultType = LightScriptType.Color;
-                                return true;
-                            }
-                            break;
-                        case LightScriptType.Color:
-                            if (@operator == BinaryOperatorType.Addition || @operator == BinaryOperatorType.Substraction)
-                            {
-                                resultType = LightScriptType.Color;
-                                return true;
-                            }
-                            break;
+                        case LightScriptType.Integer:
+                            resultType = LightScriptType.Color;
+                            return true;
                     }
 
                     break;
-
-                case LightScriptType.Fixture:
-                    break;
             }
-
-            if (@operator == BinaryOperatorType.Assignment && lhsType == rhsType)
-            {
-                resultType = lhsType;
-                return true;
-            }
-
 
             resultType = LightScriptType.Undefined;
             return false;
         }
+
+        private static bool IsValidDivision(LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType)
+        {
+            switch (lhsType)
+            {
+                case LightScriptType.Float:
+                    switch (rhsType)
+                    {
+                        case LightScriptType.Float:
+                        case LightScriptType.Integer:
+                            resultType = LightScriptType.Float;
+                            return true;
+                    }
+
+                    break;
+
+                case LightScriptType.Integer:
+
+                    switch (rhsType)
+                    {
+                        case LightScriptType.Float:
+                            resultType = LightScriptType.Float;
+                            return true;
+
+                        case LightScriptType.Integer:
+                            resultType = LightScriptType.Integer;
+                            return true;
+                    }
+
+                    break;
+
+                case LightScriptType.Color:
+
+                    switch (rhsType)
+                    {
+                        case LightScriptType.Float:
+                        case LightScriptType.Integer:
+                            resultType = LightScriptType.Color;
+                            return true;
+                    }
+
+                    break;
+            }
+
+            resultType = LightScriptType.Undefined;
+            return false;
+        }
+
+        public static LightScriptOperatorInfo GetOperatorInfo(this BinaryOperatorType operatorType) => operators[operatorType];
+
+        public static bool IsValidOperatorType(this BinaryOperatorType @operator, LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType) => GetOperatorInfo(@operator).IsValidOperatorType(lhsType, rhsType, out resultType);
 
         public static LightScriptType GetOperatorResultType(this BinaryOperatorType @operator, LightScriptType lhsType, LightScriptType rhsType) => @operator.IsValidOperatorType(lhsType, rhsType, out var result) ?
             result :

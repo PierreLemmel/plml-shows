@@ -16,6 +16,8 @@
         NoLeftHandSideForOperator,
         TypeError,
 
+        InternalSyntaxTreeError,
+
         // Type System
         UnsupportedType,
     }

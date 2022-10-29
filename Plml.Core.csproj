@@ -197,6 +197,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptData.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Emulators\ServoEmulator.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Arrays.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptIntegerData.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackElement.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptContext.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker13.cs" />
@@ -221,7 +222,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Helpers\RunInBackground.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptIntegerData.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Types\LightScriptOperatorInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />

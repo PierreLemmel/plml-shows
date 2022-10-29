@@ -84,20 +84,4 @@ namespace Plml.Dmx.Scripting.Compilation.Nodes
         Multiplication,
         Division
     }
-
-    internal static class BinaryOperators
-    {
-        public static int GetPrecedence(this BinaryOperatorType @operator) => @operator switch
-        {
-            BinaryOperatorType.Assignment => 0,
-
-            BinaryOperatorType.Addition => 10,
-            BinaryOperatorType.Substraction => 10,
-
-            BinaryOperatorType.Multiplication => 20,
-            BinaryOperatorType.Division => 20,
-
-            _ => throw new LightScriptException($"Unsupported operator '{@operator}'")
-        };
-    }
 }
