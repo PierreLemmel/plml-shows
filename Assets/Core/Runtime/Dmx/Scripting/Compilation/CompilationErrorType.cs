@@ -20,6 +20,7 @@
 
         // Compilation
         UnsupportedSyntaxNode,
+        UnsupportedVariableType,
 
         // Type System
         UnsupportedType,

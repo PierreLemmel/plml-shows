@@ -29,7 +29,7 @@ namespace Plml.Dmx.Scripting
                 Log("Source tokenized");
 
                 Log("Building context");
-                ILightScriptContext context = BuildContext(data);
+                ILightScriptCompilationContext context = BuildContext(data);
                 Log("Context built");
 
                 Log("Building abstract syntax tree");
@@ -212,9 +212,9 @@ namespace Plml.Dmx.Scripting
             }
         }
 
-        public static ILightScriptContext BuildContext(LightScriptData data)
+        public static ILightScriptCompilationContext BuildContext(LightScriptData data)
         {
-            LightScriptContext context = new();
+            LightScriptCompilationContext context = new();
 
             context.AddVariable(new(LightScriptType.Float, "t"));
             context.AddVariable(new(LightScriptType.Float, "dt"));
@@ -226,7 +226,7 @@ namespace Plml.Dmx.Scripting
             return context;
         }
 
-        public static AbstractSyntaxTree BuildAst(LightScriptToken[] tokens, ILightScriptContext context)
+        public static AbstractSyntaxTree BuildAst(LightScriptToken[] tokens, ILightScriptCompilationContext context)
         {
             LightScriptToken[][] scriptTokens = tokens
                 .Split(token => token.type == TokenType.StatementEnding);
@@ -246,7 +246,7 @@ namespace Plml.Dmx.Scripting
             RightBracket,
         }
 
-        private static SyntaxNode BuildSyntaxNodeFromTokens(LightScriptToken[] tokens, ILightScriptContext context)
+        private static SyntaxNode BuildSyntaxNodeFromTokens(LightScriptToken[] tokens, ILightScriptCompilationContext context)
         {
             Stack<(OperationStackElementType Type, BinaryOperatorType? Operator)> operationStack = new();
             Stack<SyntaxNode> resultStack = new();
@@ -515,22 +515,20 @@ namespace Plml.Dmx.Scripting
         }
 
 
-        private static LightScriptAction CompileAst(AbstractSyntaxTree ast, ILightScriptContext context)
+        private static LightScriptAction CompileAst(AbstractSyntaxTree ast, ILightScriptCompilationContext context)
         {
+            ParameterExpression contextExpression = Expression.Parameter(typeof(ILightScriptContext), "context");
+
             Expression[] compiledStatements = ast.Statements.Select(CompileNode);
 
-            ParameterExpression contextExpression = Expression.Parameter(typeof(ILightScriptContext), "context");
             Expression block = Expression.Block(compiledStatements);
 
             Expression<LightScriptAction> lambda = Expression.Lambda<LightScriptAction>(block, contextExpression);
             LightScriptAction result = lambda.Compile();
 
             return result;
-        }
 
-        private static Expression CompileNode(SyntaxNode node)
-        {
-            return node switch
+            Expression CompileNode(SyntaxNode node) => node switch
             {
                 ConstantNode constant when constant.Type is LightScriptType.Integer => Expression.Constant(constant.IntValue, typeof(int)),
                 ConstantNode constant when constant.Type is LightScriptType.Float => Expression.Constant(constant.FloatValue, typeof(float)),
@@ -540,13 +538,54 @@ namespace Plml.Dmx.Scripting
                     CompileNode(addition.RightHandSide)
                 ),
 
-                SubstractionNode substraction => Expression.Add(
+                SubstractionNode substraction => Expression.Subtract(
                     CompileNode(substraction.LeftHandSide),
                     CompileNode(substraction.RightHandSide)
                 ),
 
+                MultiplicationNode multiplication => Expression.Multiply(
+                    CompileNode(multiplication.LeftHandSide),
+                    CompileNode(multiplication.RightHandSide)
+                ),
+
+                DivisionNode division => Expression.Subtract(
+                    CompileNode(division.LeftHandSide),
+                    CompileNode(division.RightHandSide)
+                ),
+
+                AssignmentNode assignment => Expression.Assign(
+                    CompileNode(assignment.LeftHandSide),
+                    CompileNode(assignment.RightHandSide)
+                ),
+
+                MemberAccessNode memberAccess => Expression.PropertyOrField(
+                    CompileNode(memberAccess.Target),
+                    LightScriptTypeSystem.GetPropertyInfo(
+                        memberAccess.Target.Type,
+                        memberAccess.Property
+                    ).UnderlyingProperty
+                ),
+
+                VariableNode variable => CompileVariable(variable),
+
                 _ => throw new CompilationException(CompilationErrorType.UnsupportedSyntaxNode, $"Unsupported syntax node in compilation '{node.GetType().Name}'")
             };
+
+            Expression CompileVariable(VariableNode variable)
+            {
+                Expression ctx = contextExpression;
+
+                Expression bag = variable.Type switch
+                {
+                    LightScriptType.Integer => Expression.Property(ctx, nameof(ILightScriptContext.Integers)),
+                    LightScriptType.Float => Expression.Property(ctx, nameof(ILightScriptContext.Floats)),
+                    LightScriptType.Color => Expression.Property(ctx, nameof(ILightScriptContext.Colors)),
+                    LightScriptType.Fixture => Expression.Property(ctx, nameof(ILightScriptContext.Fixtures)),
+                    _ => throw new CompilationException(CompilationErrorType.UnsupportedVariableType, $"Unsupported variable type: '{variable.Type}'")
+                };
+
+                return Expression.Property(bag, "Item", Expression.Constant(variable.Name));
+            }
         }
 
         private static readonly char[] operatorChars = "-+*/%<>".ToCharArray();

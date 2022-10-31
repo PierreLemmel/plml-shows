@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace Plml.Dmx.Scripting
 {
-    internal class LightScriptContext : ILightScriptContext
+    public class LightScriptContext : ILightScriptContext
     {
-        public IReadOnlyCollection<LightScriptVariable> Variables => _variables;
+        public void AddToContext(string key, DmxTrackElement fixture) => fixtures.Add(key, fixture);
+        public void AddToContext(string key, int intValue) => integers.Add(key, intValue);
+        public void AddToContext(string key, float floatValue) => floats.Add(key, floatValue);
+        public void AddToContext(string key, Color24 color) => colors.Add(key, color);
 
-        private List<LightScriptVariable> _variables = new();
+        private readonly Dictionary<string, DmxTrackElement> fixtures = new();
+        private readonly Dictionary<string, int> integers = new();
+        private readonly Dictionary<string, float> floats = new();
+        private readonly Dictionary<string, Color24> colors = new();
 
-        internal void AddVariable(LightScriptVariable variable) => _variables.Add(variable);
-
-        public bool TryGetVariable(string name, out LightScriptVariable variable) => (variable = _variables.FirstOrDefault(v => v.Name == name)) != null;
+        public IReadOnlyDictionary<string, DmxTrackElement> Fixtures => fixtures;
+        public IReadOnlyDictionary<string, int> Integers => integers;
+        public IReadOnlyDictionary<string, float> Floats => floats;
+        public IReadOnlyDictionary<string, Color24> Colors => colors;
     }
 }

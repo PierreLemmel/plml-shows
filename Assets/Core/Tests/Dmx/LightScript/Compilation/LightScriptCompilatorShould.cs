@@ -13,7 +13,10 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
 {
     internal class LightScriptCompilatorShould
     {
-        private LightScriptCompilationOptions defaultCompilationOptions;
+        private static readonly LightScriptCompilationOptions defaultCompilationOptions = new()
+        {
+            log = true
+        };
 
         private static (GameObject fixtures, DmxFixture parLed1, DmxFixture parLed2) CreateSimpleLightingPlan()
         {
@@ -87,7 +90,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 }
             };
 
-            ILightScriptContext context = LightScriptCompilation.BuildContext(data);
+            ILightScriptCompilationContext context = LightScriptCompilation.BuildContext(data);
 
             bool hasTime = context.TryGetVariable("t", out var timeVariable);
             Assert.That(hasTime, Is.True);
@@ -119,7 +122,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         [TestCaseSource(nameof(BuildASTTestCaseSource))]
         public void Build_AST_As_Expected(string formula, LightScriptToken[] input, LightScriptData data, AbstractSyntaxTree expected)
         {
-            ILightScriptContext context = LightScriptCompilation.BuildContext(data);
+            ILightScriptCompilationContext context = LightScriptCompilation.BuildContext(data);
             AbstractSyntaxTree result = LightScriptCompilation.BuildAst(input, context);
 
             Debug.Log("expected:\n" + expected.Stringify() + "\n\nresult:\n" + result.Stringify());
@@ -593,8 +596,37 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
 
             LightScriptCompilationResult result = LightScriptCompilation.Compile(data, options);
 
+            Debug.Log(result.message);
+
             Assert.IsTrue(result.isOk);
             Assert.IsFalse(result.hasError);
+        }
+
+        [Test]
+        public void Works_As_Expected__Set_Dimmer_To_A_Constant_Value()
+        {
+            (_, DmxTrackElement parLed, _) = CreateSimpleLightingPlanTrackElements();
+
+            LightScriptData data = new()
+            {
+                text = "parLed.dimmer = 120",
+                fixtures = new LightScriptFixtureData[]
+                {
+                    new("parLed", parLed)
+                }
+            };
+            LightScriptCompilationOptions options = defaultCompilationOptions;
+
+            LightScriptCompilationResult result = LightScriptCompilation.Compile(data, options);
+
+            Debug.Log(result.message);
+
+            ILightScriptContext context = new LightScriptContext();
+            context.AddToContext("parLed", parLed);
+
+
+            result.action(context);
+            Assert.That(parLed.dimmer, Is.EqualTo(120));
         }
     }
 }

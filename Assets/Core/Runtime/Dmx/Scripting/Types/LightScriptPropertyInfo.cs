@@ -7,6 +7,7 @@ namespace Plml.Dmx.Scripting.Types
         public string Name { get; }
         public LightScriptType Type { get; }
         public string UnderlyingProperty { get; }
+        public LightScriptTypeInfo OwnerType { get; internal set; }
 
         public LightScriptPropertyInfo(string name, LightScriptType type, string property)
         {

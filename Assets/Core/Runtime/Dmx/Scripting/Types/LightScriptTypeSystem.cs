@@ -43,6 +43,7 @@ namespace Plml.Dmx.Scripting.Types
 
         private static LightScriptTypeInfo colorType = new(
             LightScriptType.Color,
+            typeof(Color24),
             EnumerateProperties(typeof(Color24))
                 .Append(new LightScriptPropertyInfo[]
                 {
@@ -58,6 +59,7 @@ namespace Plml.Dmx.Scripting.Types
 
         private static LightScriptTypeInfo fixtureType = new(
             LightScriptType.Fixture,
+            typeof(Color24),
             EnumerateProperties(typeof(DmxTrackElement))
                 .Append(new LightScriptPropertyInfo[]
                 {
@@ -65,20 +67,36 @@ namespace Plml.Dmx.Scripting.Types
                 })
         );
 
-        public static bool HasProperty(this LightScriptType type, string property, out LightScriptType propertyType)
+        public static bool TryGetPropertyInfo(this LightScriptType type, string property, out LightScriptPropertyInfo propertyInfo)
         {
-            LightScriptPropertyInfo pi = null;
+            propertyInfo = null;
 
             bool result = type switch
             {
-                LightScriptType.Color => colorType.TryGetProperty(property, out pi),
-                LightScriptType.Fixture => fixtureType.TryGetProperty(property, out pi),
+                LightScriptType.Color => colorType.TryGetProperty(property, out propertyInfo),
+                LightScriptType.Fixture => fixtureType.TryGetProperty(property, out propertyInfo),
                 _ => false
             };
 
-            propertyType = pi?.Type ?? LightScriptType.Undefined;
-
             return result;
+        }
+
+        public static LightScriptPropertyInfo GetPropertyInfo(this LightScriptType type, string property) => type.TryGetPropertyInfo(property, out LightScriptPropertyInfo propertyInfo) ?
+            propertyInfo :
+            throw new LightScriptTypeException($"Missing property '{property}' on type {type}");
+
+        public static bool HasProperty(this LightScriptType type, string property, out LightScriptType propertyType)
+        {
+            if(type.TryGetPropertyInfo(property, out LightScriptPropertyInfo pi))
+            {
+                propertyType = pi.Type;
+                return true;
+            }
+            else
+            {
+                propertyType = LightScriptType.Undefined;
+                return false;
+            }
         }
 
         public static LightScriptType GetPropertyType(this LightScriptType type, string property) => type.HasProperty(property, out var propertyType) ?
