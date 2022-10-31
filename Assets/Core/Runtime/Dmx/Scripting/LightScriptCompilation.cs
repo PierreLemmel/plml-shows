@@ -10,6 +10,7 @@ using TokenizationContext = Plml.Dmx.Scripting.Compilation.LightScriptTokenizati
 using NumberType = Plml.Dmx.Scripting.Compilation.LightScriptTokenizationNumberTypeContext;
 using Plml.Dmx.Scripting.Compilation.Nodes;
 using Plml.Dmx.Scripting.Types;
+using System.Linq.Expressions;
 
 namespace Plml.Dmx.Scripting
 {
@@ -516,7 +517,36 @@ namespace Plml.Dmx.Scripting
 
         private static LightScriptAction CompileAst(AbstractSyntaxTree ast, ILightScriptContext context)
         {
-            throw new NotImplementedException();
+            Expression[] compiledStatements = ast.Statements.Select(CompileNode);
+
+            ParameterExpression contextExpression = Expression.Parameter(typeof(ILightScriptContext), "context");
+            Expression block = Expression.Block(compiledStatements);
+
+            Expression<LightScriptAction> lambda = Expression.Lambda<LightScriptAction>(block, contextExpression);
+            LightScriptAction result = lambda.Compile();
+
+            return result;
+        }
+
+        private static Expression CompileNode(SyntaxNode node)
+        {
+            return node switch
+            {
+                ConstantNode constant when constant.Type is LightScriptType.Integer => Expression.Constant(constant.IntValue, typeof(int)),
+                ConstantNode constant when constant.Type is LightScriptType.Float => Expression.Constant(constant.FloatValue, typeof(float)),
+
+                AdditionNode addition => Expression.Add(
+                    CompileNode(addition.LeftHandSide),
+                    CompileNode(addition.RightHandSide)
+                ),
+
+                SubstractionNode substraction => Expression.Add(
+                    CompileNode(substraction.LeftHandSide),
+                    CompileNode(substraction.RightHandSide)
+                ),
+
+                _ => throw new CompilationException(CompilationErrorType.UnsupportedSyntaxNode, $"Unsupported syntax node in compilation '{node.GetType().Name}'")
+            };
         }
 
         private static readonly char[] operatorChars = "-+*/%<>".ToCharArray();

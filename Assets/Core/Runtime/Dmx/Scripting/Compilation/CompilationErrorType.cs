@@ -18,6 +18,9 @@
 
         InternalSyntaxTreeError,
 
+        // Compilation
+        UnsupportedSyntaxNode,
+
         // Type System
         UnsupportedType,
     }

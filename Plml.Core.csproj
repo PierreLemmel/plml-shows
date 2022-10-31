@@ -177,6 +177,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\MemberAccessNode.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\SyntaxNode.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\RangeBounds01Attribute.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Types\LightScriptOperatorInfo.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker11.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\NotEqual.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpyValueArrayNode.cs" />
@@ -222,7 +223,6 @@
     <Compile Include="Assets\Core\Runtime\Core\Helpers\RunInBackground.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Types\LightScriptOperatorInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />
@@ -474,9 +474,6 @@
     <Reference Include="UnityEditor.Graphs">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.Android.Extensions">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\UnityEditor.Android.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
@@ -530,12 +527,6 @@
     </Reference>
     <Reference Include="Google.JarResolver">
       <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\1.2.169\Google.JarResolver.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Android.Types">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Android.Gradle">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
