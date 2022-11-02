@@ -76,12 +76,30 @@ namespace Plml.Dmx.Scripting.Compilation.Nodes
         public override SyntaxNode Clone() => new DivisionNode(Type, LeftHandSide.Clone(), RightHandSide.Clone());
     }
 
+    internal class ModuloNode : BinaryOperatorNode
+    {
+        public ModuloNode(LightScriptType resultType, SyntaxNode lhs, SyntaxNode rhs) : base(BinaryOperatorType.Modulo, resultType, lhs, rhs) { }
+        public ModuloNode(SyntaxNode lhs, SyntaxNode rhs) : base(BinaryOperatorType.Modulo, lhs, rhs) { }
+
+        public override SyntaxNode Clone() => new ModuloNode(Type, LeftHandSide.Clone(), RightHandSide.Clone());
+    }
+
+    internal class ExponentiationNode : BinaryOperatorNode
+    {
+        public ExponentiationNode(LightScriptType resultType, SyntaxNode lhs, SyntaxNode rhs) : base(BinaryOperatorType.Exponentiation, resultType, lhs, rhs) { }
+        public ExponentiationNode(SyntaxNode lhs, SyntaxNode rhs) : base(BinaryOperatorType.Exponentiation, lhs, rhs) { }
+
+        public override SyntaxNode Clone() => new ExponentiationNode(Type, LeftHandSide.Clone(), RightHandSide.Clone());
+    }
+
     internal enum BinaryOperatorType
     {
         Assignment,
         Addition,
         Substraction,
         Multiplication,
-        Division
+        Division,
+        Modulo,
+        Exponentiation
     }
 }

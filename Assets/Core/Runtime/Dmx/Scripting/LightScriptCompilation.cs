@@ -316,6 +316,8 @@ namespace Plml.Dmx.Scripting
                             "-" => BinaryOperatorType.Substraction,
                             "/" => BinaryOperatorType.Division,
                             "*" => BinaryOperatorType.Multiplication,
+                            "%" => BinaryOperatorType.Modulo,
+                            "^" => BinaryOperatorType.Exponentiation,
                             _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unknown operator '{content}'")
                         };
 
@@ -422,6 +424,8 @@ namespace Plml.Dmx.Scripting
                         BinaryOperatorType.Multiplication => new MultiplicationNode(operatorResultType, lhs, rhs),
                         BinaryOperatorType.Division => new DivisionNode(operatorResultType, lhs, rhs),
                         BinaryOperatorType.Assignment => new AssignmentNode(operatorResultType, lhs, rhs),
+                        BinaryOperatorType.Modulo => new ModuloNode(operatorResultType, lhs, rhs),
+                        BinaryOperatorType.Exponentiation => new ExponentiationNode(operatorResultType, lhs, rhs),
                         _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unexpected operator '{@operator}'")
                     };
 
@@ -462,6 +466,8 @@ namespace Plml.Dmx.Scripting
                                     BinaryOperatorType.Substraction => lhsVal - rhsVal,
                                     BinaryOperatorType.Multiplication => lhsVal * rhsVal,
                                     BinaryOperatorType.Division => lhsVal * rhsVal,
+                                    BinaryOperatorType.Modulo => lhsVal % rhsVal,
+                                    BinaryOperatorType.Exponentiation => (int)Mathf.Pow(lhsVal, rhsVal),
                                     _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unsupported operator: {binaryOperator.Operator}")
                                 };
 
@@ -478,6 +484,8 @@ namespace Plml.Dmx.Scripting
                                     BinaryOperatorType.Substraction => lhsVal - rhsVal,
                                     BinaryOperatorType.Multiplication => lhsVal * rhsVal,
                                     BinaryOperatorType.Division => lhsVal * rhsVal,
+                                    BinaryOperatorType.Modulo => lhsVal % rhsVal,
+                                    BinaryOperatorType.Exponentiation => Mathf.Pow(lhsVal, rhsVal),
                                     _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unsupported operator: {binaryOperator.Operator}")
                                 };
 
@@ -491,6 +499,8 @@ namespace Plml.Dmx.Scripting
                             BinaryOperatorType.Substraction => new SubstractionNode(lhs, rhs),
                             BinaryOperatorType.Multiplication => new MultiplicationNode(lhs, rhs),
                             BinaryOperatorType.Division => new DivisionNode(lhs, rhs),
+                            BinaryOperatorType.Modulo => new ModuloNode(lhs, rhs),
+                            BinaryOperatorType.Exponentiation => new ExponentiationNode(lhs, rhs),
                             _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unsupported operator: {binaryOperator.Operator}")
                         };
 
@@ -588,7 +598,7 @@ namespace Plml.Dmx.Scripting
             }
         }
 
-        private static readonly char[] operatorChars = "-+*/%<>".ToCharArray();
+        private static readonly char[] operatorChars = "-+*/%^<>".ToCharArray();
         private static bool IsOperator(char c) => operatorChars.Contains(c);
 
         private static readonly char[] singleChars = "().=".ToCharArray();

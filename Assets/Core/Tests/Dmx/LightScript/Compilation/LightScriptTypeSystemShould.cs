@@ -126,6 +126,22 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 true,
                 LightScriptType.Integer
             },
+            new object[]
+            {
+                BinaryOperatorType.Modulo,
+                LightScriptType.Integer,
+                LightScriptType.Integer,
+                true,
+                LightScriptType.Integer
+            },
+            new object[]
+            {
+                BinaryOperatorType.Exponentiation,
+                LightScriptType.Integer,
+                LightScriptType.Integer,
+                true,
+                LightScriptType.Integer
+            },
 
             // Float + Float
             new object[]
@@ -163,6 +179,22 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             new object[]
             {
                 BinaryOperatorType.Division,
+                LightScriptType.Float,
+                LightScriptType.Float,
+                true,
+                LightScriptType.Float
+            },
+            new object[]
+            {
+                BinaryOperatorType.Modulo,
+                LightScriptType.Float,
+                LightScriptType.Float,
+                true,
+                LightScriptType.Float
+            },
+            new object[]
+            {
+                BinaryOperatorType.Exponentiation,
                 LightScriptType.Float,
                 LightScriptType.Float,
                 true,
@@ -245,6 +277,38 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             new object[]
             {
                 BinaryOperatorType.Division,
+                LightScriptType.Integer,
+                LightScriptType.Float,
+                true,
+                LightScriptType.Float
+            },
+            new object[]
+            {
+                BinaryOperatorType.Modulo,
+                LightScriptType.Float,
+                LightScriptType.Integer,
+                true,
+                LightScriptType.Float
+            },
+            new object[]
+            {
+                BinaryOperatorType.Modulo,
+                LightScriptType.Integer,
+                LightScriptType.Float,
+                true,
+                LightScriptType.Float
+            },
+            new object[]
+            {
+                BinaryOperatorType.Exponentiation,
+                LightScriptType.Float,
+                LightScriptType.Integer,
+                true,
+                LightScriptType.Float
+            },
+            new object[]
+            {
+                BinaryOperatorType.Exponentiation,
                 LightScriptType.Integer,
                 LightScriptType.Float,
                 true,

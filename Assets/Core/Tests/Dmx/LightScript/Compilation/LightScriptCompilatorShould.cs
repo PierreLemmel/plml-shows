@@ -512,6 +512,98 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     )
                 )
             },
+
+            // Modulo
+            new object[]
+            {
+                "parLed1.dimmer = 2 * 300 % 255 + 10",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+
+                    new(TokenType.Number, "2"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Number, "300"),
+                    new(TokenType.Operator, "%"),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.Operator, "+"),
+                    new(TokenType.Number, "10"),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = 2 * 300 % 255 + 10",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        LightScriptType.Integer,
+                        new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        new AdditionNode(
+                            new ModuloNode(
+                                new MultiplicationNode(
+                                    new ConstantNode(2),
+                                    new ConstantNode(300)
+                                ),
+                                new ConstantNode(255)
+                            ),  
+                            new ConstantNode(10)
+                        )
+                    )
+                )
+            },
+
+            // Exponentation
+            new object[]
+            {
+                "parLed1.dimmer = 2 * 10 ^ 2 + 55",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+
+                    new(TokenType.Number, "2"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Number, "10"),
+                    new(TokenType.Operator, "^"),
+                    new(TokenType.Number, "2"),
+                    new(TokenType.Operator, "+"),
+                    new(TokenType.Number, "55"),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = 2 * 10 ^ 2 + 55",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        LightScriptType.Integer,
+                        new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        new AdditionNode(
+                            new MultiplicationNode(
+                                new ConstantNode(2),
+                                new ExponentiationNode(
+                                    new ConstantNode(10),
+                                    new ConstantNode(2)
+                                )
+                            ),
+                            new ConstantNode(55)
+                        )
+                    )
+                )
+            },
         };
 
         [Test]
@@ -574,6 +666,54 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                             "dimmer"
                         ),
                         rhs: new ConstantNode(255)
+                    )
+                )
+            },
+            new object[]
+            {
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            "dimmer"
+                        ),
+                        rhs: new ExponentiationNode(
+                            new ConstantNode(10),
+                            new ConstantNode(2)
+                        )
+                    )
+                ),
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            "dimmer"
+                        ),
+                        rhs: new ConstantNode(100)
+                    )
+                )
+            },
+            new object[]
+            {
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            "dimmer"
+                        ),
+                        rhs: new ModuloNode(
+                            new ConstantNode(500),
+                            new ConstantNode(200)
+                        )
+                    )
+                ),
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            "dimmer"
+                        ),
+                        rhs: new ConstantNode(100)
                     )
                 )
             },

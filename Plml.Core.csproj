@@ -75,6 +75,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Emulators\FlatParEmulator.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_DEVICE_LIST_INFO_NODE.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\QuadraticRangeAttribute.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\ILightScriptContext.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\FunctionInfo.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\TokenReader.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\ParseException.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Assets\Core\Runtime\Annotations\PlayTimeOnlyAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Spout\SpoutApiException.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\OpenDmxExtensions.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptContext.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\WinMMDll.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\FunctionRegistry.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\CustomRangeAttribute.cs" />
@@ -186,6 +188,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_OPEN_BY.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\LessThan.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\ReadOnlyAttribute.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\ILightScriptCompilationContext.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Execution\Interpreter.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker6.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Variable.cs" />
@@ -207,6 +210,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptFixtureData.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\CubicRangeAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\IOpenDmxInterface.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptCompilationContext.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\MidiNote.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackControler.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\UnaryMinus.cs" />
@@ -221,10 +225,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Helpers\RunInBackground.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptCompilationContext.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\ILightScriptCompilationContext.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptContext.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\ILightScriptContext.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\FunctionNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />
@@ -476,9 +477,6 @@
     <Reference Include="UnityEditor.Graphs">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.Android.Extensions">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\UnityEditor.Android.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
@@ -532,12 +530,6 @@
     </Reference>
     <Reference Include="Google.JarResolver">
       <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\1.2.169\Google.JarResolver.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Android.Types">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Android.Gradle">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.8f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>

@@ -112,6 +112,10 @@ namespace Plml.Dmx.Scripting.Types
             
             [BinaryOperatorType.Multiplication] = new(BinaryOperatorType.Multiplication, 20, true, IsValidMultiplication),
             [BinaryOperatorType.Division] = new(BinaryOperatorType.Division, 20, true, IsValidDivision),
+
+            [BinaryOperatorType.Modulo] = new(BinaryOperatorType.Modulo, 20, true, IsValidModulo),
+
+            [BinaryOperatorType.Exponentiation] = new(BinaryOperatorType.Exponentiation, 30, true, IsValidExponentiation),
         };
 
         private static bool IsValidAssignment(LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType)
@@ -273,6 +277,40 @@ namespace Plml.Dmx.Scripting.Types
             resultType = LightScriptType.Undefined;
             return false;
         }
+
+        private static bool IsValidModuloOrExponentation(LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType)
+        {
+            if (lhsType == LightScriptType.Float)
+            {
+                if (rhsType == LightScriptType.Float || rhsType == LightScriptType.Integer)
+                {
+                    resultType = LightScriptType.Float;
+                    return true;
+                }
+            }
+            else if (lhsType == LightScriptType.Integer)
+            {
+                if (rhsType == LightScriptType.Float)
+                {
+                    resultType = LightScriptType.Float;
+                    return true;
+                }
+                else if (rhsType == LightScriptType.Integer)
+                {
+                    resultType = LightScriptType.Integer;
+                    return true;
+                }
+            }
+
+            resultType = LightScriptType.Undefined;
+            return false;
+        }
+
+        private static bool IsValidModulo(LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType)
+            => IsValidModuloOrExponentation(lhsType, rhsType, out resultType);
+
+        private static bool IsValidExponentiation(LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType)
+            => IsValidModuloOrExponentation(lhsType, rhsType, out resultType);
 
         public static LightScriptOperatorInfo GetOperatorInfo(this BinaryOperatorType operatorType) => operators[operatorType];
 

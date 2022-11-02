@@ -101,6 +101,14 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 new ConstantNode(20),
                 new ConstantNode(10)
             ),
+            new ExponentiationNode(
+                new ConstantNode(10),
+                new ConstantNode(2)
+            ),
+            new ModuloNode(
+                new ConstantNode(10000),
+                new ConstantNode(255)
+            ),
         };
     }
 }

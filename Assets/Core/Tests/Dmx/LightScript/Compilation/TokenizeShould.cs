@@ -185,6 +185,30 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 }
             },
 
+            // nested functions
+            new object[]
+            {
+                "parLed1.dimmer = abs(sin(0.3 * t)) * 255",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Identifier, "abs"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Identifier, "sin"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "0.3"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Identifier, "t"),
+                    new(TokenType.RightBracket),
+                    new(TokenType.RightBracket),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Number, "255"),
+                }
+            },
+
             // Multiline
             new object[]
             {
@@ -300,6 +324,38 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Assignment),
 
                     new(TokenType.Number, "255"),
+                }
+            },
+
+            // Modulo
+            new object[]
+            {
+                "parLed1.dimmer = 10000 % 255",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "10000"),
+                    new(TokenType.Operator, "%"),
+                    new(TokenType.Number, "255"),
+                }
+            },
+            
+            // Exponentiation
+            new object[]
+            {
+                "parLed1.dimmer = 10 ^ 2",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "10"),
+                    new(TokenType.Operator, "^"),
+                    new(TokenType.Number, "2"),
                 }
             },
         };
