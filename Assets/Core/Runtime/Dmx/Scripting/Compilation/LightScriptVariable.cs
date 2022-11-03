@@ -1,7 +1,4 @@
-﻿using Plml.Dmx.Scripting.Types;
-using System;
-
-namespace Plml.Dmx.Scripting
+﻿namespace Plml.Dmx.Scripting.Compilation
 {
     public class LightScriptVariable
     {
