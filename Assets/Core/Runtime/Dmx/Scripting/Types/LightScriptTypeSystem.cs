@@ -27,7 +27,7 @@ namespace Plml.Dmx.Scripting.Types
             .Where(nt => nt.type != LightScriptType.Undefined)
             .Select(nt => new LightScriptPropertyInfo(nt.name, nt.type));
 
-        private static LightScriptType MapFromSystemType(Type sysType)
+        public static LightScriptType MapFromSystemType(Type sysType)
         {
             if (sysType == typeof(int) || sysType == typeof(byte))
                 return LightScriptType.Integer;
@@ -319,5 +319,45 @@ namespace Plml.Dmx.Scripting.Types
         public static LightScriptType GetOperatorResultType(this BinaryOperatorType @operator, LightScriptType lhsType, LightScriptType rhsType) => @operator.IsValidOperatorType(lhsType, rhsType, out var result) ?
             result :
             throw new LightScriptException($"Result of operator '{@operator}' on types '{lhsType}' and '{rhsType}' cannot be inferred from usage");
+
+        public static bool HasImplicitConversion(LightScriptType from, LightScriptType to)
+        {
+            switch (from)
+            {
+                case LightScriptType.Integer:
+                    switch (to)
+                    {
+                        case LightScriptType.Float:
+                            return true;
+                    }
+                    break;
+            }
+
+            return false;
+        }
+
+        public static bool HasExplicitConversion(LightScriptType from, LightScriptType to)
+        {
+            switch (from)
+            {
+                case LightScriptType.Float:
+                    switch (to)
+                    {
+                        case LightScriptType.Integer:
+                            return true;
+                    }
+                    break;
+            }
+
+            return false;
+        }
+
+
+        public static bool IsAssignableTo(this LightScriptType inputType, LightScriptType targetType) => inputType == targetType
+            || HasImplicitConversion(inputType, targetType);
+
+        public static bool CanBeConvertedTo(this LightScriptType inputType, LightScriptType targetType) => inputType == targetType
+            || HasImplicitConversion(inputType, targetType)
+            || HasExplicitConversion(inputType, targetType);
     }
 }

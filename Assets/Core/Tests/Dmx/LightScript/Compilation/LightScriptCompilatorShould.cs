@@ -76,7 +76,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         }
 
         [Test]
-        public void Build_Context_As_Expected()
+        public void Build_Context_Has_Default_Variables()
         {
             (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
 
@@ -119,6 +119,90 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         }
 
         [Test]
+        public void Build_Context_Has_Default_Functions_With_Single_Signature()
+        {
+            (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
+
+            LightScriptData data = new()
+            {
+                text = "parLed1.dimmer = 120",
+                fixtures = new LightScriptFixtureData[]
+                {
+                    new("parLed1", parLed1),
+                    new("parLed2", parLed2),
+                }
+            };
+
+            ILightScriptCompilationContext context = LightScriptCompilation.BuildContext(data);
+
+
+            bool hasSin = context.TryGetFunction("sin", out var sinFunction, LightScriptType.Float);
+            Assert.That(hasSin, Is.True);
+            Assert.That(sinFunction.Name, Is.EqualTo("sin"));
+            Assert.That(sinFunction.ReturnType, Is.EqualTo(LightScriptType.Float));
+            Assert.That(sinFunction.IsPure, Is.True);
+            Assert.That(sinFunction.Arguments, Has.Length.EqualTo(1));
+            Assert.That(sinFunction.Arguments[0].Type, Is.EqualTo(LightScriptType.Float));
+
+            bool hasCos = context.TryGetFunction("cos", out var cosFunction, LightScriptType.Float);
+            Assert.That(hasCos, Is.True);
+            Assert.That(cosFunction.Name, Is.EqualTo("cos"));
+            Assert.That(cosFunction.ReturnType, Is.EqualTo(LightScriptType.Float));
+            Assert.That(cosFunction.IsPure, Is.True);
+            Assert.That(cosFunction.Arguments, Has.Length.EqualTo(1));
+            Assert.That(cosFunction.Arguments[0].Type, Is.EqualTo(LightScriptType.Float));
+
+            bool hasRound = context.TryGetFunction("round", out var roundFunction);
+            Assert.That(hasRound, Is.True);
+            Assert.That(roundFunction.Name, Is.EqualTo("round"));
+            Assert.That(roundFunction.ReturnType, Is.EqualTo(LightScriptType.Integer));
+            Assert.That(roundFunction.IsPure, Is.True);
+            Assert.That(roundFunction.Arguments, Has.Length.EqualTo(1));
+            Assert.That(roundFunction.Arguments[0].Type, Is.EqualTo(LightScriptType.Float));
+
+            bool hasRng = context.TryGetFunction("rng", out var rngFunction);
+            Assert.That(hasRng, Is.True);
+            Assert.That(rngFunction.Name, Is.EqualTo("rng"));
+            Assert.That(rngFunction.ReturnType, Is.EqualTo(LightScriptType.Float));
+            Assert.That(rngFunction.IsPure, Is.False);
+            Assert.That(rngFunction.Arguments, Is.Empty);
+        }
+
+        [Test]
+        public void Build_Support_Functions_With_Multiple_Signature()
+        {
+            (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
+
+            LightScriptData data = new()
+            {
+                text = "parLed1.dimmer = 120",
+                fixtures = new LightScriptFixtureData[]
+                {
+                    new("parLed1", parLed1),
+                    new("parLed2", parLed2),
+                }
+            };
+
+            ILightScriptCompilationContext context = LightScriptCompilation.BuildContext(data);
+
+            bool hasAbsFloat = context.TryGetFunction("abs", out var absFloatFunction, LightScriptType.Float);
+            Assert.That(hasAbsFloat, Is.True);
+            Assert.That(absFloatFunction.Name, Is.EqualTo("abs"));
+            Assert.That(absFloatFunction.ReturnType, Is.EqualTo(LightScriptType.Float));
+            Assert.That(absFloatFunction.IsPure, Is.True);
+            Assert.That(absFloatFunction.Arguments, Has.Length.EqualTo(1));
+            Assert.That(absFloatFunction.Arguments[0].Type, Is.EqualTo(LightScriptType.Float));
+
+            bool hasAbsInt = context.TryGetFunction("abs", out var absIntFunction, LightScriptType.Integer);
+            Assert.That(hasAbsInt, Is.True);
+            Assert.That(absIntFunction.Name, Is.EqualTo("abs"));
+            Assert.That(absIntFunction.ReturnType, Is.EqualTo(LightScriptType.Integer));
+            Assert.That(absIntFunction.IsPure, Is.True);
+            Assert.That(absIntFunction.Arguments, Has.Length.EqualTo(1));
+            Assert.That(absIntFunction.Arguments[0].Type, Is.EqualTo(LightScriptType.Integer));
+        }
+
+        [Test]
         [TestCaseSource(nameof(BuildASTTestCaseSource))]
         public void Build_AST_As_Expected(string formula, LightScriptToken[] input, LightScriptData data, AbstractSyntaxTree expected)
         {
@@ -132,6 +216,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
 
         public static IEnumerable<object[]> BuildASTTestCaseSource => new object[][]
         {
+            //Simple assignment
             new object[]
             {
                 "parLed1.dimmer = 255",
@@ -441,6 +526,8 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     )
                 )
             },
+
+            // Multiple brackets
             new object[]
             {
                 "parLed1.dimmer = (50 + (2 + 1) * (5 + 5)) * 2 + 30",
@@ -604,6 +691,160 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     )
                 )
             },
+
+            // Functions (simple)
+            new object[]
+            {
+                "parLed1.dimmer = round(245.3)",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+
+                    new(TokenType.Identifier, "round"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "245.3"),
+                    new(TokenType.RightBracket),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = round(245.3)",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        LightScriptType.Integer,
+                        new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        new FunctionNode(
+                            LightScriptFunctions.Round,
+                            new ConstantNode(245.3f)
+                        )
+                    )
+                )
+            },
+
+            // Functions (complex)
+            new object[]
+            {
+                "parLed1.dimmer = round(sin(1) + 2 * cos(3 * abs(5)))",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+
+                    new(TokenType.Identifier, "round"),
+                    new(TokenType.LeftBracket),
+
+                    new(TokenType.Identifier, "sin"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "1"),
+                    new(TokenType.RightBracket),
+
+                    new(TokenType.Operator, "+"),
+
+                    new(TokenType.Number, "2"),
+                    
+                    new(TokenType.Operator, "*"),
+                    
+                    new(TokenType.Identifier, "cos"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "3"),
+                    
+                    new(TokenType.Operator, "*"),
+
+                    new(TokenType.Identifier, "abs"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "5"),
+                    new(TokenType.RightBracket),
+
+                    new(TokenType.RightBracket),
+
+                    new(TokenType.RightBracket),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = round(sin(1) + 2 * cos(3 * abs(5)))",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        LightScriptType.Integer,
+                        new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        new FunctionNode(
+                            LightScriptFunctions.Round,
+                            new AdditionNode(
+                                new FunctionNode(
+                                    LightScriptFunctions.Sin,
+                                    new ImplicitConversionNode(
+                                        new ConstantNode(1),
+                                        LightScriptType.Float
+                                    )
+                                ),
+                                new MultiplicationNode(
+                                    new ConstantNode(2),
+                                    new FunctionNode(
+                                        LightScriptFunctions.Cos,
+                                        new ImplicitConversionNode(
+                                            new MultiplicationNode(
+                                                new ConstantNode(3),
+                                                new FunctionNode(
+                                                    LightScriptFunctions.Abs_Int,
+                                                    new ConstantNode(5)
+                                                )
+                                            ),
+                                            LightScriptType.Float
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            },
+
+            // Automatic rounding
+            new object[]
+            {
+                "parLed1.dimmer = 242.3",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "242.3")
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = 242.3",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        rhs: new ExplicitConversionNode(
+                            new ConstantNode(242.3f),
+                            LightScriptType.Integer
+                        )
+                    )
+                )
+            },
         };
 
         [Test]
@@ -715,8 +956,89 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                         ),
                         rhs: new ConstantNode(100)
                     )
+                ),
+            },
+
+            // Pure functions (simple)
+            new object[]
+            {
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        LightScriptType.Integer,
+                        new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        new FunctionNode(
+                            LightScriptFunctions.Round,
+                            new ConstantNode(245.3f)
+                        )
+                    )
+                ),
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        LightScriptType.Integer,
+                        new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        new ConstantNode(245)
+                    )
                 )
             },
+
+            // Pure functions (complex)
+            new object[]
+            {
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        LightScriptType.Integer,
+                        new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        new FunctionNode(
+                            LightScriptFunctions.Round,
+                            new MultiplicationNode(
+                                new ConstantNode(100),
+                                new AdditionNode(
+                                    new FunctionNode(
+                                        LightScriptFunctions.Sin,
+                                        new ConstantNode(1)
+                                    ),
+                                    new MultiplicationNode(
+                                        new ConstantNode(2),
+                                        new FunctionNode(
+                                            LightScriptFunctions.Cos,
+                                            new MultiplicationNode(
+                                                new ConstantNode(3),
+                                                new FunctionNode(
+                                                    LightScriptFunctions.Abs_Int,
+                                                    new ConstantNode(5)
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        LightScriptType.Integer,
+                        new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        new ConstantNode((int)Mathf.Round(100 * (Mathf.Sin(1) + 2 * Mathf.Cos(15))))
+                    )
+                )
+            }
         };
 
         [Test]

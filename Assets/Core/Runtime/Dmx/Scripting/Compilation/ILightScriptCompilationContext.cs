@@ -9,6 +9,7 @@ namespace Plml.Dmx.Scripting.Compilation
         IReadOnlyCollection<LightScriptFunction> Functions { get; }
 
         bool TryGetVariable(string name, out LightScriptVariable variable);
-        bool TryGetFunction(string name, out LightScriptFunction function);
+        bool TryGetFunction(string name, out LightScriptFunction function, params LightScriptType[] arguments);
+        IEnumerable<LightScriptFunction> GetFunctions(string name);
     }
 }

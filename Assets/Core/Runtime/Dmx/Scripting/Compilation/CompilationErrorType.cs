@@ -15,12 +15,15 @@
         UnknownOperator,
         NoLeftHandSideForOperator,
         TypeError,
-
+        InvalidArgumentType,
         InternalSyntaxTreeError,
 
         // Compilation
         UnsupportedSyntaxNode,
         UnsupportedVariableType,
+
+        // Optimization
+        OptimizationError,
 
         // Type System
         UnsupportedType,

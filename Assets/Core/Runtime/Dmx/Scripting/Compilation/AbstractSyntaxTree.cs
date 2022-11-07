@@ -72,6 +72,20 @@ namespace Plml.Dmx.Scripting.Compilation
                         StringifyNode(binary.LeftHandSide, indent + 1),
                         StringifyNode(binary.RightHandSide, indent + 1),
                     }),
+                    FunctionNode function => string.Join("\n", Enumerables.Merge(
+                        Enumerables.Create(function.Name),
+                        function.Arguments.Select(arg => StringifyNode(arg, indent + 1))
+                    )),
+                    ImplicitConversionNode @implicit => string.Join("\n", new string[]
+                    {
+                        $"Implicit: {@implicit.Target.Type} -> {@implicit.ToType}",
+                        StringifyNode(@implicit.Target, indent + 1),
+                    }),
+                    ExplicitConversionNode @explicit => string.Join("\n", new string[]
+                    {
+                        $"Explicit: {@explicit.Target.Type} -> {@explicit.ToType}",
+                        StringifyNode(@explicit.Target, indent + 1)
+                    }),
                     _ => throw new InvalidOperationException($"Unsupported node type: {node.GetType().Name}")
                 };
 

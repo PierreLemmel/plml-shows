@@ -1,13 +1,8 @@
 ﻿using NUnit.Framework;
 using Plml.Dmx.Scripting;
-using Plml.Dmx.Scripting.Compilation;
 using Plml.Dmx.Scripting.Compilation.Nodes;
 using Plml.Dmx.Scripting.Types;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Plml.Tests.Dmx.Scripting.Compilation
 {
@@ -519,6 +514,56 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 false,
                 LightScriptType.Undefined
             },
+        };
+
+        [Test]
+        [TestCaseSource(nameof(HasImplicitConverstion_TestCaseSource))]
+        public void HasImplicitConverstion_Returns_Expected(LightScriptType from, LightScriptType to, bool expected) => Assert.That(LightScriptTypeSystem.HasImplicitConversion(from, to), Is.EqualTo(expected));
+
+        public static IEnumerable<object[]> HasImplicitConverstion_TestCaseSource => new object[][]
+        {
+            new object[] { LightScriptType.Integer, LightScriptType.Float, true },
+
+            new object[] { LightScriptType.Float, LightScriptType.Integer, false },
+            new object[] { LightScriptType.Integer, LightScriptType.Color, false },
+            new object[] { LightScriptType.Color, LightScriptType.Float, false },
+            new object[] { LightScriptType.Integer, LightScriptType.Fixture, false },
+            new object[] { LightScriptType.Fixture, LightScriptType.Float, false },
+        };
+
+        [Test]
+        [TestCaseSource(nameof(HasExplicitConverstion_TestCaseSource))]
+        public void HasExplicitConverstion_Returns_Expected(LightScriptType from, LightScriptType to, bool expected) => Assert.That(LightScriptTypeSystem.HasExplicitConversion(from, to), Is.EqualTo(expected));
+
+        public static IEnumerable<object[]> HasExplicitConverstion_TestCaseSource => new object[][]
+        {
+            new object[] { LightScriptType.Float, LightScriptType.Integer, true },
+
+            new object[] { LightScriptType.Integer, LightScriptType.Float, false },
+            new object[] { LightScriptType.Integer, LightScriptType.Color, false },
+            new object[] { LightScriptType.Color, LightScriptType.Float, false },
+            new object[] { LightScriptType.Integer, LightScriptType.Fixture, false },
+            new object[] { LightScriptType.Fixture, LightScriptType.Float, false },
+        };
+
+        [Test]
+        [TestCaseSource(nameof(IsAssignableTo_TestCaseSource))]
+        public void IsAssignableTo_Returns_Expected(LightScriptType from, LightScriptType to, bool expected) => Assert.That(from.IsAssignableTo(to), Is.EqualTo(expected));
+
+        public static IEnumerable<object[]> IsAssignableTo_TestCaseSource => new object[][]
+        {
+            new object[] { LightScriptType.Integer, LightScriptType.Float, true },
+
+            new object[] { LightScriptType.Integer, LightScriptType.Integer, true },
+            new object[] { LightScriptType.Float, LightScriptType.Float, true },
+            new object[] { LightScriptType.Color, LightScriptType.Color, true },
+            new object[] { LightScriptType.Fixture, LightScriptType.Fixture, true },
+
+            new object[] { LightScriptType.Float, LightScriptType.Integer, false },
+            new object[] { LightScriptType.Integer, LightScriptType.Color, false },
+            new object[] { LightScriptType.Color, LightScriptType.Float, false },
+            new object[] { LightScriptType.Integer, LightScriptType.Fixture, false },
+            new object[] { LightScriptType.Fixture, LightScriptType.Float, false },
         };
     }
 }

@@ -8,9 +8,11 @@ using UnityEngine;
 using TokenType = Plml.Dmx.Scripting.Compilation.LightScriptTokenType;
 using TokenizationContext = Plml.Dmx.Scripting.Compilation.LightScriptTokenizationContext;
 using NumberType = Plml.Dmx.Scripting.Compilation.LightScriptTokenizationNumberTypeContext;
+
 using Plml.Dmx.Scripting.Compilation.Nodes;
 using Plml.Dmx.Scripting.Types;
 using System.Linq.Expressions;
+using System.Globalization;
 
 namespace Plml.Dmx.Scripting
 {
@@ -223,6 +225,11 @@ namespace Plml.Dmx.Scripting
             data.fixtures.ForEach(fixture => context.AddVariable(new(LightScriptType.Fixture, fixture.name)));
             data.integers.ForEach(integer => context.AddVariable(new(LightScriptType.Integer, integer.name)));
 
+
+            foreach (var func in LightScriptFunctions.DefaultFunctions)
+                context.AddFunction(func);
+
+
             return context;
         }
 
@@ -244,12 +251,14 @@ namespace Plml.Dmx.Scripting
             BinaryOperator,
             LeftBracket,
             RightBracket,
+            Function,
         }
 
         private static SyntaxNode BuildSyntaxNodeFromTokens(LightScriptToken[] tokens, ILightScriptCompilationContext context)
         {
-            Stack<(OperationStackElementType Type, BinaryOperatorType? Operator)> operationStack = new();
+            Stack<(OperationStackElementType Type, BinaryOperatorType? Operator, string Function)> operationStack = new();
             Stack<SyntaxNode> resultStack = new();
+            Stack<int> argcountStack = new();
 
             ASTBuilderContext astContext = ASTBuilderContext.Default;
             LightScriptType currentObjectType = LightScriptType.Undefined;
@@ -270,13 +279,19 @@ namespace Plml.Dmx.Scripting
                         {
                             case ASTBuilderContext.Default:
 
-                                if (!context.TryGetVariable(content, out var variable))
-                                    throw new SyntaxTreeException(CompilationErrorType.UnknownVariable, $"Unknown variable '{content}'");
+                                if (context.TryGetVariable(content, out var variable))
+                                {
+                                    VariableNode variableNode = new(variable.Type, variable.Name);
+                                    newObjectType = variable.Type;
 
-                                VariableNode variableNode = new(variable.Type, variable.Name);
-                                newObjectType = variable.Type;
-
-                                PushResultToStack(variableNode);
+                                    PushResultToStack(variableNode);
+                                }
+                                else if (context.HasFunction(content))
+                                {
+                                    PushFunctionToStack(content);
+                                }
+                                else
+                                    throw new SyntaxTreeException(CompilationErrorType.UnknownVariable, $"Unknown identifier '{content}'");
 
                                 break;
 
@@ -301,7 +316,7 @@ namespace Plml.Dmx.Scripting
                     case TokenType.Number:
                         ConstantNode constantNode = int.TryParse(content, out int intResult) ?
                             new(intResult) :
-                            new(float.Parse(content));
+                            new(float.Parse(content, CultureInfo.InvariantCulture));
 
                         PushResultToStack(constantNode);
                         newContext = ASTBuilderContext.Default;
@@ -388,10 +403,16 @@ namespace Plml.Dmx.Scripting
                     PopOperationStack();
                 }
                 
-                operationStack.Push((OperationStackElementType.BinaryOperator, @operator));
+                operationStack.Push((OperationStackElementType.BinaryOperator, @operator, null));
             }
 
-            void PushLeftBracket() => operationStack.Push((OperationStackElementType.LeftBracket, null));
+            void PushFunctionToStack(string function)
+            {
+                operationStack.Push((OperationStackElementType.Function, null, function));
+                argcountStack.Push(1);
+            }
+
+            void PushLeftBracket() => operationStack.Push((OperationStackElementType.LeftBracket, null, null));
 
             void PushRightBracket()
             {
@@ -399,40 +420,137 @@ namespace Plml.Dmx.Scripting
                     PopOperationStack();
 
                 operationStack.Pop();
+
+                if (operationStack.Peek().Type == OperationStackElementType.Function)
+                    PopOperationStack();
             }
 
             void PopOperationStack()
             {
                 var topElt = operationStack.Pop();
 
-                if (topElt.Type != OperationStackElementType.BinaryOperator)
-                    throw new SyntaxTreeException(CompilationErrorType.InternalSyntaxTreeError, $"Unexpected operation element type: '{topElt.Type}'");
+                switch (topElt.Type)
+                {
+                    case OperationStackElementType.BinaryOperator:
+                        var @operator = topElt.Operator.Value;
 
-                var @operator = topElt.Operator.Value;
+                        if (!resultStack.TryPop(out SyntaxNode rhs))
+                            throw new SyntaxTreeException(CompilationErrorType.NoLeftHandSideForOperator, $"Missing left hand side for {@operator} operator");
+                        if (!resultStack.TryPop(out SyntaxNode lhs))
+                            throw new SyntaxTreeException(CompilationErrorType.NoLeftHandSideForOperator, $"Missing right hand side for {@operator} operator");
 
-                if (!resultStack.TryPop(out SyntaxNode rhs))
-                    throw new SyntaxTreeException(CompilationErrorType.NoLeftHandSideForOperator, $"Missing left hand side for {@operator} operator");
-                if (!resultStack.TryPop(out SyntaxNode lhs))
-                    throw new SyntaxTreeException(CompilationErrorType.NoLeftHandSideForOperator, $"Missing right hand side for {@operator} operator");
+                        if (LightScriptTypeSystem.IsValidOperatorType(@operator, lhs.Type, rhs.Type, out var operatorResultType))
+                        {
+                            PushOperationNode(@operator, lhs, rhs, operatorResultType);
+                        }
+                        else if (LightScriptTypeSystem.HasImplicitConversion(rhs.Type, lhs.Type))
+                        {
+                            PushOperationNode(@operator, lhs, new ImplicitConversionNode(rhs, lhs.Type), lhs.Type);
+                        }
+                        // Auto-conversion (rounding) for assignments 
+                        else if (@operator == BinaryOperatorType.Assignment && LightScriptTypeSystem.HasExplicitConversion(rhs.Type, lhs.Type))
+                        {
+                            PushOperationNode(BinaryOperatorType.Assignment, lhs, new ExplicitConversionNode(rhs, lhs.Type), lhs.Type);
+                        }
+                        else
+                            throw new SyntaxTreeException(CompilationErrorType.TypeError, $"Operator '{@operator}' does not exist between types '{lhs.Type}' and '{rhs.Type}'");
 
-                if (LightScriptTypeSystem.IsValidOperatorType(@operator, lhs.Type, rhs.Type, out var operatorResultType))
+                        break;
+
+                    case OperationStackElementType.Function:
+
+                        var functionName = topElt.Function;
+
+                        int argc = argcountStack.Pop();
+                        SyntaxNode[] arguments = new SyntaxNode[argc];
+
+                        for (int i = argc - 1; i >= 0; i--)
+                            arguments[i] = resultStack.Pop();
+
+                        LightScriptType[] argTypes = arguments.Select(arg => arg.Type);
+
+
+                        if (TryFindFunction(functionName, argTypes, out LightScriptFunction function, out bool[] conversions))
+                        {
+                            SyntaxNode[] convertedArguments = arguments.Select((arg, i) => conversions[i] ?
+                                new ImplicitConversionNode(arg, function.Arguments[i].Type)
+                                : arg);
+
+                            FunctionNode functionNode = new(function, convertedArguments);
+                            resultStack.Push(functionNode);
+                        }
+                        else
+                        {
+                            string argsStr = string.Join(", ", argTypes);
+                            throw new SyntaxTreeException(CompilationErrorType.InvalidArgumentType, $"Impossible to find a function named '{functionName}' with the following arguments: ({argsStr})");
+                        }
+
+                        break;
+
+                    default:
+                        throw new SyntaxTreeException(CompilationErrorType.InternalSyntaxTreeError, $"Unexpected operation element type: '{topElt.Type}'");
+                }
+
+                void PushOperationNode(BinaryOperatorType @operator, SyntaxNode lhs, SyntaxNode rhs, LightScriptType resultType)
                 {
                     SyntaxNode operationNode = @operator switch
                     {
-                        BinaryOperatorType.Addition => new AdditionNode(operatorResultType, lhs, rhs),
-                        BinaryOperatorType.Substraction => new SubstractionNode(operatorResultType, lhs, rhs),
-                        BinaryOperatorType.Multiplication => new MultiplicationNode(operatorResultType, lhs, rhs),
-                        BinaryOperatorType.Division => new DivisionNode(operatorResultType, lhs, rhs),
-                        BinaryOperatorType.Assignment => new AssignmentNode(operatorResultType, lhs, rhs),
-                        BinaryOperatorType.Modulo => new ModuloNode(operatorResultType, lhs, rhs),
-                        BinaryOperatorType.Exponentiation => new ExponentiationNode(operatorResultType, lhs, rhs),
+                        BinaryOperatorType.Addition => new AdditionNode(resultType, lhs, rhs),
+                        BinaryOperatorType.Substraction => new SubstractionNode(resultType, lhs, rhs),
+                        BinaryOperatorType.Multiplication => new MultiplicationNode(resultType, lhs, rhs),
+                        BinaryOperatorType.Division => new DivisionNode(resultType, lhs, rhs),
+                        BinaryOperatorType.Assignment => new AssignmentNode(resultType, lhs, rhs),
+                        BinaryOperatorType.Modulo => new ModuloNode(resultType, lhs, rhs),
+                        BinaryOperatorType.Exponentiation => new ExponentiationNode(resultType, lhs, rhs),
                         _ => throw new SyntaxTreeException(CompilationErrorType.UnknownOperator, $"Unexpected operator '{@operator}'")
                     };
 
                     resultStack.Push(operationNode);
                 }
-                else
-                    throw new SyntaxTreeException(CompilationErrorType.TypeError, $"Operator '{@operator}' does not exist between types '{lhs.Type}' and '{rhs.Type}'");
+
+                bool TryFindFunction(string name, LightScriptType[] inputTypes, out LightScriptFunction result, out bool[] conversions)
+                {
+                    int argc = inputTypes.Length;
+                    conversions = new bool[argc];
+
+                    if (context.TryGetFunction(name, out result, inputTypes))
+                        return true;
+
+                    foreach (var function in context.GetFunctions(name))
+                    {
+                        conversions.Set(false);
+                        var funcArgs = function.Arguments;
+
+                        if (funcArgs.Length != argc)
+                            continue;
+
+                        bool isValid = true;
+                        for (int i = 0; i < argc; i++)
+                        {
+                            var funcArg = funcArgs[i];
+
+                            if (funcArg.Type != inputTypes[i])
+                            {
+                                if (LightScriptTypeSystem.HasImplicitConversion(inputTypes[i], funcArg.Type))
+                                    conversions[i] = true;
+                                else
+                                {
+                                    isValid = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (isValid)
+                        {
+                            result = function;
+                            return true;
+                        }
+                    }
+
+                    result = null;
+                    return false;
+                }
             }
 
             return resultStack.First();
@@ -475,8 +593,8 @@ namespace Plml.Dmx.Scripting
                             }
                             else if (resultType == LightScriptType.Float)
                             {
-                                float lhsVal = lhsConstant.FloatValue;
-                                float rhsVal = rhsConstant.FloatValue;
+                                float lhsVal = lhsConstant.Type == LightScriptType.Float ? lhsConstant.FloatValue : lhsConstant.IntValue;
+                                float rhsVal = rhsConstant.Type == LightScriptType.Float ? rhsConstant.FloatValue : rhsConstant.IntValue;
 
                                 float constValue = binaryOperator.Operator switch
                                 {
@@ -513,6 +631,25 @@ namespace Plml.Dmx.Scripting
                             OptimizeNode(binaryOperator.RightHandSide)
                         );
                     }
+                }
+                else if (node is FunctionNode functionNode)
+                {
+                    var optimizedArgs = functionNode.Arguments.Select(arg => OptimizeNode(arg));
+
+                    var func = functionNode.Function;
+                    if (func.IsPure && optimizedArgs.All(arg => arg is ConstantNode))
+                    {
+                        object val = func.Function.DynamicInvoke(optimizedArgs.Select(arg => ((ConstantNode)arg).Value));
+                        return func.ReturnType switch
+                        {
+                            LightScriptType.Integer => new ConstantNode((int)val),
+                            LightScriptType.Float => new ConstantNode((float)val),
+                            LightScriptType.Color => new ConstantNode((Color24)val),
+                            _ => throw new CompilationException(CompilationErrorType.OptimizationError, $"Unsupported return type in pure function: {func.ReturnType}")
+                        };
+                    }
+                    else
+                        return new FunctionNode(functionNode.Function, optimizedArgs);
                 }
                 else
                 {

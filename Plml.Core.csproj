@@ -213,6 +213,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\IOpenDmxInterface.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptCompilationContext.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\MidiNote.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptFunction.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackControler.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\UnaryMinus.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Substraction.cs" />
@@ -226,7 +227,9 @@
     <Compile Include="Assets\Core\Runtime\Core\Helpers\RunInBackground.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptFunction.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptArgument.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\ConversionNode.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptFunctions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />

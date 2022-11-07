@@ -65,7 +65,28 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                         "dimmer"
                     )
                 )
-            }
+            },
+            new object[]
+            {
+                new FunctionNode(
+                    LightScriptFunctions.Sin,
+                    new ConstantNode(MathF.PI)
+                ),
+                new FunctionNode(
+                    LightScriptFunctions.Sin,
+                    new ConstantNode(MathF.PI)
+                ),
+            },
+            new object[]
+            {
+                new ImplicitConversionNode(new ConstantNode(18), LightScriptType.Float),
+                new ImplicitConversionNode(new ConstantNode(18), LightScriptType.Float),
+            },
+            new object[]
+            {
+                new ExplicitConversionNode(new ConstantNode(18.1f), LightScriptType.Integer),
+                new ExplicitConversionNode(new ConstantNode(18.1f), LightScriptType.Integer),
+            },
         };
 
         [Test]
@@ -109,6 +130,12 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 new ConstantNode(10000),
                 new ConstantNode(255)
             ),
+            new FunctionNode(
+                LightScriptFunctions.Sin,
+                new ConstantNode(MathF.PI)
+            ),
+            new ImplicitConversionNode(new ConstantNode(18), LightScriptType.Float),
+            new ExplicitConversionNode(new ConstantNode(18.1f), LightScriptType.Integer),
         };
     }
 }

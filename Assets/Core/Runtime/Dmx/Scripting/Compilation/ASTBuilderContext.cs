@@ -5,5 +5,6 @@
         Default,
         Object,
         MemberAccess,
+        FunctionArgument
     }
 }

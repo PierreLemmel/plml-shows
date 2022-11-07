@@ -21,6 +21,17 @@ namespace Plml
             return result;
         }
 
+        public static TTo[] Select<TFrom, TTo>(this TFrom[] input, Func<TFrom, int, TTo> selector)
+        {
+            TTo[] result = new TTo[input.Length];
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = selector(input[i], i);
+            }
+
+            return result;
+        }
+
         public static void MapTo<TFrom, TTo>(this TFrom[] input, TTo[] output, Func<TFrom, TTo> selector)
         {
             if (output.Length != input.Length)
