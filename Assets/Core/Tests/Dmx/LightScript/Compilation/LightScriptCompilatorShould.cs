@@ -314,6 +314,33 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 )
             },
 
+            // Assign to int variable
+            new object[]
+            {
+                "dimmer1 = 255",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "dimmer1"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "255"),
+                },
+                new LightScriptData()
+                {
+                    text = "dimmer1 = 255",
+                    integers = new LightScriptIntegerData[]
+                    {
+                        new("dimmer1"),
+                    },
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new VariableNode(LightScriptType.Integer, "dimmer1"),
+                        rhs: new ConstantNode(255)
+                    )
+                )
+            },
+
+            // Multiple assignments (variables)
             new object[]
             {
                 "dimmer1 = dimmer2 = 255",
@@ -344,6 +371,8 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     )
                 )
             },
+
+            // Multiple assignments
             new object[]
             {
                 "parLed1.dimmer = parLed2.dimmer = 255",
@@ -380,6 +409,8 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     )
                 )
             },
+
+            // Multiple assignments on objects
             new object[]
             {
                 "parLed1.color.red = parLed1.color.green = parLed1.color.blue = 255",
@@ -444,6 +475,8 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     )
                 )
             },
+
+            // Precedence
             new object[]
             {
                 "parLed1.dimmer = 255 - 100 * 2 + 30",
@@ -487,6 +520,8 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     )
                 )
             },
+
+            // Brackets
             new object[]
             {
                 "parLed1.dimmer = (255 - 155) * 2 + 30",

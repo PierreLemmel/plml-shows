@@ -9,9 +9,9 @@ namespace Plml.Dmx.Scripting
         public void AddToContext(string key, float floatValue);
         public void AddToContext(string key, Color24 color);
 
-        public IReadOnlyDictionary<string, DmxTrackElement> Fixtures { get; }
-        public IReadOnlyDictionary<string, int> Integers { get; }
-        public IReadOnlyDictionary<string, float> Floats { get; }
-        public IReadOnlyDictionary<string, Color24> Colors { get; }
+        public IDictionary<string, DmxTrackElement> Fixtures { get; }
+        public IDictionary<string, int> Integers { get; }
+        public IDictionary<string, float> Floats { get; }
+        public IDictionary<string, Color24> Colors { get; }
     }
 }

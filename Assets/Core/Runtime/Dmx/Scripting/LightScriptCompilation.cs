@@ -246,7 +246,13 @@ namespace Plml.Dmx.Scripting
             return result;
         }
 
-        
+        private enum ASTBuilderContext
+        {
+            Default,
+            Object,
+            MemberAccess,
+        }
+
         private enum OperationStackElementType
         {
             BinaryOperator,
@@ -263,6 +269,8 @@ namespace Plml.Dmx.Scripting
 
             ASTBuilderContext astContext = ASTBuilderContext.Default;
             LightScriptType currentObjectType = LightScriptType.Undefined;
+
+            SyntaxNode resultForLastLeftBracket = null;
 
             foreach (var token in tokens)
             {
@@ -286,10 +294,12 @@ namespace Plml.Dmx.Scripting
                                     newObjectType = variable.Type;
 
                                     PushResultToStack(variableNode);
+                                    newContext = ASTBuilderContext.Object;
                                 }
                                 else if (context.HasFunction(content))
                                 {
                                     PushFunctionToStack(content);
+                                    newContext = ASTBuilderContext.Default;
                                 }
                                 else
                                     throw new SyntaxTreeException(CompilationErrorType.UnknownVariable, $"Unknown identifier '{content}'");
@@ -310,8 +320,10 @@ namespace Plml.Dmx.Scripting
                                     throw new SyntaxTreeException(CompilationErrorType.MissingProperty, $"Missing property '{content}' on type {currentObjectType}");
                                 
                                 break;
+
+                            default:
+                                throw new CompilationException(CompilationErrorType.InvalidInternalContext, $"Unexpected internal ASTContext ({astContext}) for identifier '{content}'");
                         }
-                        newContext = ASTBuilderContext.Object;
 
                         break;
                     case TokenType.Number:
@@ -411,12 +423,20 @@ namespace Plml.Dmx.Scripting
             {
                 operationStack.Push((OperationStackElementType.Function, null, function));
                 argcountStack.Push(1);
+
+                resultForLastLeftBracket = resultStack.Peek();
             }
 
             void PushLeftBracket() => operationStack.Push((OperationStackElementType.LeftBracket, null, null));
 
             void PushRightBracket()
             {
+                if (resultForLastLeftBracket == resultStack.Peek())
+                {
+                    argcountStack.Pop();
+                    argcountStack.Push(0);
+                }
+
                 while (operationStack.Peek().Type != OperationStackElementType.LeftBracket)
                     PopOperationStack();
 
@@ -464,7 +484,7 @@ namespace Plml.Dmx.Scripting
 
                         int argc = argcountStack.Pop();
                         SyntaxNode[] arguments = new SyntaxNode[argc];
-
+                        Debug.Log(argc);
                         for (int i = argc - 1; i >= 0; i--)
                             arguments[i] = resultStack.Pop();
 
@@ -554,7 +574,7 @@ namespace Plml.Dmx.Scripting
                 }
             }
 
-            return resultStack.First();
+            return resultStack.Single();
         }
 
 
@@ -700,6 +720,11 @@ namespace Plml.Dmx.Scripting
 
                 VariableNode variable => CompileVariable(variable),
 
+                FunctionNode function => CompileFunction(function),
+
+                ImplicitConversionNode @implicit => CompileImplicitConversion(@implicit),
+                ExplicitConversionNode @explicit => CompileExplicitConversion(@explicit),
+
                 _ => throw new CompilationException(CompilationErrorType.UnsupportedSyntaxNode, $"Unsupported syntax node in compilation '{node.GetType().Name}'")
             };
 
@@ -787,7 +812,6 @@ namespace Plml.Dmx.Scripting
                 Expression rightExpression = CompileNode(exponentiation.RightHandSide);
                 
                 Expression result = Expression.Call(
-                    null,
                     Methods.Pow,
                     ConvertIfNeeded(leftExpression, typeof(float)),
                     ConvertIfNeeded(rightExpression, typeof(float))
@@ -833,11 +857,60 @@ namespace Plml.Dmx.Scripting
 
                 return Expression.Property(bag, "Item", Expression.Constant(variable.Name));
             }
+
+            Expression CompileFunction(FunctionNode function)
+            {
+                var argExpressions = function.Arguments.Select(arg => CompileNode(arg));
+
+                return Expression.Call(
+                    function.Function.Function.Method,
+                    argExpressions
+                );
+            }
+
+            Expression CompileImplicitConversion(ImplicitConversionNode @implicit)
+            {
+                var targetExpression = CompileNode(@implicit.Target);
+
+                switch (@implicit.Target.Type)
+                {
+                    case LightScriptType.Integer:
+
+                        switch (@implicit.ToType)
+                        {
+                            case LightScriptType.Float:
+                                return Expression.Convert(targetExpression, typeof(float));
+                        }
+                        break;
+                }
+
+                throw new CompilationException(CompilationErrorType.MissingExplicitConversion, $"Missing implicit conversion between '{@implicit.Target.Type}' and '{@implicit.ToType}'");
+            }
+
+            Expression CompileExplicitConversion(ExplicitConversionNode @explicit)
+            {
+                var targetExpression = CompileNode(@explicit.Target);
+
+                switch (@explicit.Target.Type)
+                {
+                    case LightScriptType.Float:
+
+                        switch (@explicit.ToType)
+                        {
+                            case LightScriptType.Integer:
+                                return Expression.Call(Methods.RoundToInt, targetExpression);
+                        }
+                        break;
+                }
+
+                throw new CompilationException(CompilationErrorType.MissingExplicitConversion, $"Missing explicit conversion between '{@explicit.Target.Type}' and '{@explicit.ToType}'");
+            }
         }
 
         private static class Methods
         {
             public static readonly MethodInfo Pow = typeof(Mathf).GetMethod(nameof(Mathf.Pow));
+            public static readonly MethodInfo RoundToInt = typeof(Mathf).GetMethod(nameof(Mathf.RoundToInt));
         }
 
         private static readonly char[] operatorChars = "-+*/%^<>".ToCharArray();

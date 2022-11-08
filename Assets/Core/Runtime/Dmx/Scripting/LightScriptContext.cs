@@ -14,9 +14,9 @@ namespace Plml.Dmx.Scripting
         private readonly Dictionary<string, float> floats = new();
         private readonly Dictionary<string, Color24> colors = new();
 
-        public IReadOnlyDictionary<string, DmxTrackElement> Fixtures => fixtures;
-        public IReadOnlyDictionary<string, int> Integers => integers;
-        public IReadOnlyDictionary<string, float> Floats => floats;
-        public IReadOnlyDictionary<string, Color24> Colors => colors;
+        public IDictionary<string, DmxTrackElement> Fixtures => fixtures;
+        public IDictionary<string, int> Integers => integers;
+        public IDictionary<string, float> Floats => floats;
+        public IDictionary<string, Color24> Colors => colors;
     }
 }

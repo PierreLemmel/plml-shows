@@ -17,10 +17,13 @@
         TypeError,
         InvalidArgumentType,
         InternalSyntaxTreeError,
+        InvalidInternalContext,
 
         // Compilation
         UnsupportedSyntaxNode,
         UnsupportedVariableType,
+        MissingImplicitConversion,
+        MissingExplicitConversion,
 
         // Optimization
         OptimizationError,
