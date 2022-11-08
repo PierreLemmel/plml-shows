@@ -1,13 +1,8 @@
 ﻿using Plml.Dmx.Scripting.Compilation.Nodes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Plml.Dmx.Scripting.Types
 {
-    internal class LightScriptOperatorInfo
+    internal class LightScriptBinaryOperatorInfo
     {
         public delegate bool OperatorValidityCheckFunction(LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType);
 
@@ -18,7 +13,7 @@ namespace Plml.Dmx.Scripting.Types
 
         private readonly OperatorValidityCheckFunction validityCheckFunction;
 
-        public LightScriptOperatorInfo(BinaryOperatorType @operator, int precedence, bool isLeftAssociative, OperatorValidityCheckFunction validityCheckFunction)
+        public LightScriptBinaryOperatorInfo(BinaryOperatorType @operator, int precedence, bool isLeftAssociative, OperatorValidityCheckFunction validityCheckFunction)
         {
             Name = @operator.ToString();
             Operator = @operator;

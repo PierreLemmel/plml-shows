@@ -358,6 +358,33 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Number, "2"),
                 }
             },
+
+            // Multiple arguments
+            new object[]
+            {
+                "parLed1.dimmer = min(100, dimmer1, dimmer2, 255 * rng())",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Identifier, "min"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "100"),
+                    new(TokenType.ArgumentSeparator),
+                    new(TokenType.Identifier, "dimmer1"),
+                    new(TokenType.ArgumentSeparator),
+                    new(TokenType.Identifier, "dimmer2"),
+                    new(TokenType.ArgumentSeparator),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Identifier, "rng"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.RightBracket),
+                    new(TokenType.RightBracket),
+                }
+            }
         };
 
         public static IEnumerable<object> ValidateTokensTestCaseSource => TokenizeTestCaseSource.Select(objArr => objArr[0]);
@@ -410,6 +437,11 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 parLed2.dimmer = 50 + 60)",
                 CompilationErrorType.InvalidBrackets
             },
+            new object[]
+            {
+                "parLed1.dimmer = min(100, dimmer1, dimmer2, 255 * rng())",
+                CompilationErrorType.InvalidArgCount
+            }
         };
     }
 }

@@ -516,6 +516,25 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             },
         };
 
+
+        [Test]
+        [TestCaseSource(nameof(IsValidUnaryOperatorType_TestCaseSource))]
+        public void IsValidUnaryOperatorType_Returns_Expected(UnaryOperatorType unaryOperator, LightScriptType targetType, bool expectedResult) => Assert
+            .That(unaryOperator.IsValidOperatorType(targetType), Is.EqualTo(expectedResult));
+
+        public static IEnumerable<object[]> IsValidUnaryOperatorType_TestCaseSource => new object[][]
+        {
+            new object[] { UnaryOperatorType.Plus, LightScriptType.Float, true },
+            new object[] { UnaryOperatorType.Plus, LightScriptType.Integer, true },
+            new object[] { UnaryOperatorType.Plus, LightScriptType.Color, false },
+            new object[] { UnaryOperatorType.Plus, LightScriptType.Fixture, false },
+
+            new object[] { UnaryOperatorType.Minus, LightScriptType.Float, true },
+            new object[] { UnaryOperatorType.Minus, LightScriptType.Integer, true },
+            new object[] { UnaryOperatorType.Minus, LightScriptType.Color, false },
+            new object[] { UnaryOperatorType.Minus, LightScriptType.Fixture, false },
+        };
+
         [Test]
         [TestCaseSource(nameof(HasImplicitConverstion_TestCaseSource))]
         public void HasImplicitConverstion_Returns_Expected(LightScriptType from, LightScriptType to, bool expected) => Assert.That(LightScriptTypeSystem.HasImplicitConversion(from, to), Is.EqualTo(expected));

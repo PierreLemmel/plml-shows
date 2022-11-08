@@ -103,7 +103,7 @@ namespace Plml.Dmx.Scripting.Types
             propertyType :
             throw new LightScriptTypeException($"Missing property '{property}' on type {type}");
 
-        private static IDictionary<BinaryOperatorType, LightScriptOperatorInfo> operators = new Dictionary<BinaryOperatorType, LightScriptOperatorInfo>()
+        private static IDictionary<BinaryOperatorType, LightScriptBinaryOperatorInfo> operators = new Dictionary<BinaryOperatorType, LightScriptBinaryOperatorInfo>()
         {
             [BinaryOperatorType.Assignment] = new(BinaryOperatorType.Assignment, 0, false, IsValidAssignment),
             
@@ -312,9 +312,11 @@ namespace Plml.Dmx.Scripting.Types
         private static bool IsValidExponentiation(LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType)
             => IsValidModuloOrExponentation(lhsType, rhsType, out resultType);
 
-        public static LightScriptOperatorInfo GetOperatorInfo(this BinaryOperatorType operatorType) => operators[operatorType];
+        public static LightScriptBinaryOperatorInfo GetOperatorInfo(this BinaryOperatorType operatorType) => operators[operatorType];
 
         public static bool IsValidOperatorType(this BinaryOperatorType @operator, LightScriptType lhsType, LightScriptType rhsType, out LightScriptType resultType) => GetOperatorInfo(@operator).IsValidOperatorType(lhsType, rhsType, out resultType);
+
+        public static bool IsValidOperatorType(this UnaryOperatorType @operator, LightScriptType targetType) => targetType.IsOneOf(LightScriptType.Float, LightScriptType.Integer);
 
         public static LightScriptType GetOperatorResultType(this BinaryOperatorType @operator, LightScriptType lhsType, LightScriptType rhsType) => @operator.IsValidOperatorType(lhsType, rhsType, out var result) ?
             result :

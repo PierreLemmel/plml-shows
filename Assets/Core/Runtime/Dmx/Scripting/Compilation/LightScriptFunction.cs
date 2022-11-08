@@ -39,6 +39,18 @@ namespace Plml.Dmx.Scripting.Compilation
             Function = function;
         }
 
+        public LightScriptFunction(LightScriptType returnType, string name, bool pure, Delegate function)
+            : this(returnType, name, pure, function, Array.Empty<LightScriptArgument>())
+        {
+            
+        }
+
+        public LightScriptFunction(LightScriptType returnType, string name, bool pure, Delegate function, params LightScriptType[] arguments)
+            : this(returnType, name, pure, function, arguments.Select(argType => new LightScriptArgument(argType)))
+        {
+
+        }
+
         private static bool CheckTypeCompatibility(Type sysType, LightScriptType expectedLSType) => LightScriptTypeSystem.MapFromSystemType(sysType) == expectedLSType;
     }
 }

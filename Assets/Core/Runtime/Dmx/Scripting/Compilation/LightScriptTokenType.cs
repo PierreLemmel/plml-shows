@@ -10,5 +10,8 @@
         StatementEnding,
         LeftBracket,
         RightBracket,
+        ArgumentSeparator,
+
+        UNDEFINED,
     }
 }

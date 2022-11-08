@@ -77,7 +77,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         }
 
         [Test]
-        public void Build_Context_Has_Default_Variables()
+        public void BuildContext_Has_Default_Variables()
         {
             (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
 
@@ -120,7 +120,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         }
 
         [Test]
-        public void Build_Context_Has_Default_Functions_With_Single_Signature()
+        public void BuildContext_Has_Default_Functions_With_Single_Signature()
         {
             (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
 
@@ -167,10 +167,17 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             Assert.That(rngFunction.ReturnType, Is.EqualTo(LightScriptType.Float));
             Assert.That(rngFunction.IsPure, Is.False);
             Assert.That(rngFunction.Arguments, Is.Empty);
+
+            bool hasClamp01 = context.TryGetFunction("clamp01", out var clamp01Function);
+            Assert.That(hasClamp01, Is.True);
+            Assert.That(clamp01Function.Name, Is.EqualTo("clamp01"));
+            Assert.That(clamp01Function.ReturnType, Is.EqualTo(LightScriptType.Float));
+            Assert.That(clamp01Function.Arguments, Has.Length.EqualTo(1));
+            Assert.That(clamp01Function.Arguments[0].Type, Is.EqualTo(LightScriptType.Float));
         }
 
         [Test]
-        public void Build_Support_Functions_With_Multiple_Signature()
+        public void BuildContext_Supports_Functions_With_Multiple_Signature()
         {
             (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
 
@@ -201,6 +208,76 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             Assert.That(absIntFunction.IsPure, Is.True);
             Assert.That(absIntFunction.Arguments, Has.Length.EqualTo(1));
             Assert.That(absIntFunction.Arguments[0].Type, Is.EqualTo(LightScriptType.Integer));
+
+
+            bool hasClampFlt = context.TryGetFunction("clamp", out var clampFltFunction, LightScriptType.Float, LightScriptType.Float, LightScriptType.Float);
+            Assert.That(hasClampFlt, Is.True);
+            Assert.That(clampFltFunction.Name, Is.EqualTo("clamp"));
+            Assert.That(clampFltFunction.ReturnType, Is.EqualTo(LightScriptType.Float));
+            Assert.That(clampFltFunction.Arguments, Has.Length.EqualTo(3));
+            Assert.That(clampFltFunction.Arguments[0].Type, Is.EqualTo(LightScriptType.Float));
+            Assert.That(clampFltFunction.Arguments[1].Type, Is.EqualTo(LightScriptType.Float));
+            Assert.That(clampFltFunction.Arguments[2].Type, Is.EqualTo(LightScriptType.Float));
+
+            bool hasClampInt = context.TryGetFunction("clamp", out var clampIntFunction, LightScriptType.Integer, LightScriptType.Integer, LightScriptType.Integer);
+            Assert.That(hasClampInt, Is.True);
+            Assert.That(clampIntFunction.Name, Is.EqualTo("clamp"));
+            Assert.That(clampIntFunction.ReturnType, Is.EqualTo(LightScriptType.Integer));
+            Assert.That(clampIntFunction.Arguments, Has.Length.EqualTo(3));
+            Assert.That(clampIntFunction.Arguments[0].Type, Is.EqualTo(LightScriptType.Integer));
+            Assert.That(clampIntFunction.Arguments[1].Type, Is.EqualTo(LightScriptType.Integer));
+            Assert.That(clampIntFunction.Arguments[2].Type, Is.EqualTo(LightScriptType.Integer));
+
+
+            bool hasClampDmxFlt = context.TryGetFunction("clampDmx", out var clampDmxFltFunction);
+            Assert.That(hasClampDmxFlt, Is.True);
+            Assert.That(clampDmxFltFunction.Name, Is.EqualTo("clampDmx"));
+            Assert.That(clampDmxFltFunction.ReturnType, Is.EqualTo(LightScriptType.Float));
+            Assert.That(clampDmxFltFunction.Arguments, Has.Length.EqualTo(1));
+            Assert.That(clampDmxFltFunction.Arguments[0].Type, Is.EqualTo(LightScriptType.Float));
+
+            bool hasClampDmxInt = context.TryGetFunction("clampDmx", out var clampDmxIntFunction);
+            Assert.That(hasClampDmxInt, Is.True);
+            Assert.That(clampDmxIntFunction.Name, Is.EqualTo("clampDmx"));
+            Assert.That(clampDmxIntFunction.ReturnType, Is.EqualTo(LightScriptType.Integer));
+            Assert.That(clampDmxIntFunction.Arguments, Has.Length.EqualTo(1));
+            Assert.That(clampDmxIntFunction.Arguments[0].Type, Is.EqualTo(LightScriptType.Integer));
+        }
+
+        [Test]
+        public void BuildContext_Has_Default_Constants()
+        {
+            (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
+
+            LightScriptData data = new()
+            {
+                text = "parLed1.dimmer = 120",
+                fixtures = new LightScriptFixtureData[]
+                {
+                    new("parLed1", parLed1),
+                    new("parLed2", parLed2),
+                }
+            };
+
+            ILightScriptCompilationContext context = LightScriptCompilation.BuildContext(data);
+
+            bool hasPI = context.TryGetConstant("pi", out var piConstant);
+            Assert.That(hasPI, Is.True);
+            Assert.That(piConstant.Name, Is.EqualTo("pi"));
+            Assert.That(piConstant.Type, Is.EqualTo(LightScriptType.Float));
+            Assert.That(piConstant.FloatValue, Is.EqualTo(Mathf.PI));
+
+            bool hasDeg2Rad = context.TryGetConstant("deg2Rad", out var deg2RadConstant);
+            Assert.That(hasDeg2Rad, Is.True);
+            Assert.That(deg2RadConstant.Name, Is.EqualTo("deg2Rad"));
+            Assert.That(deg2RadConstant.Type, Is.EqualTo(LightScriptType.Float));
+            Assert.That(deg2RadConstant.FloatValue, Is.EqualTo(Mathf.Deg2Rad));
+
+            bool hasRad2Deg = context.TryGetConstant("rad2Deg", out var rad2DegConstant);
+            Assert.That(hasRad2Deg, Is.True);
+            Assert.That(rad2DegConstant.Name, Is.EqualTo("rad2Deg"));
+            Assert.That(rad2DegConstant.Type, Is.EqualTo(LightScriptType.Float));
+            Assert.That(rad2DegConstant.FloatValue, Is.EqualTo(Mathf.Rad2Deg));
         }
 
         [Test]
@@ -928,7 +1005,49 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 )
             },
 
-            // Unary Operators
+            // Unary Operators in functions
+            new object[]
+            {
+                "offset = - (3 * 15 + 5)",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "offset"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Operator, "-"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "3"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Number, "15"),
+                    new(TokenType.Operator, "+"),
+                    new(TokenType.Number, "5"),
+                    new(TokenType.RightBracket),
+                },
+                new LightScriptData()
+                {
+                    text = "offset = - (3 * 15 + 5)",
+                    fixtures = GetFixtures("parLed1", "parLed2"),
+                    integers = new LightScriptIntegerData[]
+                    {
+                        new("offset")
+                    }
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new VariableNode(LightScriptType.Integer, "offset"),
+                        rhs: new UnaryMinusNode(
+                            new AdditionNode(
+                                new MultiplicationNode(
+                                    new ConstantNode(3),
+                                    new ConstantNode(15)
+                                ),
+                                new ConstantNode(5)
+                            )
+                        )
+                    )
+                )
+            },
+
+            // Unary Operators in functions
             new object[]
             {
                 "parLed1.dimmer = 255 * abs(-sin(t))",
@@ -974,6 +1093,157 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                                                 "t"
                                             )
                                         )
+                                    )
+                                )
+                            ),
+                            LightScriptType.Integer
+                        )
+                    )
+                )
+            },
+
+            // Constants
+            new object[]
+            {
+                "parLed1.dimmer = 5 * pi",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "5"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Identifier, "pi"),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = 5 * pi",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        rhs: new ExplicitConversionNode(
+                            new MultiplicationNode(
+                                new ConstantNode(5),
+                                new ConstantNode(Mathf.PI)
+                            ),
+                            LightScriptType.Integer
+                        )
+                    )
+                )
+            },
+
+            // Multi-arguments function
+            new object[]
+            {
+                "parLed1.dimmer = clamp(500 * rng(), 0, 255)",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Identifier, "clamp"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "500"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Identifier, "rng"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.RightBracket),
+                    new(TokenType.ArgumentSeparator),
+                    new(TokenType.Number, "0"),
+                    new(TokenType.ArgumentSeparator),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.RightBracket),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = clamp(500 * rng(), 0, 255)",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        rhs: new ExplicitConversionNode(
+                            new FunctionNode(
+                                LightScriptFunctions.ClampDmx_Float,
+                                new MultiplicationNode(
+                                    new ConstantNode(500),
+                                    new FunctionNode(
+                                        LightScriptFunctions.Rng
+                                    )
+                                ),
+                                new ConstantNode(0),
+                                new ConstantNode(500)
+                            ),
+                            LightScriptType.Integer
+                        )
+                    )
+                )
+            },
+
+            // Params arguments function
+            new object[]
+            {
+                "parLed1.dimmer = min(100, dimmer1, dimmer2, 255 * rng())",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Identifier, "min"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "100"),
+                    new(TokenType.ArgumentSeparator),
+                    new(TokenType.Identifier, "dimmer1"),
+                    new(TokenType.ArgumentSeparator),
+                    new(TokenType.Identifier, "dimmer2"),
+                    new(TokenType.ArgumentSeparator),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Identifier, "rng"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.RightBracket),
+                    new(TokenType.RightBracket),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = min(100, dimmer1, dimmer2, 255 * rng())",
+                    fixtures = GetFixtures("parLed1", "parLed2"),
+                    integers = new LightScriptIntegerData[]
+                    {
+                        new("dimmer1"),
+                        new("dimmer2"),
+                    }
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        rhs: new ExplicitConversionNode(
+                            new FunctionNode(
+                                LightScriptFunctions.Min_Float,
+                                new ConstantNode(100),
+                                new VariableNode(LightScriptType.Float, "dimmer1"),
+                                new VariableNode(LightScriptType.Float, "dimmer2"),
+                                new MultiplicationNode(
+                                    new ConstantNode(255),
+                                    new FunctionNode(
+                                        LightScriptFunctions.Rng
                                     )
                                 )
                             ),
@@ -1177,6 +1447,31 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 )
             },
 
+            // Unary operators
+            new object[]
+            {
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new VariableNode(LightScriptType.Integer, "offset"),
+                        rhs: new UnaryMinusNode(
+                            new AdditionNode(
+                                new MultiplicationNode(
+                                    new ConstantNode(3),
+                                    new ConstantNode(15)
+                                ),
+                                new ConstantNode(5)
+                            )
+                        )
+                    )
+                ),
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new VariableNode(LightScriptType.Integer, "offset"),
+                        rhs: new ConstantNode(-50)
+                    )
+                )
+            },
+
             // Impure function
             new object[]
             {
@@ -1216,7 +1511,26 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                         )
                     )
                 )
-            }
+            },
+
+            // Remove Unary Plus
+            new object[]
+            {
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new VariableNode(LightScriptType.Integer, "dimmer2"),
+                        rhs: new UnaryPlusNode(
+                            new VariableNode(LightScriptType.Integer, "dimmer1")
+                        )
+                    )
+                ),
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new VariableNode(LightScriptType.Integer, "dimmer2"),
+                        rhs: new VariableNode(LightScriptType.Integer, "dimmer1")
+                    )
+                )
+            },
         };
 
         [Test]
@@ -1237,6 +1551,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                 {
                     new("dimmer1", 255),
                     new("dimmer2", 255),
+                    new("offset", 0),
                 }
             };
             LightScriptCompilationOptions options = defaultCompilationOptions;

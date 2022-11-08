@@ -6,6 +6,7 @@
         InvalidCharacter,
         InvalidNumberFormat,
         InvalidBrackets,
+        InvalidArgCount,
 
         // AST
         UnknownVariable,
@@ -14,6 +15,7 @@
         MissingProperty,
         UnknownOperator,
         NoLeftHandSideForOperator,
+        MissingTargetForOperator,
         TypeError,
         InvalidArgumentType,
         InternalSyntaxTreeError,
@@ -22,6 +24,7 @@
         // Compilation
         UnsupportedSyntaxNode,
         UnsupportedVariableType,
+        UnsupportedConstantType,
         MissingImplicitConversion,
         MissingExplicitConversion,
 
