@@ -13,6 +13,7 @@ using Plml.Dmx.Scripting.Compilation.Nodes;
 using Plml.Dmx.Scripting.Types;
 using System.Linq.Expressions;
 using System.Globalization;
+using System.Reflection;
 
 namespace Plml.Dmx.Scripting
 {
@@ -680,30 +681,14 @@ namespace Plml.Dmx.Scripting
                 ConstantNode constant when constant.Type is LightScriptType.Integer => Expression.Constant(constant.IntValue, typeof(int)),
                 ConstantNode constant when constant.Type is LightScriptType.Float => Expression.Constant(constant.FloatValue, typeof(float)),
 
-                AdditionNode addition => Expression.Add(
-                    CompileNode(addition.LeftHandSide),
-                    CompileNode(addition.RightHandSide)
-                ),
+                AdditionNode addition => CompileAddition(addition),
+                SubstractionNode substraction => CompileSubstraction(substraction),
+                MultiplicationNode multiplication => CompileMultiplication(multiplication),
+                DivisionNode division => CompileDivision(division),
+                ModuloNode modulo => CompileModulo(modulo),
+                ExponentiationNode exponentiation => CompileExponentiation(exponentiation),
 
-                SubstractionNode substraction => Expression.Subtract(
-                    CompileNode(substraction.LeftHandSide),
-                    CompileNode(substraction.RightHandSide)
-                ),
-
-                MultiplicationNode multiplication => Expression.Multiply(
-                    CompileNode(multiplication.LeftHandSide),
-                    CompileNode(multiplication.RightHandSide)
-                ),
-
-                DivisionNode division => Expression.Subtract(
-                    CompileNode(division.LeftHandSide),
-                    CompileNode(division.RightHandSide)
-                ),
-
-                AssignmentNode assignment => Expression.Assign(
-                    CompileNode(assignment.LeftHandSide),
-                    CompileNode(assignment.RightHandSide)
-                ),
+                AssignmentNode assignment => CompileAssignment(assignment),
 
                 MemberAccessNode memberAccess => Expression.PropertyOrField(
                     CompileNode(memberAccess.Target),
@@ -717,6 +702,121 @@ namespace Plml.Dmx.Scripting
 
                 _ => throw new CompilationException(CompilationErrorType.UnsupportedSyntaxNode, $"Unsupported syntax node in compilation '{node.GetType().Name}'")
             };
+
+            void ConvertExpressionsForArithmeticOperatorsIfNeeded(ref Expression leftExpression, ref Expression rightExpression)
+            {
+                if (leftExpression.Type == typeof(int) && rightExpression.Type == typeof(float))
+                {
+                    leftExpression = Expression.Convert(leftExpression, typeof(float));
+                }
+
+                if (leftExpression.Type == typeof(float) && rightExpression.Type == typeof(int))
+                {
+                    rightExpression = Expression.Convert(rightExpression, typeof(float));
+                }
+            }
+
+            Expression CompileAddition(AdditionNode addition)
+            {
+                Expression leftExpression = CompileNode(addition.LeftHandSide);
+                Expression rightExpression = CompileNode(addition.RightHandSide);
+
+                ConvertExpressionsForArithmeticOperatorsIfNeeded(ref leftExpression, ref rightExpression);
+
+                return Expression.Add(
+                    leftExpression,
+                    rightExpression
+                );
+            }
+
+            Expression CompileSubstraction(SubstractionNode substraction)
+            {
+                Expression leftExpression = CompileNode(substraction.LeftHandSide);
+                Expression rightExpression = CompileNode(substraction.RightHandSide);
+
+                ConvertExpressionsForArithmeticOperatorsIfNeeded(ref leftExpression, ref rightExpression);
+
+                return Expression.Subtract(
+                    leftExpression,
+                    rightExpression
+                );
+            }
+
+            Expression CompileMultiplication(MultiplicationNode multiply)
+            {
+                Expression leftExpression = CompileNode(multiply.LeftHandSide);
+                Expression rightExpression = CompileNode(multiply.RightHandSide);
+
+                ConvertExpressionsForArithmeticOperatorsIfNeeded(ref leftExpression, ref rightExpression);
+
+                return Expression.Multiply(
+                    leftExpression,
+                    rightExpression
+                );
+            }
+
+            Expression CompileDivision(DivisionNode division)
+            {
+                Expression leftExpression = CompileNode(division.LeftHandSide);
+                Expression rightExpression = CompileNode(division.RightHandSide);
+
+                ConvertExpressionsForArithmeticOperatorsIfNeeded(ref leftExpression, ref rightExpression);
+
+                return Expression.Divide(
+                    leftExpression,
+                    rightExpression
+                );
+            }
+
+            Expression CompileModulo(ModuloNode modulo)
+            {
+                Expression leftExpression = CompileNode(modulo.LeftHandSide);
+                Expression rightExpression = CompileNode(modulo.RightHandSide);
+
+                ConvertExpressionsForArithmeticOperatorsIfNeeded(ref leftExpression, ref rightExpression);
+
+                return Expression.Modulo(
+                    leftExpression,
+                    rightExpression
+                );
+            }
+
+            Expression CompileExponentiation(ExponentiationNode exponentiation)
+            {
+                Expression leftExpression = CompileNode(exponentiation.LeftHandSide);
+                Expression rightExpression = CompileNode(exponentiation.RightHandSide);
+                
+                Expression result = Expression.Call(
+                    null,
+                    Methods.Pow,
+                    ConvertIfNeeded(leftExpression, typeof(float)),
+                    ConvertIfNeeded(rightExpression, typeof(float))
+                );
+
+                if (leftExpression.Type == typeof(int) && rightExpression.Type == typeof(int))
+                    result = Expression.Convert(result, typeof(int));
+
+                return result;
+            }
+
+            Expression CompileAssignment(AssignmentNode assignment)
+            {
+                var leftExpression = CompileNode(assignment.LeftHandSide);
+                var rightExpression = CompileNode(assignment.RightHandSide);
+
+                return Expression.Assign(
+                    leftExpression,
+                    ConvertIfNeeded(rightExpression, leftExpression.Type)
+                );
+            }
+
+            Expression ConvertIfNeeded(Expression expression, Type type)
+            {
+                if (expression.Type != type)
+                    expression = Expression.Convert(expression, type);
+
+                return expression;
+            }
 
             Expression CompileVariable(VariableNode variable)
             {
@@ -733,6 +833,11 @@ namespace Plml.Dmx.Scripting
 
                 return Expression.Property(bag, "Item", Expression.Constant(variable.Name));
             }
+        }
+
+        private static class Methods
+        {
+            public static readonly MethodInfo Pow = typeof(Mathf).GetMethod(nameof(Mathf.Pow));
         }
 
         private static readonly char[] operatorChars = "-+*/%^<>".ToCharArray();

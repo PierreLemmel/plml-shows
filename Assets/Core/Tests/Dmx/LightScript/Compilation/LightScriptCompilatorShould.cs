@@ -5,6 +5,7 @@ using Plml.Dmx.Scripting.Compilation;
 using Plml.Dmx.Scripting.Compilation.Nodes;
 using Plml.Dmx.Scripting.Types;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 using TokenType = Plml.Dmx.Scripting.Compilation.LightScriptTokenType;
@@ -244,6 +245,8 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     )
                 )
             },
+
+            //Substraction
             new object[]
             {
                 "parLed1.dimmer = 255 - 100",
@@ -277,6 +280,8 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     )
                 )
             },
+
+            // Nested assignment
             new object[]
             {
                 "parLed1.color.red = 255",
@@ -308,6 +313,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     )
                 )
             },
+
             new object[]
             {
                 "dimmer1 = dimmer2 = 255",
@@ -845,6 +851,102 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     )
                 )
             },
+
+            // Functions witthout parameters
+            new object[]
+            {
+                "parLed1.dimmer = 255 * rng()",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Identifier, "rng"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.RightBracket),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = 255 * rng()",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        rhs: new ExplicitConversionNode(
+                            new MultiplicationNode(
+                                new ConstantNode(255),
+                                new FunctionNode(
+                                    LightScriptFunctions.Rng
+                                )
+                            ),
+                            LightScriptType.Integer
+                        )
+                    )
+                )
+            },
+
+            // Unary Operators
+            new object[]
+            {
+                "parLed1.dimmer = 255 * abs(-sin(t))",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Identifier, "abs"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Operator, "-"),
+                    new(TokenType.Identifier, "sin"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Identifier, "t"),
+                    new(TokenType.RightBracket),
+                    new(TokenType.RightBracket),
+                },
+                new LightScriptData()
+                {
+                    text = "parLed1.dimmer = 255 * abs(-sin(t))",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        rhs: new ExplicitConversionNode(
+                            new MultiplicationNode(
+                                new ConstantNode(255),
+                                new FunctionNode(
+                                    LightScriptFunctions.Abs_Float,
+                                    new UnaryMinusNode(
+                                        new FunctionNode(
+                                            LightScriptFunctions.Sin,
+                                            new VariableNode(
+                                                LightScriptType.Float,
+                                                "t"
+                                            )
+                                        )
+                                    )
+                                )
+                            ),
+                            LightScriptType.Integer
+                        )
+                    )
+                )
+            },
         };
 
         [Test]
@@ -1038,20 +1140,68 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                         new ConstantNode((int)Mathf.Round(100 * (Mathf.Sin(1) + 2 * Mathf.Cos(15))))
                     )
                 )
+            },
+
+            // Impure function
+            new object[]
+            {
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        rhs: new ExplicitConversionNode(
+                            new MultiplicationNode(
+                                new ConstantNode(255),
+                                new FunctionNode(
+                                    LightScriptFunctions.Rng
+                                )
+                            ),
+                            LightScriptType.Integer
+                        )
+                    )
+                ),
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        rhs: new ExplicitConversionNode(
+                            new MultiplicationNode(
+                                new ConstantNode(255),
+                                new FunctionNode(
+                                    LightScriptFunctions.Rng
+                                )
+                            ),
+                            LightScriptType.Integer
+                        )
+                    )
+                )
             }
         };
 
         [Test]
-        public void Compile_Without_Errors_For__Set_Dimmer_To_A_Constant_Value()
+        [TestCaseSource(nameof(Compile_TestCaseSource))]
+        public void Compile_Without_Errors(string input)
         {
-            (_, DmxTrackElement parLed, _) = CreateSimpleLightingPlanTrackElements();
+            (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
 
             LightScriptData data = new()
             {
-                text = "parLed.dimmer = 120",
+                text = input,
                 fixtures = new LightScriptFixtureData[]
                 {
-                    new("parLed", parLed)
+                    new(nameof(parLed1), parLed1),
+                    new(nameof(parLed2), parLed2),
+                },
+                integers = new LightScriptIntegerData[]
+                {
+                    new("dimmer1", 255),
+                    new("dimmer2", 255),
                 }
             };
             LightScriptCompilationOptions options = defaultCompilationOptions;
@@ -1063,6 +1213,8 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             Assert.IsTrue(result.isOk);
             Assert.IsFalse(result.hasError);
         }
+
+        public static IEnumerable<object> Compile_TestCaseSource => BuildASTTestCaseSource.Select(arr => arr[0]);
 
         [Test]
         public void Works_As_Expected__Set_Dimmer_To_A_Constant_Value()
