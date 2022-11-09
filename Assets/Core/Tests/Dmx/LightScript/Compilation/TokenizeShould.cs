@@ -439,7 +439,12 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             },
             new object[]
             {
-                "parLed1.dimmer = min(100, dimmer1, dimmer2, 255 * rng())",
+                "parLed1.dimmer = min(100, dimmer1, dimmer2, 255 * rng(),)",
+                CompilationErrorType.InvalidArgCount
+            },
+            new object[]
+            {
+                "parLed1.dimmer = min(,100, dimmer1, dimmer2, 255 * rng())",
                 CompilationErrorType.InvalidArgCount
             }
         };

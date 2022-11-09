@@ -20,8 +20,16 @@ namespace Plml.Dmx.Scripting.Compilation
 
             for (int i = 0; i < arguments.Length; i++)
             {
-                Type sysType = delParamaters[i].ParameterType;
-                LightScriptType expectedLSType = arguments[i].Type;
+                var arg = arguments[i];
+                var param = delParamaters[i];
+                Type sysType = !arg.IsParams ?
+                    param.ParameterType :
+                    (param.ParameterType.InheritsFrom<Array>() ?
+                        param.ParameterType.GetElementType():
+                        throw new LightScriptException($"Params argument should be mapped to array argument"));
+
+                
+                LightScriptType expectedLSType = arg.Type;
                 if (!CheckTypeCompatibility(sysType, expectedLSType))
                 {
                     throw new LightScriptException($"Invalid type in delegate for function '{name}' in argument {i}: impossible to map system type '{sysType.FullName}' to '{expectedLSType}'");
@@ -30,6 +38,12 @@ namespace Plml.Dmx.Scripting.Compilation
 
             if (!CheckTypeCompatibility(method.ReturnType, returnType))
                 throw new LightScriptException($"Invalid in delegate for function '{name}' in return type: impossible to map system type '{method.ReturnType}' to '{returnType}'");
+
+            for (int i = 0; i < arguments.Length - 1; i++)
+            {
+                if (arguments[i].IsParams)
+                    throw new LightScriptException("Only last argument of function can be params");
+            }
 
 
             ReturnType = returnType;
@@ -52,5 +66,6 @@ namespace Plml.Dmx.Scripting.Compilation
         }
 
         private static bool CheckTypeCompatibility(Type sysType, LightScriptType expectedLSType) => LightScriptTypeSystem.MapFromSystemType(sysType) == expectedLSType;
+
     }
 }

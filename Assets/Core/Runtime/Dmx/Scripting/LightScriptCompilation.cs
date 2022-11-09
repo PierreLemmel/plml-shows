@@ -150,6 +150,7 @@ namespace Plml.Dmx.Scripting
                             ')' => TokenType.RightBracket,
                             '.' => TokenType.DotNotation,
                             '=' => TokenType.Assignment,
+                            ',' => TokenType.ArgumentSeparator,
                             _ => throw new TokenizationException(CompilationErrorType.InvalidCharacter, $"Unexpected single char: '{sc}'")
                         };
                         result.Add(new(type));
@@ -170,47 +171,62 @@ namespace Plml.Dmx.Scripting
         {
             ValidateNumberFormats(tokens);
             ValidateBrackets(tokens);
-        }
+            ValidateArguments(tokens);
 
-        private static void ValidateNumberFormats(LightScriptToken[] tokens) => tokens
-            .Where(token => token.type == TokenType.Number)
-            .Select(token => token.content)
-            .ForEach(str =>
-            {
-                bool result = Regex.IsMatch(str, "^[0-9]+$")
-                        || Regex.IsMatch(str, @"^[0-9]+\.[0-9]*$")
-                        || Regex.IsMatch(str, @"^0x([0-9]|[a-f]|[A-F])+$");
-
-                if (!result)
-                    throw new TokenizationException(CompilationErrorType.InvalidNumberFormat, $"Invalid number format: '{str}'");
-            });
-
-        private static void ValidateBrackets(LightScriptToken[] tokens)
-        {
-            var statements = tokens.Split(t => t.type == TokenType.StatementEnding);
-
-            const string ErrorMsg = "Error in brackets";
-
-            foreach (var statement in statements)
-            {
-                int opened = 0;
-
-                foreach (LightScriptToken token in statement)
+            static void ValidateNumberFormats(LightScriptToken[] tokens) => tokens
+                .Where(token => token.type == TokenType.Number)
+                .Select(token => token.content)
+                .ForEach(str =>
                 {
-                    switch (token.type)
+                    bool result = Regex.IsMatch(str, "^[0-9]+$")
+                            || Regex.IsMatch(str, @"^[0-9]+\.[0-9]*$")
+                            || Regex.IsMatch(str, @"^0x([0-9]|[a-f]|[A-F])+$");
+
+                    if (!result)
+                        throw new TokenizationException(CompilationErrorType.InvalidNumberFormat, $"Invalid number format: '{str}'");
+                });
+
+            static void ValidateBrackets(LightScriptToken[] tokens)
+            {
+                var statements = tokens.Split(t => t.type == TokenType.StatementEnding);
+
+                const string ErrorMsg = "Error in brackets";
+
+                foreach (var statement in statements)
+                {
+                    int opened = 0;
+
+                    foreach (LightScriptToken token in statement)
                     {
-                        case TokenType.LeftBracket:
-                            opened++;
-                            break;
-                        case TokenType.RightBracket:
-                            if (--opened < 0)
-                                throw new TokenizationException(CompilationErrorType.InvalidBrackets, ErrorMsg);
-                            break;
+                        switch (token.type)
+                        {
+                            case TokenType.LeftBracket:
+                                opened++;
+                                break;
+                            case TokenType.RightBracket:
+                                if (--opened < 0)
+                                    throw new TokenizationException(CompilationErrorType.InvalidBrackets, ErrorMsg);
+                                break;
+                        }
+                    }
+
+                    if (opened != 0)
+                        throw new TokenizationException(CompilationErrorType.InvalidBrackets, ErrorMsg);
+                }
+            }
+
+            static void ValidateArguments(LightScriptToken[] tokens)
+            {
+                for (int i = 0; i < tokens.Length - 1; i++)
+                {
+                    if (
+                        (tokens[i].type == TokenType.ArgumentSeparator && tokens[i + 1].type == TokenType.RightBracket) ||
+                        (tokens[i].type == TokenType.LeftBracket && tokens[i + 1].type == TokenType.ArgumentSeparator)
+                    )
+                    {
+                        throw new TokenizationException(CompilationErrorType.InvalidArgCount, $"Missing argument after separator");
                     }
                 }
-
-                if (opened != 0)
-                    throw new TokenizationException(CompilationErrorType.InvalidBrackets, ErrorMsg);
             }
         }
 
@@ -245,7 +261,7 @@ namespace Plml.Dmx.Scripting
             SyntaxNode[] statements = scriptTokens.Select(t => BuildSyntaxNodeFromTokens(t, context));
 
             AbstractSyntaxTree result = new(statements);
-
+            
             return result;
         }
 
@@ -416,6 +432,13 @@ namespace Plml.Dmx.Scripting
 
                         break;
 
+                    case TokenType.ArgumentSeparator:
+
+                        PushArgumentSeparator();
+                        newContext = ASTBuilderContext.Default;
+
+                        break;
+
                     default:
                         throw new SyntaxTreeException(CompilationErrorType.UnsupportedToken, $"Unsupported token '{token.type}'");
                 }
@@ -483,6 +506,8 @@ namespace Plml.Dmx.Scripting
                     PopOperationStack();
             }
 
+            void PushArgumentSeparator() => argcountStack.Push(argcountStack.Pop() + 1);
+
             void PopOperationStack()
             {
                 var topElt = operationStack.Pop();
@@ -543,7 +568,7 @@ namespace Plml.Dmx.Scripting
 
                         int argc = argcountStack.Pop();
                         SyntaxNode[] arguments = new SyntaxNode[argc];
-                        Debug.Log(argc);
+
                         for (int i = argc - 1; i >= 0; i--)
                             arguments[i] = resultStack.Pop();
 
@@ -952,7 +977,32 @@ namespace Plml.Dmx.Scripting
 
             Expression CompileFunction(FunctionNode function)
             {
-                var argExpressions = function.Arguments.Select(arg => CompileNode(arg));
+                Expression[] argExpressions;
+                var argNodes = function.Arguments;
+                var argDefinitions = function.Function.Arguments;
+
+                if (argDefinitions.IsEmpty())
+                    argExpressions = Array.Empty<Expression>();
+                else if (argDefinitions[^1].IsParams)
+                {
+                    argExpressions = new Expression[argDefinitions.Length];
+
+                    int i = 0;
+                    for (; i < argExpressions.Length - 1; i++)
+                        argExpressions[i] = CompileNode(argNodes[i]);
+
+                    Type arrayType = LightScriptTypeSystem.MapFromToSystemType(argDefinitions[^1].Type);
+                    Expression paramsExpression = Expression.NewArrayInit(
+                        arrayType,
+                        argNodes[i..].Select(arg => CompileNode(arg))
+                    );
+
+                    argExpressions[^1] = paramsExpression;
+                }
+                else
+                {
+                    argExpressions = argNodes.Select(arg => CompileNode(arg));
+                }
 
                 return Expression.Call(
                     null,
@@ -1013,7 +1063,7 @@ namespace Plml.Dmx.Scripting
         private static readonly char[] operatorChars = "-+*/%^<>".ToCharArray();
         private static bool IsOperator(char c) => operatorChars.Contains(c);
 
-        private static readonly char[] singleChars = "().=".ToCharArray();
+        private static readonly char[] singleChars = "().=,".ToCharArray();
         private static bool IsSingleChar(char c) => singleChars.Contains(c);
 
     }

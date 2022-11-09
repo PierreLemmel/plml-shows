@@ -41,6 +41,15 @@ namespace Plml.Dmx.Scripting.Types
                 return LightScriptType.Undefined;
         }
 
+        public static Type MapFromToSystemType(LightScriptType lsType) => lsType switch
+        {
+            LightScriptType.Integer => typeof(int),
+            LightScriptType.Float => typeof(float),
+            LightScriptType.Color => typeof(Color24),
+            LightScriptType.Fixture => typeof(DmxTrackElement),
+            _ => throw new LightScriptTypeException($"Unsupported LightScriptType '{lsType}'")
+        };
+
         private static LightScriptTypeInfo colorType = new(
             LightScriptType.Color,
             typeof(Color24),
