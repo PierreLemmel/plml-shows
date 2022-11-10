@@ -43,56 +43,5 @@ namespace Plml.Dmx.Scripting.Compilation
             "\n",
             tree.Statements.Select(statement => statement.Stringify())
         );
-
-        public static string Stringify(this SyntaxNode node)
-        {
-            return StringifyNode(node, 0);
-
-            string StringifyNode(SyntaxNode node, int indent)
-            {
-                string str = node switch
-                {
-                    VariableNode variable => $"{variable.Type} {variable.Name}",
-                    ConstantNode constant => constant.Value.ToString(),
-                    MemberAccessNode ma => string.Join("\n", new string[]
-                    {
-                        $"Member access",
-                        StringifyNode(ma.Target, indent + 1),
-                        IndentString(indent + 1) + ma.Property,
-                        IndentString(indent) + ")"
-                    }),
-                    UnaryOperatorNode unary => string.Join("\n", new string[]
-                    {
-                        $"{unary.Operator}",
-                        StringifyNode(unary.Operand, indent + 1)
-                    }),
-                    BinaryOperatorNode binary => string.Join("\n", new string[]
-                    {
-                        $"{binary.Operator}",
-                        StringifyNode(binary.LeftHandSide, indent + 1),
-                        StringifyNode(binary.RightHandSide, indent + 1),
-                    }),
-                    FunctionNode function => string.Join("\n", Enumerables.Merge(
-                        Enumerables.Create(function.Name),
-                        function.Arguments.Select(arg => StringifyNode(arg, indent + 1))
-                    )),
-                    ImplicitConversionNode @implicit => string.Join("\n", new string[]
-                    {
-                        $"Implicit: {@implicit.Target.Type} -> {@implicit.ToType}",
-                        StringifyNode(@implicit.Target, indent + 1),
-                    }),
-                    ExplicitConversionNode @explicit => string.Join("\n", new string[]
-                    {
-                        $"Explicit: {@explicit.Target.Type} -> {@explicit.ToType}",
-                        StringifyNode(@explicit.Target, indent + 1)
-                    }),
-                    _ => throw new InvalidOperationException($"Unsupported node type: {node.GetType().Name}")
-                };
-
-                return IndentString(indent) + str;
-            }
-
-            string IndentString(int indent) => "    ".Repeat(indent);
-        }
     }
 }

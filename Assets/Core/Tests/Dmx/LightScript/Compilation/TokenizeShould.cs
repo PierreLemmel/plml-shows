@@ -384,7 +384,34 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.RightBracket),
                     new(TokenType.RightBracket),
                 }
-            }
+            },
+
+            // Negatives number
+            new object[]
+            {
+                "x = -200",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "x"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Operator, "-"),
+                    new(TokenType.Number, "200"),
+                }
+            },
+
+            // Substraction
+            new object[]
+            {
+                "x = 200 - 100",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "x"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "200"),
+                    new(TokenType.Operator, "-"),
+                    new(TokenType.Number, "100"),
+                }
+            },
         };
 
         public static IEnumerable<object> ValidateTokensTestCaseSource => TokenizeTestCaseSource.Select(objArr => objArr[0]);

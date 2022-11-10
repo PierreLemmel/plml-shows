@@ -1,5 +1,6 @@
 ﻿using Plml.Dmx.Scripting.Types;
 using System;
+using System.Linq;
 
 namespace Plml.Dmx.Scripting.Compilation
 {
@@ -10,6 +11,8 @@ namespace Plml.Dmx.Scripting.Compilation
         public LightScriptArgument[] Arguments { get; }
         public bool IsPure { get; }
         public Delegate Function { get; }
+
+        public bool HasParamsArgument => Arguments.Any() && Arguments[^1].IsParams;
 
         public LightScriptFunction(LightScriptType returnType, string name, bool pure, Delegate function, params LightScriptArgument[] arguments)
         {

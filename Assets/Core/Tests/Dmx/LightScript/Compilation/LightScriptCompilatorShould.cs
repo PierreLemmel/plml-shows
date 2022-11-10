@@ -153,7 +153,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             Assert.That(cosFunction.Arguments, Has.Length.EqualTo(1));
             Assert.That(cosFunction.Arguments[0].Type, Is.EqualTo(LightScriptType.Float));
 
-            bool hasRound = context.TryGetFunction("round", out var roundFunction);
+            bool hasRound = context.TryGetFunction("round", out var roundFunction, LightScriptType.Float);
             Assert.That(hasRound, Is.True);
             Assert.That(roundFunction.Name, Is.EqualTo("round"));
             Assert.That(roundFunction.ReturnType, Is.EqualTo(LightScriptType.Integer));
@@ -168,7 +168,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             Assert.That(rngFunction.IsPure, Is.False);
             Assert.That(rngFunction.Arguments, Is.Empty);
 
-            bool hasClamp01 = context.TryGetFunction("clamp01", out var clamp01Function);
+            bool hasClamp01 = context.TryGetFunction("clamp01", out var clamp01Function, LightScriptType.Float);
             Assert.That(hasClamp01, Is.True);
             Assert.That(clamp01Function.Name, Is.EqualTo("clamp01"));
             Assert.That(clamp01Function.ReturnType, Is.EqualTo(LightScriptType.Float));
@@ -1188,7 +1188,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                                     LightScriptType.Float
                                 ),
                                 new ImplicitConversionNode(
-                                    new ConstantNode(0),
+                                    new ConstantNode(255),
                                     LightScriptType.Float
                                 )
                             ),
@@ -1243,13 +1243,133 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                         rhs: new ExplicitConversionNode(
                             new FunctionNode(
                                 LightScriptFunctions.Min_Float,
-                                new ConstantNode(100),
-                                new VariableNode(LightScriptType.Float, "dimmer1"),
-                                new VariableNode(LightScriptType.Float, "dimmer2"),
+                                new ImplicitConversionNode(
+                                    new ConstantNode(100),
+                                    LightScriptType.Float
+                                ),
+                                new ImplicitConversionNode(
+                                    new VariableNode(LightScriptType.Integer, "dimmer1"),
+                                    LightScriptType.Float
+                                ),
+                                new ImplicitConversionNode(
+                                    new VariableNode(LightScriptType.Integer, "dimmer2"),
+                                    LightScriptType.Float
+                                ),
                                 new MultiplicationNode(
                                     new ConstantNode(255),
                                     new FunctionNode(
                                         LightScriptFunctions.Rng
+                                    )
+                                )
+                            ),
+                            LightScriptType.Integer
+                        )
+                    )
+                )
+            },
+
+            // Super-méga complex shit
+            new object[]
+            {
+                "parLed1.dimmer = abs(clamp(3 * rng() + 5 * (1 + sin (2 * t + 50)) / 2 - 3, -200, 200))",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Identifier, "abs"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Identifier, "clamp"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "3"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Identifier, "rng"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.RightBracket),
+                    new(TokenType.Operator, "+"),
+                    new(TokenType.Number, "5"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "1"),
+                    new(TokenType.Operator, "+"),
+                    new(TokenType.Identifier, "sin"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "2"),
+                    new(TokenType.Operator, "*"),
+                    new(TokenType.Identifier, "t"),
+                    new(TokenType.Operator, "+"),
+                    new(TokenType.Number, "50"),
+                    new(TokenType.RightBracket),
+                    new(TokenType.RightBracket),
+                    new(TokenType.Operator, "/"),
+                    new(TokenType.Number, "2"),
+                    new(TokenType.Operator, "-"),
+                    new(TokenType.Number, "3"),
+                    new(TokenType.ArgumentSeparator),
+                    new(TokenType.Operator, "-"),
+                    new(TokenType.Number, "200"),
+                    new(TokenType.ArgumentSeparator),
+                    new(TokenType.Number, "200"),
+                    new(TokenType.RightBracket),
+                    new(TokenType.RightBracket),
+                },
+                new LightScriptData()
+                {
+                    text = "abs(clamp(3 * rng() + 5 * (1 + sin (2 * t + 50)) / 2 - 3, -200, 200))",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        rhs: new ExplicitConversionNode(
+                            new FunctionNode(
+                                LightScriptFunctions.Abs_Float,
+                                new FunctionNode(
+                                    LightScriptFunctions.Clamp_Float,
+                                    new SubstractionNode(
+                                        new AdditionNode(
+                                            new MultiplicationNode(
+                                                new ConstantNode(3),
+                                                new FunctionNode(
+                                                    LightScriptFunctions.Rng
+                                                )
+                                            ),
+                                            new DivisionNode(
+                                                new MultiplicationNode(
+                                                    new ConstantNode(5),
+                                                    new AdditionNode(
+                                                        new ConstantNode(1),
+                                                        new FunctionNode(
+                                                            LightScriptFunctions.Sin,
+                                                            new AdditionNode(
+                                                                new MultiplicationNode(
+                                                                    new ConstantNode(2),
+                                                                    new VariableNode(LightScriptType.Float, "t")
+                                                                ),
+                                                                new ConstantNode(50)
+                                                            )
+                                                        )
+                                                    )
+                                                ),
+                                                new ConstantNode(2)
+                                            )
+                                        ),
+                                        new ConstantNode(3)
+                                    ),
+                                    new ImplicitConversionNode(
+                                        new UnaryMinusNode(
+                                            new ConstantNode(200)
+                                        ),
+                                        LightScriptType.Float
+                                    ),
+                                    new ImplicitConversionNode(
+                                        new ConstantNode(200),
+                                        LightScriptType.Float
                                     )
                                 )
                             ),

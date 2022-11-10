@@ -23,12 +23,32 @@ namespace Plml.Dmx.Scripting.Compilation
         internal void AddConstant(LightScriptConstant constant) => _constants.Add(constant);
 
         public bool TryGetVariable(string name, out LightScriptVariable variable) => (variable = _variables.FirstOrDefault(v => v.Name == name)) != null;
-        public bool TryGetFunction(string name, out LightScriptFunction function, params LightScriptType[] arguments) =>
-            (function = GetFunctions(name).SingleOrDefault(f => f.Arguments
-                .Select(arg => arg.Type)
-                .Zip(arguments, (lhs, rhs) => lhs == rhs)
-                .All(r => r))
-            ) != null;
+        public bool TryGetFunction(string name, out LightScriptFunction function, params LightScriptType[] arguments)
+        {
+            bool IsValidFunction(LightScriptFunction f)
+            {
+                int nonParamsArgc = f.Arguments.Length - (f.HasParamsArgument ? 1 : 0);
+
+                int i = 0;
+                for (; i < nonParamsArgc; i++)
+                {
+                    if (f.Arguments[i].Type != arguments[i])
+                        return false;
+                }
+
+                if (f.HasParamsArgument)
+                {
+                    var foo = f.Arguments[^1].Type;
+                    if (!arguments[i..].All(argType => argType == foo))
+                        return false;
+                }
+
+                return true;
+            }
+
+            return (function = GetFunctions(name).SingleOrDefault(IsValidFunction)) != null;
+        }
+
         public bool TryGetConstant(string name, out LightScriptConstant constant) => (constant = _constants.FirstOrDefault(v => v.Name == name)) != null;
 
         public IEnumerable<LightScriptFunction> GetFunctions(string name) => _functions.Where(f => f.Name == name);

@@ -75,7 +75,7 @@ namespace Plml.Dmx.Scripting
             for (; i < length; i++)
             {
                 char c = src[i];
-
+                
                 bool charIsValidInCurrentContext = tokenContext switch
                 {
                     TokenizationContext.Identifier => char.IsLetterOrDigit(c),
@@ -159,6 +159,9 @@ namespace Plml.Dmx.Scripting
                     case TokenizationContext.Operator:
                         result.Add(new(TokenType.Operator, GetCurrentString()));
                         break;
+
+                    default:
+                        throw new TokenizationException(CompilationErrorType.InvalidTokenizationContext, $"Invalid tokenization context: '{tokenContext}'");
                 }
             }
             
@@ -375,7 +378,7 @@ namespace Plml.Dmx.Scripting
 
                     case TokenType.Operator:
 
-                        if (!lastToken.type.IsOneOf(TokenType.LeftBracket, TokenType.Operator, TokenType.Assignment))
+                        if (!lastToken.type.IsOneOf(TokenType.LeftBracket, TokenType.Operator, TokenType.Assignment, TokenType.ArgumentSeparator))
                         {
                             BinaryOperatorType @operator = content switch
                             {
@@ -501,8 +504,7 @@ namespace Plml.Dmx.Scripting
                     argcountStack.Push(0);
                 }
 
-                while (operationStack.Peek().Type != OperationStackElementType.LeftBracket)
-                    PopOperationStack();
+                PopCurrentOperations();
 
                 operationStack.Pop();
 
@@ -514,10 +516,13 @@ namespace Plml.Dmx.Scripting
             {
                 argcountStack.Push(argcountStack.Pop() + 1);
 
-                while (operationStack.Peek().Type.IsOneOf(OperationStackElementType.ArgumentSeparator, OperationStackElementType.LeftBracket))
-                    PopOperationStack();
+                PopCurrentOperations();
+            }
 
-                operationStack.Push((OperationStackElementType.ArgumentSeparator, null, null, null));
+            void PopCurrentOperations()
+            {
+                while (!operationStack.Peek().Type.IsOneOf(OperationStackElementType.LeftBracket, OperationStackElementType.ArgumentSeparator))
+                    PopOperationStack();
             }
 
             void PopOperationStack()
@@ -590,7 +595,7 @@ namespace Plml.Dmx.Scripting
                         if (TryFindFunction(functionName, argTypes, out LightScriptFunction function, out bool[] conversions))
                         {
                             SyntaxNode[] convertedArguments = arguments.Select((arg, i) => conversions[i] ?
-                                new ImplicitConversionNode(arg, function.Arguments[i].Type)
+                                new ImplicitConversionNode(arg, function.Arguments[Mathf.Min(i, function.Arguments.Length - 1)].Type)
                                 : arg);
 
                             FunctionNode functionNode = new(function, convertedArguments);
@@ -637,23 +642,47 @@ namespace Plml.Dmx.Scripting
                     {
                         conversions.Set(false);
                         var funcArgs = function.Arguments;
+                        bool hasParams = function.HasParamsArgument;
 
-                        if (funcArgs.Length != argc)
+                        bool hasRightCountOfParams = argc == funcArgs.Length || (hasParams && argc > funcArgs.Length);
+                        if (!hasRightCountOfParams)
                             continue;
 
                         bool isValid = true;
-                        for (int i = 0; i < argc; i++)
-                        {
-                            var funcArg = funcArgs[i];
+                        int i = 0;
 
-                            if (funcArg.Type != inputTypes[i])
+                        int nonParamsArgCount = funcArgs.Length - (hasParams ? 1 : 0);
+                        for (; i < nonParamsArgCount; i++)
+                        {
+                            var funcArgType = funcArgs[i].Type;
+
+                            if (inputTypes[i] != funcArgType)
                             {
-                                if (LightScriptTypeSystem.HasImplicitConversion(inputTypes[i], funcArg.Type))
+                                if (LightScriptTypeSystem.HasImplicitConversion(inputTypes[i], funcArgType))
                                     conversions[i] = true;
                                 else
                                 {
                                     isValid = false;
                                     break;
+                                }
+                            }
+                        }
+
+                        if (hasParams)
+                        {
+                            var paramsArgType = funcArgs[^1].Type;
+
+                            for(; i < argc; i++)
+                            {
+                                if (inputTypes[i] != paramsArgType)
+                                {
+                                    if (LightScriptTypeSystem.HasImplicitConversion(inputTypes[i], paramsArgType))
+                                        conversions[i] = true;
+                                    else
+                                    {
+                                        isValid = false;
+                                        break;
+                                    }
                                 }
                             }
                         }

@@ -7,6 +7,7 @@
         InvalidNumberFormat,
         InvalidBrackets,
         InvalidArgCount,
+        InvalidTokenizationContext,
 
         // AST
         UnknownVariable,
