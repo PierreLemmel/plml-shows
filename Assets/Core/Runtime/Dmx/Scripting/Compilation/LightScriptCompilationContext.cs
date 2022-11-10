@@ -24,7 +24,7 @@ namespace Plml.Dmx.Scripting.Compilation
 
         public bool TryGetVariable(string name, out LightScriptVariable variable) => (variable = _variables.FirstOrDefault(v => v.Name == name)) != null;
         public bool TryGetFunction(string name, out LightScriptFunction function, params LightScriptType[] arguments) =>
-            (function = GetFunctions(name).FirstOrDefault(f => f.Arguments
+            (function = GetFunctions(name).SingleOrDefault(f => f.Arguments
                 .Select(arg => arg.Type)
                 .Zip(arguments, (lhs, rhs) => lhs == rhs)
                 .All(r => r))

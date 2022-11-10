@@ -164,6 +164,9 @@ namespace Plml.Dmx.Scripting
             
             string GetCurrentString() => src[startPosition..i];
 
+            static bool IsOperator(char c) => "-+*/%^<>".Contains(c);
+            static bool IsSingleChar(char c) => "().=,".Contains(c);
+
             return result.ToArray();
         }
 
@@ -278,6 +281,7 @@ namespace Plml.Dmx.Scripting
             UnaryOperator,
             LeftBracket,
             RightBracket,
+            ArgumentSeparator,
             Function,
         }
 
@@ -506,7 +510,15 @@ namespace Plml.Dmx.Scripting
                     PopOperationStack();
             }
 
-            void PushArgumentSeparator() => argcountStack.Push(argcountStack.Pop() + 1);
+            void PushArgumentSeparator()
+            {
+                argcountStack.Push(argcountStack.Pop() + 1);
+
+                while (operationStack.Peek().Type.IsOneOf(OperationStackElementType.ArgumentSeparator, OperationStackElementType.LeftBracket))
+                    PopOperationStack();
+
+                operationStack.Push((OperationStackElementType.ArgumentSeparator, null, null, null));
+            }
 
             void PopOperationStack()
             {
@@ -994,7 +1006,7 @@ namespace Plml.Dmx.Scripting
                     Type arrayType = LightScriptTypeSystem.MapFromToSystemType(argDefinitions[^1].Type);
                     Expression paramsExpression = Expression.NewArrayInit(
                         arrayType,
-                        argNodes[i..].Select(arg => CompileNode(arg))
+                        argNodes[i..].Select(arg => ConvertIfNeeded(CompileNode(arg), arrayType))
                     );
 
                     argExpressions[^1] = paramsExpression;
@@ -1059,12 +1071,5 @@ namespace Plml.Dmx.Scripting
             public static readonly MethodInfo Pow = typeof(Mathf).GetMethod(nameof(Mathf.Pow));
             public static readonly MethodInfo RoundToInt = typeof(Mathf).GetMethod(nameof(Mathf.RoundToInt));
         }
-
-        private static readonly char[] operatorChars = "-+*/%^<>".ToCharArray();
-        private static bool IsOperator(char c) => operatorChars.Contains(c);
-
-        private static readonly char[] singleChars = "().=,".ToCharArray();
-        private static bool IsSingleChar(char c) => singleChars.Contains(c);
-
     }
 }

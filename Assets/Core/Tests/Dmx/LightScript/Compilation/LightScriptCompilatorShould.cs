@@ -229,14 +229,14 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             Assert.That(clampIntFunction.Arguments[2].Type, Is.EqualTo(LightScriptType.Integer));
 
 
-            bool hasClampDmxFlt = context.TryGetFunction("clampDmx", out var clampDmxFltFunction);
+            bool hasClampDmxFlt = context.TryGetFunction("clampDmx", out var clampDmxFltFunction, LightScriptType.Float);
             Assert.That(hasClampDmxFlt, Is.True);
             Assert.That(clampDmxFltFunction.Name, Is.EqualTo("clampDmx"));
             Assert.That(clampDmxFltFunction.ReturnType, Is.EqualTo(LightScriptType.Float));
             Assert.That(clampDmxFltFunction.Arguments, Has.Length.EqualTo(1));
             Assert.That(clampDmxFltFunction.Arguments[0].Type, Is.EqualTo(LightScriptType.Float));
 
-            bool hasClampDmxInt = context.TryGetFunction("clampDmx", out var clampDmxIntFunction);
+            bool hasClampDmxInt = context.TryGetFunction("clampDmx", out var clampDmxIntFunction, LightScriptType.Integer);
             Assert.That(hasClampDmxInt, Is.True);
             Assert.That(clampDmxIntFunction.Name, Is.EqualTo("clampDmx"));
             Assert.That(clampDmxIntFunction.ReturnType, Is.EqualTo(LightScriptType.Integer));
@@ -1176,15 +1176,21 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                         ),
                         rhs: new ExplicitConversionNode(
                             new FunctionNode(
-                                LightScriptFunctions.ClampDmx_Float,
+                                LightScriptFunctions.Clamp_Float,
                                 new MultiplicationNode(
                                     new ConstantNode(500),
                                     new FunctionNode(
                                         LightScriptFunctions.Rng
                                     )
                                 ),
-                                new ConstantNode(0),
-                                new ConstantNode(500)
+                                new ImplicitConversionNode(
+                                    new ConstantNode(0),
+                                    LightScriptType.Float
+                                ),
+                                new ImplicitConversionNode(
+                                    new ConstantNode(0),
+                                    LightScriptType.Float
+                                )
                             ),
                             LightScriptType.Integer
                         )
