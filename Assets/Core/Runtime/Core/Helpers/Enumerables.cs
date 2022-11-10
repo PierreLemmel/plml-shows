@@ -45,5 +45,10 @@ namespace Plml
             .Select((_, i) => i);
 
         public static IEnumerable<T> Create<T>(params T[] elts) => elts;
+
+        public static IEnumerable<T> Append<T>(this IEnumerable<T> sequence, params T[] elts) => Merge(
+            sequence,
+            elts
+        );
     }
 }

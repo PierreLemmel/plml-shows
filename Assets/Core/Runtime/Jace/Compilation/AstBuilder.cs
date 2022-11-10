@@ -10,10 +10,10 @@ namespace Plml.Jace.Compilation
     public class AstBuilder
     {
         private readonly IFunctionRegistry functionRegistry;
-        private readonly Dictionary<char, int> operationPrecedence = new Dictionary<char, int>();
-        private readonly Stack<Operation> resultStack = new Stack<Operation>();
-        private readonly Stack<Token> operatorStack = new Stack<Token>();
-        private readonly Stack<int> parameterCount = new Stack<int>();
+        private readonly Dictionary<char, int> operationPrecedence = new();
+        private readonly Stack<Operation> resultStack = new();
+        private readonly Stack<Token> operatorStack = new();
+        private readonly Stack<int> parameterCount = new();
 
         public AstBuilder(IFunctionRegistry functionRegistry)
         {
