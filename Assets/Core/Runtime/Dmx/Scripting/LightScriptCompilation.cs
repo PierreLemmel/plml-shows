@@ -250,7 +250,8 @@ namespace Plml.Dmx.Scripting
 
             data.fixtures.ForEach(fixture => context.AddVariable(new(LightScriptType.Fixture, fixture.name)));
             data.integers.ForEach(integer => context.AddVariable(new(LightScriptType.Integer, integer.name)));
-
+            data.floats.ForEach(flt => context.AddVariable(new(LightScriptType.Float, flt.name)));
+            data.colors.ForEach(color => context.AddVariable(new(LightScriptType.Color, color.name)));
 
             foreach (var func in LightScriptFunctions.DefaultFunctions)
                 context.AddFunction(func);

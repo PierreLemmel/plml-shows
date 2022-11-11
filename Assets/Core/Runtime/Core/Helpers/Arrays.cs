@@ -90,6 +90,18 @@ namespace Plml
             return result;
         }
 
+        public static T[] Reverse<T>(this T[] array)
+        {
+            int length = array.Length;
+
+            T[] result = new T[length];
+
+            for (int i = 0; i < length; i++)
+                result[length - 1 - i] = array[i];
+
+            return result;
+        }
+
         public static void CopyTo<T>(this T[] array, T[] other)
         {
             if (other.Length != array.Length)
