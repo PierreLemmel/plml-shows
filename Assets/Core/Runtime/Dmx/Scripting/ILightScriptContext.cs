@@ -1,17 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using Plml.Dmx.Scripting.Runtime;
+using System.Collections.Generic;
 
 namespace Plml.Dmx.Scripting
 {
     public interface ILightScriptContext
     {
-        public void AddToContext(string key, DmxTrackElement fixture);
-        public void AddToContext(string key, int intValue);
-        public void AddToContext(string key, float floatValue);
-        public void AddToContext(string key, Color24 color);
+        public void AddToContext(FixtureVariableInfo fixture);
+        public void AddToContext(IntegerVariableInfo intValue);
+        public void AddToContext(FloatVariableInfo floatValue);
+        public void AddToContext(ColorVariableInfo color);
 
-        public IDictionary<string, DmxTrackElement> Fixtures { get; }
-        public IDictionary<string, int> Integers { get; }
-        public IDictionary<string, float> Floats { get; }
-        public IDictionary<string, Color24> Colors { get; }
+        public IDictionary<string, FixtureVariable> Fixtures { get; }
+        public IDictionary<string, IntVariable> Integers { get; }
+        public IDictionary<string, FloatVariable> Floats { get; }
+        public IDictionary<string, ColorVariable> Colors { get; }
     }
 }

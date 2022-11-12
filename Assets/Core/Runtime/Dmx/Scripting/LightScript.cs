@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Plml.Dmx.Scripting.Compilation;
+using Plml.Dmx.Scripting.Runtime;
+using System;
 using UnityEngine;
 
 namespace Plml.Dmx.Scripting
@@ -8,7 +10,8 @@ namespace Plml.Dmx.Scripting
         [EditTimeOnly]
         public DmxTrack track;
 
-        public VariableData variables;
+        [EditTimeOnly]
+        public VariableDefinitionData variableDefinitions;
 
         [Multiline]
         public string input;
@@ -18,42 +21,43 @@ namespace Plml.Dmx.Scripting
         {
             compilator = FindObjectOfType<LightScriptCompilator>() ?? throw new MissingComponentException($"Can't find {nameof(LightScriptCompilator)} in scene");
 
-            context = new LightScriptContext();
+            variableDefinitions.fixtures.ForEach(f => Context.AddToContext(f));
+            variableDefinitions.integers.ForEach(i => Context.AddToContext(i));
+            variableDefinitions.floats.ForEach(f => Context.AddToContext(f));
+            variableDefinitions.colors.ForEach(c => Context.AddToContext(c));
 
-            variables.fixtures.ForEach(f => context.AddToContext(f.name, f.fixture));
-            variables.integers.ForEach(i => context.AddToContext(i.name, i.defaultValue));
-            variables.floats.ForEach(f => context.AddToContext(f.name, f.defaultValue));
-            variables.colors.ForEach(c => context.AddToContext(c.name, c.defaultValue));
+            Context.AddToContext(new FloatVariableInfo("t", defaultValue: 0f, isReadonly: true));
+            Context.AddToContext(new FloatVariableInfo("dt", defaultValue: 0f, isReadonly: true));
+            Context.AddToContext(new IntegerVariableInfo("frame", defaultValue: 0, isReadonly: true));
 
-            context.AddToContext("t", 0f);
-            context.AddToContext("dt", 0f);
-            context.AddToContext("frame", 0);
-
-            Compile();
+            if (!string.IsNullOrEmpty(input))
+                Compile();
         }
 
         private LightScriptAction lsAction;
-        private ILightScriptContext context;
+        public RuntimeContext Context { get; } = new();
         private void Update()
         {
+            Context.Floats["t"].Value = Time.time;
+            Context.Floats["dt"].Value = Time.deltaTime;
+            Context.Integers["frame"].Value = Time.frameCount;
+
             if (lsAction != null)
             {
-                context.Floats["t"] = Time.time;
-                context.Floats["dt"] = Time.deltaTime;
-                context.Integers["frame"] = Time.frameCount;
+                
 
-                lsAction(context);
+                lsAction(Context);
             }
         }
 
         public void Compile()
         {
-            LightScriptData data = new()
+            LightScriptCompilationData data = new()
             {
-                fixtures = variables.fixtures,
-                integers = variables.integers,
-                floats = variables.floats,
-                colors = variables.colors,
+                fixtures = variableDefinitions.fixtures,
+                integers = variableDefinitions.integers,
+                floats = variableDefinitions.floats,
+                colors = variableDefinitions.colors,
 
                 text = input
             };
@@ -65,12 +69,18 @@ namespace Plml.Dmx.Scripting
         }
 
         [Serializable]
-        public class VariableData
+        public class VariableDefinitionData
         {
-            public LightScriptFixtureData[] fixtures;
-            public LightScriptIntegerData[] integers;
-            public LightScriptFloatData[] floats;
-            public LightScriptColorData[] colors;
+            public FixtureVariableInfo[] fixtures;
+            public IntegerVariableInfo[] integers;
+            public FloatVariableInfo[] floats;
+            public ColorVariableInfo[] colors;
+        }
+
+
+        public class VariableRuntimeData
+        {
+
         }
     }
 }

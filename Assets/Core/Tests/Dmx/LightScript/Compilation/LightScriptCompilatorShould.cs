@@ -3,6 +3,7 @@ using Plml.Dmx;
 using Plml.Dmx.Scripting;
 using Plml.Dmx.Scripting.Compilation;
 using Plml.Dmx.Scripting.Compilation.Nodes;
+using Plml.Dmx.Scripting.Runtime;
 using Plml.Dmx.Scripting.Types;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,11 +66,11 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
             return (track, parLed1TrackElement, parLed2TrackElement);
         }
 
-        private static LightScriptFixtureData[] GetFixtures(string name1, string name2 = null)
+        private static FixtureVariableInfo[] GetFixtures(string name1, string name2 = null)
         {
             (_, var parLed1, var parLed2) = CreateSimpleLightingPlanTrackElements();
 
-            return new LightScriptFixtureData[]
+            return new FixtureVariableInfo[]
             {
                 new(name1, parLed1),
                 new(name2, parLed2)
@@ -81,10 +82,10 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         {
             (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
 
-            LightScriptData data = new()
+            LightScriptCompilationData data = new()
             {
                 text = "parLed1.dimmer = 120",
-                fixtures = new LightScriptFixtureData[]
+                fixtures = new FixtureVariableInfo[]
                 {
                     new("parLed1", parLed1),
                     new("parLed2", parLed2),
@@ -124,10 +125,10 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         {
             (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
 
-            LightScriptData data = new()
+            LightScriptCompilationData data = new()
             {
                 text = "parLed1.dimmer = 120",
-                fixtures = new LightScriptFixtureData[]
+                fixtures = new FixtureVariableInfo[]
                 {
                     new("parLed1", parLed1),
                     new("parLed2", parLed2),
@@ -181,10 +182,10 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         {
             (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
 
-            LightScriptData data = new()
+            LightScriptCompilationData data = new()
             {
                 text = "parLed1.dimmer = 120",
-                fixtures = new LightScriptFixtureData[]
+                fixtures = new FixtureVariableInfo[]
                 {
                     new("parLed1", parLed1),
                     new("parLed2", parLed2),
@@ -249,10 +250,10 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         {
             (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
 
-            LightScriptData data = new()
+            LightScriptCompilationData data = new()
             {
                 text = "parLed1.dimmer = 120",
-                fixtures = new LightScriptFixtureData[]
+                fixtures = new FixtureVariableInfo[]
                 {
                     new("parLed1", parLed1),
                     new("parLed2", parLed2),
@@ -282,7 +283,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
 
         [Test]
         [TestCaseSource(nameof(BuildASTTestCaseSource))]
-        public void Build_AST_As_Expected(string formula, LightScriptToken[] input, LightScriptData data, AbstractSyntaxTree expected)
+        public void Build_AST_As_Expected(string formula, LightScriptToken[] input, LightScriptCompilationData data, AbstractSyntaxTree expected)
         {
             ILightScriptCompilationContext context = LightScriptCompilation.BuildContext(data);
             AbstractSyntaxTree result = LightScriptCompilation.BuildAst(input, context);
@@ -306,7 +307,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Assignment),
                     new(TokenType.Number, "255")
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = 255",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -337,7 +338,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Operator, "-"),
                     new(TokenType.Number, "100"),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = 255 - 100",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -372,7 +373,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Assignment),
                     new(TokenType.Number, "255"),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.color.red = 255",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -401,10 +402,10 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Assignment),
                     new(TokenType.Number, "255"),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "dimmer1 = 255",
-                    integers = new LightScriptIntegerData[]
+                    integers = new IntegerVariableInfo[]
                     {
                         new("dimmer1"),
                     },
@@ -429,10 +430,10 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Assignment),
                     new(TokenType.Number, "255"),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "dimmer1 = dimmer2 = 255",
-                    integers = new LightScriptIntegerData[]
+                    integers = new IntegerVariableInfo[]
                     {
                         new("dimmer1"),
                         new("dimmer2"),
@@ -465,7 +466,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Assignment),
                     new(TokenType.Number, "255"),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = parLed2.dimmer = 255",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -516,7 +517,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
 
                     new(TokenType.Number, "255"),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.color.red = parLed1.color.green = parLed1.color.blue = 255",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -571,7 +572,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Operator, "+"),
                     new(TokenType.Number, "30"),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = 255 - 100 * 2 + 30",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -618,7 +619,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Operator, "+"),
                     new(TokenType.Number, "30"),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = (255 - 155) * 2 + 30",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -682,7 +683,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Operator, "+"),
                     new(TokenType.Number, "30"),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = (50 + (2 + 1) * (5 + 5)) * 2 + 30",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -737,7 +738,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Operator, "+"),
                     new(TokenType.Number, "10"),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = 2 * 300 % 255 + 10",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -783,7 +784,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Operator, "+"),
                     new(TokenType.Number, "55"),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = 2 * 10 ^ 2 + 55",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -826,7 +827,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Number, "245.3"),
                     new(TokenType.RightBracket),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = round(245.3)",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -887,7 +888,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
 
                     new(TokenType.RightBracket),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = round(sin(1) + 2 * cos(3 * abs(5)))",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -944,7 +945,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Assignment),
                     new(TokenType.Number, "242.3")
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = 242.3",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -980,7 +981,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.LeftBracket),
                     new(TokenType.RightBracket),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = 255 * rng()",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -1022,11 +1023,11 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Number, "5"),
                     new(TokenType.RightBracket),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "offset = - (3 * 15 + 5)",
                     fixtures = GetFixtures("parLed1", "parLed2"),
-                    integers = new LightScriptIntegerData[]
+                    integers = new IntegerVariableInfo[]
                     {
                         new("offset")
                     }
@@ -1068,7 +1069,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.RightBracket),
                     new(TokenType.RightBracket),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = 255 * abs(-sin(t))",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -1116,7 +1117,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Operator, "*"),
                     new(TokenType.Identifier, "pi"),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = 5 * pi",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -1162,7 +1163,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.Number, "255"),
                     new(TokenType.RightBracket),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = clamp(500 * rng(), 0, 255)",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -1223,11 +1224,11 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.RightBracket),
                     new(TokenType.RightBracket),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "parLed1.dimmer = min(100, dimmer1, dimmer2, 255 * rng())",
                     fixtures = GetFixtures("parLed1", "parLed2"),
-                    integers = new LightScriptIntegerData[]
+                    integers = new IntegerVariableInfo[]
                     {
                         new("dimmer1"),
                         new("dimmer2"),
@@ -1314,7 +1315,7 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     new(TokenType.RightBracket),
                     new(TokenType.RightBracket),
                 },
-                new LightScriptData()
+                new LightScriptCompilationData()
                 {
                     text = "abs(clamp(3 * rng() + 5 * (1 + sin (2 * t + 50)) / 2 - 3, -200, 200))",
                     fixtures = GetFixtures("parLed1", "parLed2")
@@ -1374,6 +1375,95 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                                 )
                             ),
                             LightScriptType.Integer
+                        )
+                    )
+                )
+            },
+
+            // Multiline
+            new object[]
+            {
+                @"parLed1.dimmer = 255;
+                parLed2.dimmer = 255;",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "255"),
+
+                    new(TokenType.StatementEnding),
+
+                    new(TokenType.Identifier, "parLed2"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "dimmer"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Number, "255"),
+                },
+                new LightScriptCompilationData()
+                {
+                    text = @"parLed1.dimmer = 255;
+                            parLed2.dimmer = 255;",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        rhs: new ConstantNode(255)
+                    ),
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed2"),
+                            LightScriptType.Integer,
+                            "dimmer"
+                        ),
+                        rhs: new ConstantNode(255)
+                    )
+                )
+            },
+
+            // Color function
+            new object[]
+            {
+                "parLed1.color = rgb(255, 0, 255)",
+                new LightScriptToken[]
+                {
+                    new(TokenType.Identifier, "parLed1"),
+                    new(TokenType.DotNotation),
+                    new(TokenType.Identifier, "color"),
+                    new(TokenType.Assignment),
+                    new(TokenType.Identifier, "rgb"),
+                    new(TokenType.LeftBracket),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.ArgumentSeparator),
+                    new(TokenType.Number, "0"),
+                    new(TokenType.ArgumentSeparator),
+                    new(TokenType.Number, "255"),
+                    new(TokenType.RightBracket),
+
+                },
+                new LightScriptCompilationData()
+                {
+                    text = "parLed1.color = rgb(255, 0, 255)",
+                    fixtures = GetFixtures("parLed1", "parLed2")
+                },
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new MemberAccessNode(
+                            new VariableNode(LightScriptType.Fixture, "parLed1"),
+                            LightScriptType.Color,
+                            "color"
+                        ),
+                        rhs: new FunctionNode(
+                            LightScriptFunctions.Rgb,
+                            new ConstantNode(255),
+                            new ConstantNode(0),
+                            new ConstantNode(255)
                         )
                     )
                 )
@@ -1657,6 +1747,29 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
                     )
                 )
             },
+
+            // Color functions
+            // Remove Unary Plus
+            new object[]
+            {
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new VariableNode(LightScriptType.Color, "color"),
+                        rhs: new FunctionNode(
+                            LightScriptFunctions.Rgb,
+                            new ConstantNode(255),
+                            new ConstantNode(0),
+                            new ConstantNode(255)
+                        )
+                    )
+                ),
+                new AbstractSyntaxTree(
+                    new AssignmentNode(
+                        lhs: new VariableNode(LightScriptType.Color, "color"),
+                        rhs: new ConstantNode(new Color24(255, 0, 255))
+                    )
+                )
+            },
         };
 
         [Test]
@@ -1665,15 +1778,15 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         {
             (_, DmxTrackElement parLed1, DmxTrackElement parLed2) = CreateSimpleLightingPlanTrackElements();
 
-            LightScriptData data = new()
+            LightScriptCompilationData data = new()
             {
                 text = input,
-                fixtures = new LightScriptFixtureData[]
+                fixtures = new FixtureVariableInfo[]
                 {
                     new(nameof(parLed1), parLed1),
                     new(nameof(parLed2), parLed2),
                 },
-                integers = new LightScriptIntegerData[]
+                integers = new IntegerVariableInfo[]
                 {
                     new("dimmer1", 255),
                     new("dimmer2", 255),
@@ -1697,10 +1810,10 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
         {
             (_, DmxTrackElement parLed, _) = CreateSimpleLightingPlanTrackElements();
 
-            LightScriptData data = new()
+            LightScriptCompilationData data = new()
             {
                 text = "parLed.dimmer = 120",
-                fixtures = new LightScriptFixtureData[]
+                fixtures = new FixtureVariableInfo[]
                 {
                     new("parLed", parLed)
                 }
@@ -1711,8 +1824,8 @@ namespace Plml.Tests.Dmx.Scripting.Compilation
 
             Debug.Log(result.message);
 
-            ILightScriptContext context = new LightScriptContext();
-            context.AddToContext("parLed", parLed);
+            ILightScriptContext context = new RuntimeContext();
+            context.AddToContext(new FixtureVariableInfo("parLed", parLed));
 
 
             result.action(context);

@@ -1,3 +1,4 @@
+using Plml.Dmx.Scripting.Compilation;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace Plml.Dmx.Scripting
     {
         public LightScriptCompilationOptions options = new();
 
-        public bool TryCompile(LightScriptData data, out LightScriptAction action)
+        public bool TryCompile(LightScriptCompilationData data, out LightScriptAction action)
         {
             var result = LightScriptCompilation.Compile(data, options);
 

@@ -1,4 +1,4 @@
-﻿namespace Plml.Dmx.Scripting
+﻿namespace Plml.Dmx.Scripting.Types
 {
     public enum LightScriptType
     {

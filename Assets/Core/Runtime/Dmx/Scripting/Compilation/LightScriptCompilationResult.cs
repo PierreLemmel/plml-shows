@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plml.Dmx.Scripting
+namespace Plml.Dmx.Scripting.Compilation
 {
     public class LightScriptCompilationResult
     {

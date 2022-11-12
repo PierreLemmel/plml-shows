@@ -568,16 +568,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   track: {fileID: 634348268}
-  variables:
+  variableDefinitions:
     fixtures:
     - name: parLed
+      isReadOnly: 0
       fixture: {fileID: 1796212212}
     integers: []
-    floats:
-    - name: speed
-      defaultValue: 5
+    floats: []
     colors: []
-  input: parLed.dimmer = 255 * (1 + sin(speed * t)) / 2
+  input: 'parLed.dimmer = 255 * (1 + sin(4 * t)) / 2
+
+    parLed.color = rgb(255,
+    80, 20)'
 --- !u!4 &1599535036
 Transform:
   m_ObjectHideFlags: 0
@@ -638,4 +640,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 467126563}
-  channels: fd0000007900000000000000000000000000000000000000
+  channels: 000000000000000000000000000000000000000000000000

@@ -1,25 +1,26 @@
-﻿using Plml.Dmx.Scripting.Compilation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Linq.Expressions;
+using System.Globalization;
+using System.Reflection;
+
 using UnityEngine;
+
+using Plml.Dmx.Scripting.Compilation.Nodes;
+using Plml.Dmx.Scripting.Types;
 
 using TokenType = Plml.Dmx.Scripting.Compilation.LightScriptTokenType;
 using TokenizationContext = Plml.Dmx.Scripting.Compilation.LightScriptTokenizationContext;
 using NumberType = Plml.Dmx.Scripting.Compilation.LightScriptTokenizationNumberTypeContext;
 
-using Plml.Dmx.Scripting.Compilation.Nodes;
-using Plml.Dmx.Scripting.Types;
-using System.Linq.Expressions;
-using System.Globalization;
-using System.Reflection;
 
-namespace Plml.Dmx.Scripting
+namespace Plml.Dmx.Scripting.Compilation
 {
     internal static class LightScriptCompilation
     {
-        public static LightScriptCompilationResult Compile(LightScriptData data, LightScriptCompilationOptions options)
+        public static LightScriptCompilationResult Compile(LightScriptCompilationData data, LightScriptCompilationOptions options)
         {
             try
             {
@@ -236,13 +237,13 @@ namespace Plml.Dmx.Scripting
             }
         }
 
-        public static ILightScriptCompilationContext BuildContext(LightScriptData data)
+        public static ILightScriptCompilationContext BuildContext(LightScriptCompilationData data)
         {
             LightScriptCompilationContext context = new();
 
-            context.AddVariable(new(LightScriptType.Float, "t"));
-            context.AddVariable(new(LightScriptType.Float, "dt"));
-            context.AddVariable(new(LightScriptType.Integer, "frame"));
+            context.AddVariable(new(LightScriptType.Float, "t", true));
+            context.AddVariable(new(LightScriptType.Float, "dt", true));
+            context.AddVariable(new(LightScriptType.Integer, "frame", true));
 
             context.AddConstant(new("pi", Mathf.PI));
             context.AddConstant(new("deg2Rad", Mathf.Deg2Rad));
@@ -1014,7 +1015,10 @@ namespace Plml.Dmx.Scripting
                     _ => throw new CompilationException(CompilationErrorType.UnsupportedVariableType, $"Unsupported variable type: '{variable.Type}'")
                 };
 
-                return Expression.Property(bag, "Item", Expression.Constant(variable.Name));
+                return Expression.Property(
+                    Expression.Property(bag, "Item", Expression.Constant(variable.Name)),
+                    "Value"
+                );
             }
 
             Expression CompileFunction(FunctionNode function)

@@ -1,4 +1,6 @@
-﻿namespace Plml.Dmx.Scripting.Compilation
+﻿using Plml.Dmx.Scripting.Types;
+
+namespace Plml.Dmx.Scripting.Compilation
 {
     public class LightScriptArgument
     {

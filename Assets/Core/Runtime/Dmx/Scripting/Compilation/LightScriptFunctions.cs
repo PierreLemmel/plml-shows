@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Plml.Dmx.Scripting.Types;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using URandom = UnityEngine.Random;
 
@@ -15,6 +17,11 @@ namespace Plml.Dmx.Scripting.Compilation
 
         public static LightScriptFunction Round { get; } = new(LightScriptType.Integer, "round", true, (Func<float, int>)Mathf.RoundToInt, LightScriptType.Float);
         public static LightScriptFunction Rng { get; } = new(LightScriptType.Float, "rng", false, (Func<float>)RngImpl);
+
+        public static LightScriptFunction Rgb { get; } = new LightScriptFunction(LightScriptType.Color, "rgb", true,
+            (Func<int, int, int, Color24>)Color24.Rgb, LightScriptType.Integer, LightScriptType.Integer, LightScriptType.Integer);
+        public static LightScriptFunction Hsv { get; } = new LightScriptFunction(LightScriptType.Color, "hsv", true,
+            (Func<float, float, float, Color24>)Color24.Hsv, LightScriptType.Float, LightScriptType.Float, LightScriptType.Float);
 
         public static LightScriptFunction Clamp_Float { get; } = new(
             LightScriptType.Float, "clamp", true, (Func<float, float, float, float>)Mathf.Clamp,
@@ -50,23 +57,10 @@ namespace Plml.Dmx.Scripting.Compilation
         private static float ClampDmx_Impl(float value) => Mathf.Clamp(value, 0f, 255f);
         private static int ClampDmx_Impl(int value) => Mathf.Clamp(value, 0, 255);
 
-        public static IEnumerable<LightScriptFunction> DefaultFunctions => new LightScriptFunction[]
-        {
-            Sin,
-            Cos,
-            Abs_Float,
-            Abs_Int,
-            Round,
-            Rng,
-            Clamp_Float,
-            Clamp_Int,
-            Clamp01,
-            ClampDmx_Int,
-            ClampDmx_Float,
-            Min_Int,
-            Min_Float,
-            Max_Int,
-            Max_Float,
-        };
+        public static readonly IReadOnlyCollection<LightScriptFunction> DefaultFunctions = typeof(LightScriptFunctions)
+            .GetProperties()
+            .Select(pi => pi.GetValue(null))
+            .OfType<LightScriptFunction>()
+            .ToList();
     }
 }
