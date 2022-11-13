@@ -575,11 +575,21 @@ MonoBehaviour:
       fixture: {fileID: 1796212212}
     integers: []
     floats: []
-    colors: []
+    colors:
+    - name: 
+      isReadOnly: 0
+      defaultValue:
+        r: 0
+        g: 0
+        b: 0
   input: 'parLed.dimmer = 255 * (1 + sin(4 * t)) / 2
 
     parLed.color = rgb(255,
     80, 20)'
+  test:
+    r: 0
+    g: 0
+    b: 0
 --- !u!4 &1599535036
 Transform:
   m_ObjectHideFlags: 0

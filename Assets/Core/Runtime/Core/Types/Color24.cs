@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Plml
 {
+    [Serializable]
     public struct Color24
     {
         public byte r;

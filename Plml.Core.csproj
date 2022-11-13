@@ -90,6 +90,7 @@
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\FunctionRegistry.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\CustomRangeAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ConstantRegistry.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\IntegerVariableInfo.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Types\LightScriptTypeException.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\IFunctionRegistry.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker12.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Assets\Core\Runtime\Midi\Mmsyserr.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ExpressionTreeBuilder.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptCompilator.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\Variables.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\Token.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FTD2XXDll.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker15.cs" />
@@ -128,6 +130,8 @@
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Function.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Or.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Emulators\LightEmulator.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\VariableInfo.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptCompilationOptions.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptAction.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Colors.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Vectors.cs" />
@@ -135,6 +139,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker16.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\TokenType.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\CheckerFactory.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\FixtureVariableInfo.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_Exception.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptToken.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\FunctionNode.cs" />
@@ -158,18 +163,21 @@
     <Compile Include="Assets\Core\Runtime\Core\Helpers\MoreDelegates.cs" />
     <Compile Include="Assets\Core\Runtime\Spout\SpoutSenderParameters.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Equal.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptCompilationData.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Division.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\AstBuilder.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FTD2XXInterface.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\GreaterThan.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Strings.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker8.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\FloatVariableInfo.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\IChecker.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Enumerables.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\Fixtures\FixtureDefinition.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\CompilationException.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\FloatRange.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\TokenizationException.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptCompilationResult.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\Fixtures\DmxChannelDefinition.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker5.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrackCollection.cs" />
@@ -188,6 +196,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpyValueArrayNode.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\AllPropertiesCheckerFactory.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Execution\IExecutor.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\ColorVariableInfo.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_OPEN_BY.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\LessThan.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\ReadOnlyAttribute.cs" />
@@ -224,18 +233,9 @@
     <Compile Include="Assets\Core\Runtime\Annotations\RangeBoundsAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\DmxTrack.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\RunInBackground.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptElement.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\ColorVariableInfo.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\IntegerVariableInfo.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptCompilationResult.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptCompilationOptions.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptCompilationData.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\VariableInfo.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\FixtureVariableInfo.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\FloatVariableInfo.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\Variables.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptElement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />

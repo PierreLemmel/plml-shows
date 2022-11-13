@@ -16,6 +16,8 @@ namespace Plml.Dmx.Scripting
         [Multiline]
         public string input;
 
+        public Color24 test;
+
         private LightScriptCompilator compilator;
         private void Awake()
         {
