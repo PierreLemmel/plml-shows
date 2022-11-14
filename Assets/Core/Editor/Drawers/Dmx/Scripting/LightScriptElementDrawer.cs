@@ -41,17 +41,24 @@ namespace Plml.Dmx.Scripting.Editor
                         property.FindPropertyRelative(nameof(LightScriptElement.couldRecompile)).boolValue = true;
 
 
-                    string errorMsg = property.FindPropertyRelative(nameof(LightScriptElement.errorMessage)).stringValue;
+                    SerializedProperty errorMsgProperty = property.FindPropertyRelative(nameof(LightScriptElement.errorMessage));
+                    string errorMsg = errorMsgProperty.stringValue;
                     if (errorMsg.IsNotEmpty())
                     {
-                        Rect errorMsgPosition = new(position.x, position.y + lines++ * lineHeight, position.width, lineHeight);
+                        int errorLineCount = GetLineCount(errorMsgProperty);
+                        Rect errorMsgPosition = new(position.x, position.y + lines * lineHeight, position.width, errorLineCount * lineHeight);
+                        lines += errorLineCount;
+
                         EditorGUI.HelpBox(errorMsgPosition, errorMsg, MessageType.Error);
                     }
 
 
                     EditorGUI.BeginDisabledGroup(!property.FindPropertyRelative(nameof(LightScriptElement.couldRecompile)).boolValue);
-                    if (GUILayout.Button("Recompile"))
+                    
+                    Rect buttonPos = new(position.x, position.y + lines++ * lineHeight, position.width, lineHeight);
+                    if (GUI.Button(buttonPos, "Recompile"))
                         property.FindPropertyRelative(nameof(LightScriptElement.shouldRecompile)).boolValue = true;
+
                     EditorGUI.EndDisabledGroup();
                 }
 
@@ -69,8 +76,13 @@ namespace Plml.Dmx.Scripting.Editor
 
                 if (Application.isPlaying)
                 {
-                    if (property.FindPropertyRelative(nameof(LightScriptElement.errorMessage)).stringValue.IsNotEmpty())
-                        totalLines++;
+                    SerializedProperty errorMsgProperty = property.FindPropertyRelative(nameof(LightScriptElement.errorMessage));
+                    if (errorMsgProperty.stringValue.IsNotEmpty())
+                    {
+                        totalLines += GetLineCount(errorMsgProperty);
+                    }
+
+                    totalLines+=2;
                 }
             }
 
@@ -79,8 +91,8 @@ namespace Plml.Dmx.Scripting.Editor
 
         private static int GetLineCount(SerializedProperty property)
         {
-            int lines = property.FindPropertyRelative(nameof(LightScriptElement.input)).stringValue.Split("\n").Length;
-            return Mathf.Max(3, lines);
+            int lines = property.FindPropertyRelative(nameof(LightScriptElement.input)).stringValue?.Split("\n").Length ?? 0;
+            return Mathf.Max(2, lines);
         }
     }
 }
