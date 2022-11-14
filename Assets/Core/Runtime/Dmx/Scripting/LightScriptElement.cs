@@ -8,5 +8,13 @@ namespace Plml.Dmx.Scripting
     {
         [Multiline]
         public string input;
+
+        public bool couldRecompile;
+        public bool shouldRecompile;
+
+        public string errorMessage;
+
+        [NonSerialized]
+        public LightScriptAction action;
     }
 }

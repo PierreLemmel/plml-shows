@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   options:
     log: 1
+    errorLogLevel: 1
 --- !u!4 &172433435
 Transform:
   m_ObjectHideFlags: 0
@@ -573,23 +574,44 @@ MonoBehaviour:
     - name: parLed
       isReadOnly: 0
       fixture: {fileID: 1796212212}
-    integers: []
-    floats: []
+    integers:
+    - name: range
+      isReadOnly: 0
+      defaultValue: 255
+      hasBounds: 1
+      minValue: 0
+      maxValue: 255
+    floats:
+    - name: speed
+      isReadOnly: 0
+      defaultValue: 1
+      hasBounds: 1
+      minValue: 0
+      maxValue: 25
     colors:
-    - name: 
+    - name: color
       isReadOnly: 0
       defaultValue:
-        r: 0
+        r: 255
         g: 0
         b: 0
-  input: 'parLed.dimmer = 255 * (1 + sin(4 * t)) / 2
-
-    parLed.color = rgb(255,
-    80, 20)'
-  test:
-    r: 0
-    g: 0
-    b: 0
+  initialize:
+    input: parLed.color = rgb(0xff, 0xff, 0xff)
+    couldRecompile: 0
+    shouldRecompile: 0
+    errorMessage: 
+  update:
+    input: parLed.dimmer = range * (1 + sin(speed * t)) / 2
+    couldRecompile: 0
+    shouldRecompile: 0
+    errorMessage: 
+  namedElements:
+  - name: test
+    element:
+      input: 
+      couldRecompile: 0
+      shouldRecompile: 0
+      errorMessage: 
 --- !u!4 &1599535036
 Transform:
   m_ObjectHideFlags: 0

@@ -1,6 +1,8 @@
 ﻿using Plml.Dmx.Scripting.Compilation;
 using Plml.Dmx.Scripting.Runtime;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Plml.Dmx.Scripting
@@ -13,30 +15,45 @@ namespace Plml.Dmx.Scripting
         [EditTimeOnly]
         public VariableDefinitionData variableDefinitions;
 
-        [Multiline]
-        public string input;
-
-        public Color24 test;
-
         private LightScriptCompilator compilator;
         private void Awake()
         {
             compilator = FindObjectOfType<LightScriptCompilator>() ?? throw new MissingComponentException($"Can't find {nameof(LightScriptCompilator)} in scene");
 
-            variableDefinitions.fixtures.ForEach(f => Context.AddToContext(f));
-            variableDefinitions.integers.ForEach(i => Context.AddToContext(i));
-            variableDefinitions.floats.ForEach(f => Context.AddToContext(f));
-            variableDefinitions.colors.ForEach(c => Context.AddToContext(c));
+            variableDefinitions.fixtures.ForEach(Context.AddToContext);
+            variableDefinitions.integers.ForEach(Context.AddToContext);
+            variableDefinitions.floats.ForEach(Context.AddToContext);
+            variableDefinitions.colors.ForEach(Context.AddToContext);
 
             Context.AddToContext(new FloatVariableInfo("t", defaultValue: 0f, isReadonly: true));
             Context.AddToContext(new FloatVariableInfo("dt", defaultValue: 0f, isReadonly: true));
             Context.AddToContext(new IntegerVariableInfo("frame", defaultValue: 0, isReadonly: true));
-
-            if (!string.IsNullOrEmpty(input))
-                Compile();
         }
 
-        private LightScriptAction lsAction;
+        private void Start()
+        {
+            Recompile(initialize);
+            Recompile(update);
+
+            foreach (var ne in namedElements)
+                Recompile(ne.element);
+
+            Execute(initialize);
+        }
+
+        public void ExecuteAction(string name)
+        {
+            var elt = namedElements.SingleOrDefault(ne => ne.name == name)?.element
+                ?? throw new InvalidOperationException($"Can't find a LightScript action named {name}");
+
+            Execute(elt);
+        }
+
+        public LightScriptElement initialize;
+        public LightScriptElement update;
+
+        public NamedElement[] namedElements;
+
         public RuntimeContext Context { get; } = new();
         private void Update()
         {
@@ -44,15 +61,26 @@ namespace Plml.Dmx.Scripting
             Context.Floats["dt"].Value = Time.deltaTime;
             Context.Integers["frame"].Value = Time.frameCount;
 
-            if (lsAction != null)
+            if (initialize.shouldRecompile)
             {
-                
+                Recompile(initialize);
+                Execute(initialize);
+            }
 
-                lsAction(Context);
+            if (update.shouldRecompile)
+                Recompile(update);
+
+            Execute(update);
+
+            foreach(var ne in namedElements)
+            {
+                var elt = ne.element;
+                if (elt.shouldRecompile)
+                    Recompile(elt);
             }
         }
 
-        public void Compile()
+        private void Recompile(LightScriptElement elt)
         {
             LightScriptCompilationData data = new()
             {
@@ -61,13 +89,31 @@ namespace Plml.Dmx.Scripting
                 floats = variableDefinitions.floats,
                 colors = variableDefinitions.colors,
 
-                text = input
+                text = elt.input
             };
 
-            if (compilator.TryCompile(data, out var action))
+            LightScriptCompilationResult result = compilator.Compile(data);
+            if (result.isOk)
             {
-                lsAction = action;
+                elt.action = result.action;
+                elt.errorMessage = "";
             }
+            else
+            {
+                elt.action = null;
+                elt.errorMessage = result.message;
+            }
+
+            elt.couldRecompile = false;
+            elt.shouldRecompile = false;
+        }
+
+        private void Execute(LightScriptElement elt) => elt.action?.Invoke(Context);
+
+        private static void ResetElement(LightScriptElement elt)
+        {
+            elt.action = null;
+            elt.errorMessage = "";
         }
 
         [Serializable]
@@ -79,10 +125,11 @@ namespace Plml.Dmx.Scripting
             public ColorVariableInfo[] colors;
         }
 
-
-        public class VariableRuntimeData
+        [Serializable]
+        public class NamedElement
         {
-
+            public string name;
+            public LightScriptElement element;
         }
     }
 }

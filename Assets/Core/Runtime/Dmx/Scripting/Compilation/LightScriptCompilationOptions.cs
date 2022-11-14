@@ -6,5 +6,6 @@ namespace Plml.Dmx.Scripting.Compilation
     public class LightScriptCompilationOptions
     {
         public bool log = true;
+        public LogLevel errorLogLevel = LogLevel.Warning;
     }
 }

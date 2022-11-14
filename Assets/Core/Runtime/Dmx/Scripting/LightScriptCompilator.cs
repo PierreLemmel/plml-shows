@@ -1,6 +1,4 @@
 using Plml.Dmx.Scripting.Compilation;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Plml.Dmx.Scripting
@@ -9,24 +7,19 @@ namespace Plml.Dmx.Scripting
     {
         public LightScriptCompilationOptions options = new();
 
-        public bool TryCompile(LightScriptCompilationData data, out LightScriptAction action)
+        public LightScriptCompilationResult Compile(LightScriptCompilationData data)
         {
             var result = LightScriptCompilation.Compile(data, options);
 
-            if (result.isOk)
+            if (result.hasError)
             {
-                action = result.action;
-                return true;
-            }
-            else
-            {
-                action = null;
-
                 if (options.log)
-                    Debug.LogError(result.message);
-
-                return false;
+                {
+                    Logs.Log(options.errorLogLevel, result.message);
+                }
             }
+
+            return result;
         }
     }
 }

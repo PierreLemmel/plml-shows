@@ -1,15 +1,86 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Plml.Dmx.Scripting.Editor
 {
-    [CustomPropertyDrawer(typeof(LightScriptElement), true)]
+    [CustomPropertyDrawer(typeof(LightScriptElement))]
     public class LightScriptElementDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EditorGUILayout.LabelField("Test");
-            base.OnGUI(position, property, label);
+            var lineHeight = EditorGUIUtility.singleLineHeight;
+
+            EditorGUI.BeginProperty(position, label, property);
+
+            bool expanded = EditorGUI.Foldout(
+                new(position.x, position.y, position.width, lineHeight),
+                property.isExpanded, label);
+
+            property.isExpanded = expanded;
+            if (expanded)
+            {
+                EditorGUI.indentLevel++;
+                int lines = 1;
+                
+                var inputProperty = property.FindPropertyRelative(nameof(LightScriptElement.input));
+                string oldInput = inputProperty.stringValue;
+
+                int inputLineCount = GetLineCount(property);
+                Rect inputPosition = new(position.x, position.y + lines++ * lineHeight, position.width, inputLineCount * lineHeight);
+                EditorGUI.PropertyField(inputPosition, inputProperty);
+                
+
+                lines += inputLineCount;
+
+                if (Application.isPlaying)
+                {
+                    string newInput = inputProperty.stringValue;
+
+                    if (newInput != oldInput)
+                        property.FindPropertyRelative(nameof(LightScriptElement.couldRecompile)).boolValue = true;
+
+
+                    string errorMsg = property.FindPropertyRelative(nameof(LightScriptElement.errorMessage)).stringValue;
+                    if (errorMsg.IsNotEmpty())
+                    {
+                        Rect errorMsgPosition = new(position.x, position.y + lines++ * lineHeight, position.width, lineHeight);
+                        EditorGUI.HelpBox(errorMsgPosition, errorMsg, MessageType.Error);
+                    }
+
+
+                    EditorGUI.BeginDisabledGroup(!property.FindPropertyRelative(nameof(LightScriptElement.couldRecompile)).boolValue);
+                    if (GUILayout.Button("Recompile"))
+                        property.FindPropertyRelative(nameof(LightScriptElement.shouldRecompile)).boolValue = true;
+                    EditorGUI.EndDisabledGroup();
+                }
+
+                EditorGUI.indentLevel--;
+            }
+        }
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            int totalLines = 1;
+
+            if (property.isExpanded)
+            {
+                totalLines += GetLineCount(property);
+
+                if (Application.isPlaying)
+                {
+                    if (property.FindPropertyRelative(nameof(LightScriptElement.errorMessage)).stringValue.IsNotEmpty())
+                        totalLines++;
+                }
+            }
+
+            return EditorGUIUtility.singleLineHeight * totalLines + EditorGUIUtility.standardVerticalSpacing * (totalLines - 1);
+        }
+
+        private static int GetLineCount(SerializedProperty property)
+        {
+            int lines = property.FindPropertyRelative(nameof(LightScriptElement.input)).stringValue.Split("\n").Length;
+            return Mathf.Max(3, lines);
         }
     }
 }
