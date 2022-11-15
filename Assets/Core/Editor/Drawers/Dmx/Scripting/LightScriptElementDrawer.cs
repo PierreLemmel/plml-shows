@@ -29,7 +29,7 @@ namespace Plml.Dmx.Scripting.Editor
                 int inputLineCount = GetLineCount(property);
                 Rect inputPosition = new(position.x, position.y + lines++ * lineHeight, position.width, inputLineCount * lineHeight);
                 EditorGUI.PropertyField(inputPosition, inputProperty);
-                
+
 
                 lines += inputLineCount;
 
@@ -54,7 +54,7 @@ namespace Plml.Dmx.Scripting.Editor
 
 
                     EditorGUI.BeginDisabledGroup(!property.FindPropertyRelative(nameof(LightScriptElement.couldRecompile)).boolValue);
-                    
+
                     Rect buttonPos = new(position.x, position.y + lines++ * lineHeight, position.width, lineHeight);
                     if (GUI.Button(buttonPos, "Recompile"))
                         property.FindPropertyRelative(nameof(LightScriptElement.shouldRecompile)).boolValue = true;
@@ -82,7 +82,7 @@ namespace Plml.Dmx.Scripting.Editor
                         totalLines += GetLineCount(errorMsgProperty);
                     }
 
-                    totalLines+=2;
+                    totalLines += 2;
                 }
             }
 
@@ -91,7 +91,7 @@ namespace Plml.Dmx.Scripting.Editor
 
         private static int GetLineCount(SerializedProperty property)
         {
-            int lines = property.FindPropertyRelative(nameof(LightScriptElement.input)).stringValue?.Split("\n").Length ?? 0;
+            int lines = property.FindPropertyRelative(nameof(LightScriptElement.input))?.stringValue?.Split("\n").Length ?? 0;
             return Mathf.Max(2, lines);
         }
     }

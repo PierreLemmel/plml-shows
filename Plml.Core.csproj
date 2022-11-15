@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScript.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptConstant.cs" />
+    <Compile Include="Assets\Core\Runtime\Core\Types\LogLevel.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\ValueChecker.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\And.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\Color24.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ConstantInfo.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\LogMidiListener.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\IConstantRegistry.cs" />
+    <Compile Include="Assets\Core\Runtime\Core\Helpers\Logs.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpyConfig.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\IBindPropertiesSourceNode.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Emulators\LedBarEmulator.cs" />
@@ -236,8 +238,6 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptElement.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
-    <Compile Include="Assets\Core\Runtime\Core\Helpers\Logs.cs" />
-    <Compile Include="Assets\Core\Runtime\Core\Types\LogLevel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />

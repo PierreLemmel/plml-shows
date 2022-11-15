@@ -375,7 +375,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3727991642785649135, guid: 483413b98c99a6a4d9cb593e3face74e, type: 3}
       propertyPath: enableOpenDmx
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3727991642785649135, guid: 483413b98c99a6a4d9cb593e3face74e, type: 3}
       propertyPath: fixturesObject

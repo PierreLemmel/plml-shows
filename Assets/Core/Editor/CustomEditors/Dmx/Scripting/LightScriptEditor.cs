@@ -14,6 +14,7 @@ namespace Plml.Dmx.Scripting.Editor
     public class LightScriptEditor : UEditor
     {
         private static Dictionary<string, bool> expandedCache = new();
+        private static Dictionary<string, int> indexCache = new();
 
         public override void OnInspectorGUI()
         {
@@ -22,12 +23,36 @@ namespace Plml.Dmx.Scripting.Editor
             base.OnInspectorGUI();
 
             if (Application.isPlaying)
-                DisplayContext(lightScript.Context, lightScript.variableDefinitions);  
+            {
+                DisplayContext(lightScript.Context, lightScript.variableDefinitions);
+
+
+                if (lightScript.namedElements.Any())
+                {
+                    string[] options = lightScript
+                        .namedElements
+                        .Select(ne => ne.name)
+                        .ToArray();
+
+                    string indexKey = targetKey;
+                    if (!indexCache.TryGetValue(indexKey, out int index))
+                    {
+                        index = 0;
+                        indexCache.Add(indexKey, index);
+                    }
+
+                    index = EditorGUILayout.Popup(index, options);
+
+                    indexCache[indexKey] = index;
+                }
+            }
         }
+
+        private string targetKey => $"{target.name}-{target.GetInstanceID()}";
 
         private void DisplayContext(ILightScriptContext context, VariableDefinitionData definitions)
         {
-            string ctxExpandedKey = $"{target.name}-{target.GetInstanceID()}";
+            string ctxExpandedKey = targetKey;
 
             bool ctxExpanded = CheckForKey(ctxExpandedKey);
             ctxExpanded = EditorGUILayout.Foldout(ctxExpanded, "Variables", EditorStyles.foldoutHeader);
