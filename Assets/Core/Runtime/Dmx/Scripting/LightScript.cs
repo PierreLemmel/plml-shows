@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Plml.Dmx.Scripting
 {
@@ -44,6 +45,9 @@ namespace Plml.Dmx.Scripting
         {
             var elt = namedElements.SingleOrDefault(ne => ne.name == name)?.element
                 ?? throw new InvalidOperationException($"Can't find a LightScript action named {name}");
+
+            if (elt.action == null)
+                Recompile(elt);
 
             Execute(elt);
         }
@@ -95,11 +99,13 @@ namespace Plml.Dmx.Scripting
             if (result.isOk)
             {
                 elt.action = result.action;
+                elt.isCompiled = true;
                 elt.errorMessage = "";
             }
             else
             {
                 elt.action = null;
+                elt.isCompiled = false;
                 elt.errorMessage = result.message;
             }
 
@@ -107,12 +113,12 @@ namespace Plml.Dmx.Scripting
             elt.shouldRecompile = false;
         }
 
-        private void Execute(LightScriptElement elt) => elt.action?.Invoke(Context);
-
-        private static void ResetElement(LightScriptElement elt)
+        private void Execute(LightScriptElement elt)
         {
-            elt.action = null;
-            elt.errorMessage = "";
+            if (elt.action != null)
+                elt.action?.Invoke(Context);
+            else
+                throw new LightScriptException($"Action is not compiled: '{elt.input}'");
         }
 
         [Serializable]

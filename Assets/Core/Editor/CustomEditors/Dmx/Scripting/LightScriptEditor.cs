@@ -52,11 +52,13 @@ namespace Plml.Dmx.Scripting.Editor
                 {
                     if (GUILayout.Button("Execute"))
                         lightScript.ExecuteAction(namedElements[index].name);
-                }, namedElements[index].element.isCompiled);
+                }, !namedElements[index].element.isCompiled);
 
                 EditorGUILayout.EndHorizontal();
 
             }
+
+            serializedObject.ApplyModifiedProperties();
         }
 
         private string GetCacheKey() => $"{target.name}-{target.GetInstanceID()}";
@@ -171,7 +173,7 @@ namespace Plml.Dmx.Scripting.Editor
 
             expandedCache[ctxExpandedKey] = ctxExpanded;
 
-            bool CheckForKey(string key)
+            static bool CheckForKey(string key)
             {
                 if (!expandedCache.TryGetValue(key, out bool result))
                     expandedCache.Add(key, result);

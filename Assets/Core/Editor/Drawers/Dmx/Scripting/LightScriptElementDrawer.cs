@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Plml.Dmx.Scripting.Editor
@@ -29,7 +28,7 @@ namespace Plml.Dmx.Scripting.Editor
                 int inputLineCount = GetLineCount(property);
                 Rect inputPosition = new(position.x, position.y + lines * lineHeight, position.width, inputLineCount * lineHeight);
                 EditorGUI.PropertyField(inputPosition, inputProperty);
-                
+
 
                 lines += inputLineCount;
 
@@ -56,6 +55,7 @@ namespace Plml.Dmx.Scripting.Editor
                     Rect btnPosition = new(position.x, position.y + lines++ * lineHeight, position.width, lineHeight);
                     if (GUI.Button(btnPosition, "Recompile"))
                         property.FindPropertyRelative(nameof(LightScriptElement.shouldRecompile)).boolValue = true;
+
                     EditorGUI.EndDisabledGroup();
                 }
 
