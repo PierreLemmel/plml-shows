@@ -37,24 +37,7 @@ namespace Plml.Dmx
 
         private float lastTime;
 
-        private void Awake()
-        {
-            int lastChannel = fixturesObject
-                .GetComponentsInChildren<DmxFixture>()
-                .Max(fix => fix.channelOffset + fix.model.chanCount);
-
-            channels = new byte[lastChannel];
-            currents = new float[lastChannel];
-            speeds = new float[lastChannel];
-            targets = new float[lastChannel];
-
-            lastTime = Time.time;
-
-            addedTracks = new();
-
-            if (enableOpenDmx)
-                openDmx.Start();
-        }
+        private void Awake() => Setup();
 
         private void OnEnable()
         {
@@ -64,39 +47,12 @@ namespace Plml.Dmx
 
         private void Update()
         {
-            Array.Clear(targets, 0, targets.Length);
-
-            var tracks = tracksObject.GetComponentsInChildren<DmxTrack>();
-
-            foreach (DmxTrack track in tracks.Where(t => t.isPlaying))
-            {
-                float master = track.master;
-
-                foreach (DmxTrackElement elt in track.Elements)
-                {
-                    int[] channels = elt.channels;
-                    for (int i=0, address = elt.Address; i<channels.Length; i++, address++)
-                    {
-                        targets[address] = Math.Max(targets[address], master * channels[i]);
-                    }
-                }
-            }
-
-            for (int i = 0; i < channels.Length; i++)
-            {
-                currents[i] = Mathf.SmoothDamp(currents[i], master * targets[i], ref speeds[i], fade);
-                channels[i] = (byte)currents[i];
-            }
+            RebuildDmxFrame();
 
             if (Time.time - lastTime < 1.0f / refreshRate) return;
-
-            if (enableOpenDmx)
-            {
-                openDmx.CopyData(channels);
-                openDmx.SendFrame();
-            }
-
             lastTime = Time.time;
+
+            SendFrame();
         }
 
         private void OnDisable()
@@ -105,14 +61,7 @@ namespace Plml.Dmx
                 openDmx.ClearFrame();
         }
 
-        private void OnDestroy()
-        {
-            if (enableOpenDmx)
-            {
-                openDmx.Stop();
-                openDmx.Dispose();
-            }
-        }
+        private void OnDestroy() => Cleanup();
 
         public DmxTrack AddTrack(DmxTrack track, out Guid trackId)
         {
@@ -132,14 +81,88 @@ namespace Plml.Dmx
             Destroy(track);
         }
 
-        public void ClearTracks()
+        private void Setup()
         {
-            foreach (var track in addedTracks.Values)
+            int lastChannel = fixturesObject
+                .GetComponentsInChildren<DmxFixture>()
+                .Max(fix => fix.channelOffset + fix.model.chanCount);
+
+            channels = new byte[lastChannel];
+            currents = new float[lastChannel];
+            speeds = new float[lastChannel];
+            targets = new float[lastChannel];
+
+            lastTime = Time.time;
+
+            addedTracks = new();
+
+            if (enableOpenDmx)
+                openDmx.Start();
+        }
+
+        private void Cleanup()
+        {
+            if (enableOpenDmx)
             {
-                Destroy(track);
+                openDmx.Stop();
+                openDmx.Dispose();
+            }
+        }
+
+        private void RebuildDmxFrame()
+        {
+            Array.Clear(targets, 0, targets.Length);
+
+            var tracks = tracksObject.GetComponentsInChildren<DmxTrack>();
+
+            foreach (DmxTrack track in tracks.Where(t => t.isPlaying))
+            {
+                float master = track.master;
+
+                foreach (DmxTrackElement elt in track.Elements)
+                {
+                    int[] channels = elt.channels;
+                    for (int i = 0, address = elt.Address; i < channels.Length; i++, address++)
+                    {
+                        targets[address] = Math.Max(targets[address], master * channels[i]);
+                    }
+                }
             }
 
-            addedTracks.Clear();
+            for (int i = 0; i < channels.Length; i++)
+            {
+                currents[i] = Mathf.SmoothDamp(currents[i], master * targets[i], ref speeds[i], fade);
+                channels[i] = (byte)currents[i];
+            }
         }
+
+        private void SendFrame()
+        {
+            if (enableOpenDmx)
+            {
+                openDmx.CopyData(channels);
+                openDmx.SendFrame();
+            }
+        }
+
+#if UNITY_EDITOR
+        public void SetupFromEditor() => Setup();
+
+        public void SendCurrentFrameFromEditor()
+        {
+            RebuildDmxFrame();
+            SendFrame();
+        }
+
+        public void StopSendingFrameFromEditor()
+        {
+            if (enableOpenDmx)
+                openDmx.ClearFrame();
+
+            Cleanup();
+        }
+
+        public byte[] GetChannelsFromEditor() => channels;
+#endif
     }
 }

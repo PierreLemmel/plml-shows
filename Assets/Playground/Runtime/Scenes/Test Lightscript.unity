@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 467126566}
-  channels: 000000000000000000000000000000000000000000000000
+  channels: ff0000000000000000000000000000000000000000000000
 --- !u!1001 &467126562
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -492,7 +492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 467126565}
-  channels: 000000000000000000000000000000000000000000000000
+  channels: ff0000000000000000000000000000000000000000000000
 --- !u!1 &1310441806
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,7 +538,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 467126564}
-  channels: 000000000000000000000000000000000000000000000000
+  channels: ff000000000000000000000000000000ff00000000000000
 --- !u!1 &1599535034
 GameObject:
   m_ObjectHideFlags: 0
@@ -555,7 +555,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1599535035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -676,4 +676,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 467126563}
-  channels: 000000000000000000000000000000000000000000000000
+  channels: ff000000000000000000000000000000ff00000000000000
