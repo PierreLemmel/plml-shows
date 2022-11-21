@@ -19,7 +19,7 @@ namespace Plml.Rng
         public RngProvider<TProvided>[] GetActiveProviders() => GetActiveProviders_Internal()
             .ToArray();
 
-        public bool IsRoot() => this.HasComponentInParents(GetType());
+        public bool IsRoot() => !this.HasComponentInParents(GetType());
 
         private RngProvider<TProvided> lastProvider;
 

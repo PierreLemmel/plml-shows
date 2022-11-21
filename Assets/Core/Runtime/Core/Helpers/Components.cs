@@ -49,8 +49,8 @@ namespace Plml
 
         public static bool HasComponentInParents(this Component comp, Type componentType)
         {
-            Component component = comp.GetComponentInParent(componentType);
-            return component != null;
+            Component[] components = comp.GetComponentsInParent(componentType);
+            return components.Any(c => c != comp);
         }
 
         public static TComponent AttachTo<TComponent>(this TComponent component, Component other) where TComponent : Component

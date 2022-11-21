@@ -3,6 +3,7 @@ using Plml.Rng.Dmx;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,7 +29,8 @@ namespace Plml.Rng.UI
         {
             durationSlider.onValueChanged.AddListener(UpdateDurationLabel);
 
-            providers = FindObjectOfType<DmxTrackProviderCollection>().GetProvidersInHierarchy();
+            var rootCollection = FindObjectsOfType<DmxTrackProviderCollection>().Single(coll => coll.IsRoot());
+            providers = rootCollection.GetProvidersInHierarchy();
             dmxControler = FindObjectOfType<DmxTrackControler>();
 
             scenesDropdown.ClearOptions();
