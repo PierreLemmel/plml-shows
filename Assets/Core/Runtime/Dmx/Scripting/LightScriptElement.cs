@@ -12,6 +12,8 @@ namespace Plml.Dmx.Scripting
         public bool couldRecompile;
         public bool shouldRecompile;
 
+        public bool isCompiled;
+
         public string errorMessage;
 
         [NonSerialized]

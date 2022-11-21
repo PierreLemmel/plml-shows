@@ -14,20 +14,56 @@ namespace Plml.Dmx.Scripting.Editor
     public class LightScriptEditor : UEditor
     {
         private static Dictionary<string, bool> expandedCache = new();
+        private static Dictionary<string, int> popupsCache = new();
 
         public override void OnInspectorGUI()
         {
             LightScript lightScript = (LightScript)target;
 
-            base.OnInspectorGUI();
+            EditorGUILayout.Separator();
+
+            PlmlUI.Disabled(() => EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(LightScript.track))), !Application.isPlaying);
+            PlmlUI.Disabled(() => EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(LightScript.variableDefinitions))), Application.isPlaying);
 
             if (Application.isPlaying)
-                DisplayContext(lightScript.Context, lightScript.variableDefinitions);  
+                DisplayContext(lightScript.Context, lightScript.variableDefinitions);
+
+            EditorGUILayout.Separator();
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(LightScript.initialize)));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(LightScript.update)));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(LightScript.namedElements)));
+
+            var namedElements = lightScript.namedElements;
+            if (Application.isPlaying && namedElements.Any())
+            {
+                EditorGUILayout.Separator();
+                EditorGUILayout.BeginHorizontal();
+
+                string key = GetCacheKey();
+
+                if (!popupsCache.TryGetValue(key, out int index))
+                    popupsCache.Add(key, index);
+
+                index = EditorGUILayout.Popup(index, namedElements.Select(ne => ne.name));
+                popupsCache[key] = index;
+
+                PlmlUI.Disabled(() =>
+                {
+                    if (GUILayout.Button("Execute"))
+                        lightScript.ExecuteAction(namedElements[index].name);
+                }, namedElements[index].element.isCompiled);
+
+                EditorGUILayout.EndHorizontal();
+
+            }
         }
+
+        private string GetCacheKey() => $"{target.name}-{target.GetInstanceID()}";
 
         private void DisplayContext(ILightScriptContext context, VariableDefinitionData definitions)
         {
-            string ctxExpandedKey = $"{target.name}-{target.GetInstanceID()}";
+            string ctxExpandedKey = GetCacheKey();
 
             bool ctxExpanded = CheckForKey(ctxExpandedKey);
             ctxExpanded = EditorGUILayout.Foldout(ctxExpanded, "Variables", EditorStyles.foldoutHeader);

@@ -596,21 +596,25 @@ MonoBehaviour:
         g: 0
         b: 0
   initialize:
-    input: parLed.color = rgb(0xff, 0xff, 0xff)
+    input: parLed.color = rgb(255, 255, 255)
     couldRecompile: 0
     shouldRecompile: 0
+    isCompiled: 0
     errorMessage: 
   update:
     input: parLed.dimmer = range * (1 + sin(speed * t)) / 2
     couldRecompile: 0
     shouldRecompile: 0
+    isCompiled: 0
     errorMessage: 
   namedElements:
-  - name: test
+  - name: randomizeColor
     element:
-      input: 
+      input: parLed.color = rgb(round(255 * rng()), round(255 * rng()), round(255
+        * rng()))
       couldRecompile: 0
       shouldRecompile: 0
+      isCompiled: 0
       errorMessage: 
 --- !u!4 &1599535036
 Transform:

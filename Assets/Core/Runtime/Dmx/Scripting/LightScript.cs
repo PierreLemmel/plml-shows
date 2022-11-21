@@ -12,7 +12,6 @@ namespace Plml.Dmx.Scripting
         [EditTimeOnly]
         public DmxTrack track;
 
-        [EditTimeOnly]
         public VariableDefinitionData variableDefinitions;
 
         private LightScriptCompilator compilator;

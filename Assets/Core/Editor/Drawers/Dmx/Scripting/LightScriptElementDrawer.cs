@@ -27,7 +27,7 @@ namespace Plml.Dmx.Scripting.Editor
                 string oldInput = inputProperty.stringValue;
 
                 int inputLineCount = GetLineCount(property);
-                Rect inputPosition = new(position.x, position.y + lines++ * lineHeight, position.width, inputLineCount * lineHeight);
+                Rect inputPosition = new(position.x, position.y + lines * lineHeight, position.width, inputLineCount * lineHeight);
                 EditorGUI.PropertyField(inputPosition, inputProperty);
                 
 
@@ -40,17 +40,21 @@ namespace Plml.Dmx.Scripting.Editor
                     if (newInput != oldInput)
                         property.FindPropertyRelative(nameof(LightScriptElement.couldRecompile)).boolValue = true;
 
-
-                    string errorMsg = property.FindPropertyRelative(nameof(LightScriptElement.errorMessage)).stringValue;
+                    var errorMsgProperty = property.FindPropertyRelative(nameof(LightScriptElement.errorMessage));
+                    string errorMsg = errorMsgProperty.stringValue;
                     if (errorMsg.IsNotEmpty())
                     {
-                        Rect errorMsgPosition = new(position.x, position.y + lines++ * lineHeight, position.width, lineHeight);
+                        int errorLineCount = GetLineCount(errorMsgProperty);
+                        Rect errorMsgPosition = new(position.x, position.y + lines * lineHeight, position.width, lineHeight * errorLineCount);
                         EditorGUI.HelpBox(errorMsgPosition, errorMsg, MessageType.Error);
+                        lines += errorLineCount;
                     }
 
 
                     EditorGUI.BeginDisabledGroup(!property.FindPropertyRelative(nameof(LightScriptElement.couldRecompile)).boolValue);
-                    if (GUILayout.Button("Recompile"))
+
+                    Rect btnPosition = new(position.x, position.y + lines++ * lineHeight, position.width, lineHeight);
+                    if (GUI.Button(btnPosition, "Recompile"))
                         property.FindPropertyRelative(nameof(LightScriptElement.shouldRecompile)).boolValue = true;
                     EditorGUI.EndDisabledGroup();
                 }
@@ -69,17 +73,22 @@ namespace Plml.Dmx.Scripting.Editor
 
                 if (Application.isPlaying)
                 {
-                    if (property.FindPropertyRelative(nameof(LightScriptElement.errorMessage)).stringValue.IsNotEmpty())
-                        totalLines++;
+                    var errorMsg = property.FindPropertyRelative(nameof(LightScriptElement.errorMessage));
+                    if (errorMsg.stringValue.IsNotEmpty())
+                        totalLines += GetLineCount(errorMsg);
+
+                    totalLines++;
                 }
             }
 
             return EditorGUIUtility.singleLineHeight * totalLines + EditorGUIUtility.standardVerticalSpacing * (totalLines - 1);
         }
 
+        
+
         private static int GetLineCount(SerializedProperty property)
         {
-            int lines = property.FindPropertyRelative(nameof(LightScriptElement.input)).stringValue.Split("\n").Length;
+            int lines = property.FindPropertyRelative(nameof(LightScriptElement.input))?.stringValue?.Split("\n").Length ?? 0;
             return Mathf.Max(3, lines);
         }
     }
