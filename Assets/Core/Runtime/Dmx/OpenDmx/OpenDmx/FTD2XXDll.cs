@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Plml.Dmx.OpenDmx.FTD2XX
+namespace Plml.Dmx.OpenDmx
 {
     internal static unsafe class FTD2XXDll
     {

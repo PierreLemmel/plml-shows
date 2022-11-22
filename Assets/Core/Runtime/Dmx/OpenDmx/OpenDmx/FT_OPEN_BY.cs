@@ -1,4 +1,4 @@
-﻿namespace Plml.Dmx.OpenDmx.FTD2XX
+﻿namespace Plml.Dmx.OpenDmx
 {
     public enum FT_OPEN_BY : uint
     {

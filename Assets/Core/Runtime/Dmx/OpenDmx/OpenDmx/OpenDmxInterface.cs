@@ -1,11 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Plml.Dmx.OpenDmx.FTD2XX
+namespace Plml.Dmx.OpenDmx
 {
     using static FTD2XXDll;
 
-    public unsafe class FTD2XXInterface : IOpenDmxInterface
+    internal unsafe class OpenDmxInterface : IDmxInterface
     {
         private const int BufferSize = 513;
         private FTD2XXData data;

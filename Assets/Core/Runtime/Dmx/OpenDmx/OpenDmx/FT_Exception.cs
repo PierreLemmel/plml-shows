@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plml.Dmx.OpenDmx.FTD2XX
+namespace Plml.Dmx.OpenDmx
 {
     public sealed class FT_Exception : Exception
     {

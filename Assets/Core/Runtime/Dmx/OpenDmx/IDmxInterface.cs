@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Plml.Dmx.OpenDmx
+namespace Plml.Dmx
 {
-    public interface IOpenDmxInterface : IDisposable
+    public interface IDmxInterface : IDisposable
     {
         void Start();
         void Stop();

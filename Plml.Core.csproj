@@ -75,7 +75,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Types\IntRange.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\MoreReflection.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Emulators\FlatParEmulator.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_DEVICE_LIST_INFO_NODE.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\OpenDmx\FT_DEVICE_LIST_INFO_NODE.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\QuadraticRangeAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\ILightScriptContext.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\FunctionInfo.cs" />
@@ -85,7 +85,7 @@
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Operation.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\PlayTimeOnlyAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Spout\SpoutApiException.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\OpenDmxExtensions.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\DmxInterfaces.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\RuntimeContext.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\WinMMDll.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\FunctionRegistry.cs" />
@@ -106,7 +106,7 @@
     <Compile Include="Assets\Core\Runtime\Annotations\HideInEditModeAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\MidiInputDispatcher.cs" />
     <Compile Include="Assets\Core\Runtime\Spout\SpoutApi.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_STATUS.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\OpenDmx\FT_STATUS.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\AbstractSyntaxTree.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptTokenType.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\MidiMsg.cs" />
@@ -119,7 +119,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptCompilator.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\Variables.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\Token.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FTD2XXDll.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\OpenDmx\FTD2XXDll.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker15.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\MidiInputListener.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptTokenizationContext.cs" />
@@ -141,7 +141,7 @@
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\TokenType.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\CheckerFactory.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\FixtureVariableInfo.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_Exception.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\OpenDmx\FT_Exception.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptToken.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\FunctionNode.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Types\LightScriptTypeSystem.cs" />
@@ -168,7 +168,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptCompilationData.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Division.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\AstBuilder.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FTD2XXInterface.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\OpenDmx\OpenDmxInterface.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\GreaterThan.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Strings.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker8.cs" />
@@ -199,7 +199,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\AllPropertiesCheckerFactory.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Execution\IExecutor.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\ColorVariableInfo.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_OPEN_BY.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\OpenDmx\FT_OPEN_BY.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\LessThan.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\ReadOnlyAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\ILightScriptCompilationContext.cs" />
@@ -207,7 +207,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker6.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Variable.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\SpiesExtensions.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\FTD2XX\FT_PROGRAM_DATA.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\OpenDmx\FT_PROGRAM_DATA.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Control\Fixtures\DmxChannelType.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Types\LightScriptPropertyInfo.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\Optimizer.cs" />
@@ -220,7 +220,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Types\LightScriptTypeInfo.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpySetupPropertiesNode.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\CubicRangeAttribute.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\IOpenDmxInterface.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\IDmxInterface.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptCompilationContext.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\MidiNote.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptFunction.cs" />
@@ -238,6 +238,9 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptElement.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\EnttecUsbPro\EnttecUsbProInterface.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\LogInterface.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\DmxInterfaceType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />

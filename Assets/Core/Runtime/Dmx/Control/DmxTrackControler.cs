@@ -1,5 +1,4 @@
 using Plml.Dmx.OpenDmx;
-using Plml.Dmx.OpenDmx.FTD2XX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +23,10 @@ namespace Plml.Dmx
         [Range(1.0f, 60.0f)]
         public float refreshRate = 30.0f;
 
-        public bool enableOpenDmx = true;
+        public DmxInterfaceType dmxInterface;
 
-        private IOpenDmxInterface openDmx = new FTD2XXInterface();
+        private IDmxInterface _dmxInterface;
+        private IDmxInterface GetDmxInterface() => _dmxInterface ??= DmxInterfaces.Create(dmxInterface);
 
         private Dictionary<Guid, GameObject> addedTracks;
 
@@ -39,11 +39,7 @@ namespace Plml.Dmx
 
         private void Awake() => Setup();
 
-        private void OnEnable()
-        {
-            if (enableOpenDmx)
-                openDmx.CopyData(channels);
-        }
+        private void OnEnable() => GetDmxInterface().CopyData(channels);
 
         private void Update()
         {
@@ -55,11 +51,7 @@ namespace Plml.Dmx
             SendFrame();
         }
 
-        private void OnDisable()
-        {
-            if (enableOpenDmx)
-                openDmx.ClearFrame();
-        }
+        private void OnDisable() => GetDmxInterface().ClearFrame();
 
         private void OnDestroy() => Cleanup();
 
@@ -96,17 +88,15 @@ namespace Plml.Dmx
 
             addedTracks = new();
 
-            if (enableOpenDmx)
-                openDmx.Start();
+            GetDmxInterface().Start();
         }
 
         private void Cleanup()
         {
-            if (enableOpenDmx)
-            {
-                openDmx.Stop();
-                openDmx.Dispose();
-            }
+            var dmxInterface = GetDmxInterface();
+
+            dmxInterface.Stop();
+            dmxInterface.Dispose();
         }
 
         private void RebuildDmxFrame()
@@ -138,11 +128,11 @@ namespace Plml.Dmx
 
         private void SendFrame()
         {
-            if (enableOpenDmx)
-            {
-                openDmx.CopyData(channels);
-                openDmx.SendFrame();
-            }
+            var dmxInterface = GetDmxInterface();
+
+            
+            dmxInterface.CopyData(channels);
+            dmxInterface.SendFrame();
         }
 
 #if UNITY_EDITOR
@@ -156,8 +146,7 @@ namespace Plml.Dmx
 
         public void StopSendingFrameFromEditor()
         {
-            if (enableOpenDmx)
-                openDmx.ClearFrame();
+            GetDmxInterface().ClearFrame();
 
             Cleanup();
         }

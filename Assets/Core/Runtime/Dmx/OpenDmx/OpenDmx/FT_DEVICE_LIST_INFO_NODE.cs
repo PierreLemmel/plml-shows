@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Plml.Dmx.OpenDmx.FTD2XX
+namespace Plml.Dmx.OpenDmx
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct FT_DEVICE_LIST_INFO_NODE
