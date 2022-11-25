@@ -10,5 +10,7 @@ namespace Plml.Dmx
         void SendFrame();
         void ClearFrame();
         void CopyData(int channelOffset, byte[] data, int length);
+
+        public DmxFeature Features { get; }
     }
 }

@@ -6,6 +6,8 @@
 
         public LogInterface(LogLevel lvl) => logLvl = lvl;
 
+        public DmxFeature Features => DmxFeature.ReadWrite;
+
         public void ClearFrame() => Log("Frame cleared");
 
         public void CopyData(int channelOffset, byte[] data, int length) { }

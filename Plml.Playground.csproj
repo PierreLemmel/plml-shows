@@ -336,6 +336,9 @@
     <Reference Include="Google.VersionHandlerImpl">
       <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\1.2.169\Google.VersionHandlerImpl.dll</HintPath>
     </Reference>
+    <Reference Include="System.IO.Ports">
+      <HintPath>Assets\Plugins\Ports\System.IO.Ports.dll</HintPath>
+    </Reference>
     <Reference Include="Firebase.TaskExtension">
       <HintPath>Assets\ThirdParties\Firebase\Firebase\Plugins\Firebase.TaskExtension.dll</HintPath>
     </Reference>

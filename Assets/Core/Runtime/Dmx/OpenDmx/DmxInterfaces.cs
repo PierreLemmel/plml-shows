@@ -17,5 +17,9 @@ namespace Plml.Dmx.OpenDmx
             DmxInterfaceType.EnntecUsbPro => new EnttecUsbProInterface(),
             _ => throw new InvalidOperationException($"Unknown Dmx Interface type: {type}")
         };
+
+        public static bool HasFeature(this IDmxInterface dmxInterface, DmxFeature feature) => dmxInterface.Features.HasFlag(feature);
+        public static bool HasReadFeature(this IDmxInterface dmxInterface) => dmxInterface.HasFeature(DmxFeature.Read);
+        public static bool HasWriteFeature(this IDmxInterface dmxInterface) => dmxInterface.HasFeature(DmxFeature.Write);
     }
 }

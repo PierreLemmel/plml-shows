@@ -56,11 +56,13 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\DmxFeature.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScript.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptConstant.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\LogLevel.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\ValueChecker.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\And.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\DmxInterfaceType.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\Color24.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\MoreRandom.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\SyntaxTreeException.cs" />
@@ -113,6 +115,7 @@
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker9.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\Exponentiation.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker10.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\LogInterface.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\MidiInputListenerBase.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\Mmsyserr.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ExpressionTreeBuilder.cs" />
@@ -200,6 +203,7 @@
     <Compile Include="Assets\Core\Runtime\Jace\Execution\IExecutor.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\ColorVariableInfo.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\OpenDmx\FT_OPEN_BY.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\EnttecUsbPro\EnttecUsbProInterface.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Operations\LessThan.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\ReadOnlyAttribute.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\ILightScriptCompilationContext.cs" />
@@ -238,9 +242,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptElement.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\EnttecUsbPro\EnttecUsbProInterface.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\LogInterface.cs" />
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\DmxInterfaceType.cs" />
+    <Compile Include="Assets\Core\Runtime\Core\Helpers\Bytes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />
@@ -515,6 +517,9 @@
     </Reference>
     <Reference Include="Google.VersionHandlerImpl">
       <HintPath>Assets\ThirdParties\Firebase\ExternalDependencyManager\Editor\1.2.169\Google.VersionHandlerImpl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Ports">
+      <HintPath>Assets\Plugins\Ports\System.IO.Ports.dll</HintPath>
     </Reference>
     <Reference Include="Firebase.TaskExtension">
       <HintPath>Assets\ThirdParties\Firebase\Firebase\Plugins\Firebase.TaskExtension.dll</HintPath>

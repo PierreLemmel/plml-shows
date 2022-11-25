@@ -106,6 +106,8 @@ namespace Plml.Dmx.OpenDmx
             }
         }
 
+        public DmxFeature Features => DmxFeature.Read;
+
         private unsafe struct FTD2XXData
         {
             public IntPtr handle;
