@@ -56,7 +56,7 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\DmxFeature.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\DmxMissingFeatureException.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScript.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\LightScriptConstant.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Types\LogLevel.cs" />
@@ -119,6 +119,7 @@
     <Compile Include="Assets\Core\Runtime\Midi\MidiInputListenerBase.cs" />
     <Compile Include="Assets\Core\Runtime\Midi\Mmsyserr.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Compilation\ExpressionTreeBuilder.cs" />
+    <Compile Include="Assets\Core\Runtime\Core\Helpers\Bytes.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptCompilator.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Runtime\Variables.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Parsing\Token.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Control\Fixtures\DmxFixture.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Helpers\Enums.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\ISpySetupActionNode.cs" />
+    <Compile Include="Assets\Core\Runtime\Dmx\OpenDmx\DmxFeature.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\MemberAccessNode.cs" />
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\Compilation\Nodes\SyntaxNode.cs" />
     <Compile Include="Assets\Core\Runtime\Annotations\RangeBounds01Attribute.cs" />
@@ -242,7 +244,6 @@
     <Compile Include="Assets\Core\Runtime\Dmx\Scripting\LightScriptElement.cs" />
     <Compile Include="Assets\Core\Runtime\Core\Spies\Checkers\PropertyChecker2.cs" />
     <Compile Include="Assets\Core\Runtime\Jace\Maths\Mathf.cs" />
-    <Compile Include="Assets\Core\Runtime\Core\Helpers\Bytes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Core\Runtime\Plml.Core.asmdef" />

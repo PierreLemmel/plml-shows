@@ -26,7 +26,21 @@ namespace Plml.Dmx
         public DmxInterfaceType dmxInterface;
 
         private IDmxInterface _dmxInterface;
-        private IDmxInterface GetDmxInterface() => _dmxInterface ??= DmxInterfaces.Create(dmxInterface);
+
+        private bool canRead;
+        private bool canWrite;
+        private IDmxInterface GetDmxInterface()
+        {
+            if (_dmxInterface == null)
+            {
+                _dmxInterface = DmxInterfaces.Create(dmxInterface);
+
+                canRead = _dmxInterface.HasReadFeature();
+                canWrite = _dmxInterface.HasWriteFeature();
+            }
+
+            return _dmxInterface;
+        }
 
         private Dictionary<Guid, GameObject> addedTracks;
 
@@ -128,11 +142,14 @@ namespace Plml.Dmx
 
         private void SendFrame()
         {
-            var dmxInterface = GetDmxInterface();
+            if (canWrite)
+            {
+                var dmxInterface = GetDmxInterface();
 
             
-            dmxInterface.CopyData(channels);
-            dmxInterface.SendFrame();
+                dmxInterface.CopyData(channels);
+                dmxInterface.SendFrame();
+            }
         }
 
 #if UNITY_EDITOR
@@ -151,6 +168,7 @@ namespace Plml.Dmx
             Cleanup();
         }
 
+        public DmxFeature GetFeaturesFromEditor() => GetDmxInterface().Features;
         public byte[] GetChannelsFromEditor() => channels;
 #endif
     }

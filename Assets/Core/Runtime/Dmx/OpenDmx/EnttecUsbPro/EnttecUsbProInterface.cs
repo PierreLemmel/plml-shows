@@ -46,6 +46,10 @@ namespace Plml.Dmx.OpenDmx.EnttecUsbPro
 
         public void SendFrame() => port.Write(buffer, 0, buffer.Length);
 
+        private DmxFrameHandler frameHandler;
+        public void AddFrameReceivedHandler(DmxFrameHandler handler) => frameHandler += handler;
+        public void RemoveFrameReceivedHandler(DmxFrameHandler handler) => frameHandler -= handler;
+
         public void Start()
         {
             InitializeToSendFrame();

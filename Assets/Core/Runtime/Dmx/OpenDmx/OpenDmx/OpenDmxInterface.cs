@@ -26,6 +26,9 @@ namespace Plml.Dmx.OpenDmx
 
         public void Dispose() => Stop();
 
+        public void AddFrameReceivedHandler(DmxFrameHandler handler) => throw new DmxMissingFeatureException(DmxFeature.Read);
+        public void RemoveFrameReceivedHandler(DmxFrameHandler handler) => throw new DmxMissingFeatureException(DmxFeature.Read);
+
         public void SendFrame()
         {
             lock (mutex)
