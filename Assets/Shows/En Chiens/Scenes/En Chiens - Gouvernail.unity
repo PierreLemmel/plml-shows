@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 3239023752108877169}
-  channels: ff000000
+  channels: 00000000
 --- !u!1 &10102768
 GameObject:
   m_ObjectHideFlags: 0
@@ -555,7 +555,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 6972522825128264834}
-  channels: 49000000
+  channels: 00000000
 --- !u!1 &270453238
 GameObject:
   m_ObjectHideFlags: 0
@@ -918,7 +918,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 3056516819989020977}
-  channels: ff000000
+  channels: 00000000
 --- !u!1 &594158205
 GameObject:
   m_ObjectHideFlags: 0
@@ -1106,7 +1106,7 @@ MonoBehaviour:
   master: 1
   fade: 0
   refreshRate: 30
-  enableOpenDmx: 1
+  dmxInterface: 0
 --- !u!1 &687705166
 GameObject:
   m_ObjectHideFlags: 0
@@ -2142,7 +2142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 6972522825128264834}
-  channels: 49000000
+  channels: 00000000
 --- !u!114 &1774353057 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7640429035788616743, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
@@ -2968,10 +2968,46 @@ PrefabInstance:
       propertyPath: channelOffset
       value: 21
       objectReference: {fileID: 0}
+    - target: {fileID: 4639460097975877559, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: e38a2427bdf109645a2e80cf63f2924d, type: 2}
+    - target: {fileID: 5114703016187927543, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: e38a2427bdf109645a2e80cf63f2924d, type: 2}
+    - target: {fileID: 7297395549209317400, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: e38a2427bdf109645a2e80cf63f2924d, type: 2}
+    - target: {fileID: 7640429035006752034, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: e38a2427bdf109645a2e80cf63f2924d, type: 2}
     - target: {fileID: 7640429035006752034, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
       propertyPath: channelOffset
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 7640429035176699009, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: e38a2427bdf109645a2e80cf63f2924d, type: 2}
+    - target: {fileID: 7640429035240179092, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: e38a2427bdf109645a2e80cf63f2924d, type: 2}
+    - target: {fileID: 7640429035653274165, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: e38a2427bdf109645a2e80cf63f2924d, type: 2}
+    - target: {fileID: 7640429035788616743, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: e38a2427bdf109645a2e80cf63f2924d, type: 2}
+    - target: {fileID: 7640429035840420307, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: e38a2427bdf109645a2e80cf63f2924d, type: 2}
     - target: {fileID: 7640429036407092321, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
       propertyPath: m_Name
       value: Fixtures - Gouvernail
@@ -3020,6 +3056,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7640429036961080680, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 11400000, guid: e38a2427bdf109645a2e80cf63f2924d, type: 2}
     - target: {fileID: 8113858120356580470, guid: 667c382c7bc270b438d8bc27aa65f098, type: 3}
       propertyPath: channelOffset
       value: 54

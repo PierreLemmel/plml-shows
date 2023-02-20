@@ -5,7 +5,7 @@ namespace Plml.Dmx.OpenDmx
 {
     using static FTD2XXDll;
 
-    internal unsafe class OpenDmxInterface : IDmxInterface
+    internal unsafe class OpenDmxSendInterface : ISendDmxInterface
     {
         private const int BufferSize = 513;
         private FTD2XXData data;
@@ -25,9 +25,6 @@ namespace Plml.Dmx.OpenDmx
         public void Stop() => FT_Close(data.handle);
 
         public void Dispose() => Stop();
-
-        public void AddFrameReceivedHandler(DmxFrameHandler handler) => throw new DmxMissingFeatureException(DmxFeature.Read);
-        public void RemoveFrameReceivedHandler(DmxFrameHandler handler) => throw new DmxMissingFeatureException(DmxFeature.Read);
 
         public void SendFrame()
         {
@@ -108,8 +105,6 @@ namespace Plml.Dmx.OpenDmx
                 Debug.LogError($"'{function}' returned Invalid status: '{status}'");
             }
         }
-
-        public DmxFeature Features => DmxFeature.Read;
 
         private unsafe struct FTD2XXData
         {

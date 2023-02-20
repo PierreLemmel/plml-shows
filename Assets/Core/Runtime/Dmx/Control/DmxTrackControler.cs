@@ -1,4 +1,3 @@
-using Plml.Dmx.OpenDmx;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,20 +22,18 @@ namespace Plml.Dmx
         [Range(1.0f, 60.0f)]
         public float refreshRate = 30.0f;
 
-        public DmxInterfaceType dmxInterface;
+        public SendDmxInterfaceType dmxInterface;
 
-        private IDmxInterface _dmxInterface;
+        private ISendDmxInterface _dmxInterface;
 
-        private bool canRead;
-        private bool canWrite;
-        private IDmxInterface GetDmxInterface()
+        private SendDmxInterfaceType lastType = SendDmxInterfaceType.None;
+
+        private ISendDmxInterface GetDmxInterface()
         {
-            if (_dmxInterface == null)
+            if (_dmxInterface == null || dmxInterface != lastType)
             {
-                _dmxInterface = DmxInterfaces.Create(dmxInterface);
-
-                canRead = _dmxInterface.HasReadFeature();
-                canWrite = _dmxInterface.HasWriteFeature();
+                _dmxInterface = DmxInterfaces.CreateSendInterface(dmxInterface);
+                lastType = dmxInterface;
             }
 
             return _dmxInterface;
@@ -142,14 +139,10 @@ namespace Plml.Dmx
 
         private void SendFrame()
         {
-            if (canWrite)
-            {
-                var dmxInterface = GetDmxInterface();
-
+            var dmxInterface = GetDmxInterface();
             
-                dmxInterface.CopyData(channels);
-                dmxInterface.SendFrame();
-            }
+            dmxInterface.CopyData(channels);
+            dmxInterface.SendFrame();
         }
 
 #if UNITY_EDITOR
@@ -168,7 +161,6 @@ namespace Plml.Dmx
             Cleanup();
         }
 
-        public DmxFeature GetFeaturesFromEditor() => GetDmxInterface().Features;
         public byte[] GetChannelsFromEditor() => channels;
 #endif
     }

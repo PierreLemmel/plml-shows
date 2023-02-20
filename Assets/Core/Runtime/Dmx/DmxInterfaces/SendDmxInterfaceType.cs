@@ -1,6 +1,6 @@
 ﻿namespace Plml.Dmx
 {
-    public enum DmxInterfaceType
+    public enum SendDmxInterfaceType
     {
         None,
         EnntecOpenDmx,

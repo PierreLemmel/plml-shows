@@ -5824,7 +5824,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30.1
+  m_fontSize: 30.05
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8405,10 +8405,18 @@ PrefabInstance:
       propertyPath: model
       value: 
       objectReference: {fileID: 11400000, guid: 88b853e71a3ba8245b0426be75a95818, type: 2}
+    - target: {fileID: 32165675641354180, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
+      propertyPath: channelOffset
+      value: 41
+      objectReference: {fileID: 0}
     - target: {fileID: 350355040398471023, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
       propertyPath: model
       value: 
       objectReference: {fileID: 11400000, guid: 5da1567fe0d61334d9f7421b25978014, type: 2}
+    - target: {fileID: 350355040398471023, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
+      propertyPath: channelOffset
+      value: 53
+      objectReference: {fileID: 0}
     - target: {fileID: 637621346079666577, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -8457,22 +8465,42 @@ PrefabInstance:
       propertyPath: model
       value: 
       objectReference: {fileID: 11400000, guid: 88b853e71a3ba8245b0426be75a95818, type: 2}
+    - target: {fileID: 930088810612808138, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
+      propertyPath: channelOffset
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 1426573872559316580, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
       propertyPath: model
       value: 
       objectReference: {fileID: 11400000, guid: 88b853e71a3ba8245b0426be75a95818, type: 2}
+    - target: {fileID: 1426573872559316580, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
+      propertyPath: channelOffset
+      value: 23
+      objectReference: {fileID: 0}
     - target: {fileID: 1860426006636967667, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
       propertyPath: model
       value: 
       objectReference: {fileID: 11400000, guid: 88b853e71a3ba8245b0426be75a95818, type: 2}
+    - target: {fileID: 1860426006636967667, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
+      propertyPath: channelOffset
+      value: 17
+      objectReference: {fileID: 0}
     - target: {fileID: 2825194463998225716, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
       propertyPath: model
       value: 
       objectReference: {fileID: 11400000, guid: 88b853e71a3ba8245b0426be75a95818, type: 2}
+    - target: {fileID: 2825194463998225716, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
+      propertyPath: channelOffset
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 5431588648170426179, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
       propertyPath: model
       value: 
       objectReference: {fileID: 11400000, guid: 88b853e71a3ba8245b0426be75a95818, type: 2}
+    - target: {fileID: 5431588648170426179, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
+      propertyPath: channelOffset
+      value: 29
+      objectReference: {fileID: 0}
     - target: {fileID: 6198519792458812515, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
       propertyPath: model
       value: 
@@ -8481,10 +8509,18 @@ PrefabInstance:
       propertyPath: model
       value: 
       objectReference: {fileID: 11400000, guid: 30afb9bc59fe51d4cadaf748aa5fcf1b, type: 2}
+    - target: {fileID: 8837135459689565891, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
+      propertyPath: channelOffset
+      value: 82
+      objectReference: {fileID: 0}
     - target: {fileID: 9034053415471640844, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
       propertyPath: model
       value: 
       objectReference: {fileID: 11400000, guid: 52d42f6d1d036064c93cd483926f47b3, type: 2}
+    - target: {fileID: 9034053415471640844, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
+      propertyPath: channelOffset
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 9071722219148678139, guid: 4b0ea221aa9073e49a5257c945fdc286, type: 3}
       propertyPath: m_Name
       value: Fixtures - Improvibar
@@ -17097,7 +17133,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30.1
+  m_fontSize: 30.05
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1

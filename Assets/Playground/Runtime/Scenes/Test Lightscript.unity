@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 467126566}
-  channels: ff0000000000000000000000000000000000000000000000
+  channels: 000000000000000000000000000000000000000000000000
 --- !u!1001 &467126562
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -374,6 +374,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3727991642785649135, guid: 483413b98c99a6a4d9cb593e3face74e, type: 3}
+      propertyPath: dmxInterface
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3727991642785649135, guid: 483413b98c99a6a4d9cb593e3face74e, type: 3}
+      propertyPath: tracksObject
+      value: 
+      objectReference: {fileID: 1343525941}
+    - target: {fileID: 3727991642785649135, guid: 483413b98c99a6a4d9cb593e3face74e, type: 3}
       propertyPath: enableOpenDmx
       value: 1
       objectReference: {fileID: 0}
@@ -492,7 +500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 467126565}
-  channels: ff0000000000000000000000000000000000000000000000
+  channels: 000000000000000000000000000000000000000000000000
 --- !u!1 &1310441806
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,7 +546,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 467126564}
-  channels: ff000000000000000000000000000000ff00000000000000
+  channels: 000000000000000000000000000000000000000000000000
+--- !u!114 &1343525941 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6956257747033032687, guid: 483413b98c99a6a4d9cb593e3face74e, type: 3}
+  m_PrefabInstance: {fileID: 600570027}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90ee106514a81da49ad3627b1b34dce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1599535034
 GameObject:
   m_ObjectHideFlags: 0
@@ -555,7 +574,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1599535035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -676,4 +695,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixture: {fileID: 467126563}
-  channels: ff000000000000000000000000000000ff00000000000000
+  channels: 000000000000000000000000000000000000000000000000
