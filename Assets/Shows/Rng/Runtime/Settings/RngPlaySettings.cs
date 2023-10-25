@@ -7,5 +7,7 @@ namespace Plml.Rng
     {
         public bool autoGenerateScenes = true;
         public bool autoSaveShow = true;
+        public bool autoSendPlaylist = true;
+        public string playlistUrl = "";
     }
 }

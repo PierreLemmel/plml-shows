@@ -8,6 +8,8 @@ namespace Plml.Rng
 {
     public class RngScene : MonoBehaviour
     {
+        public RngSceneType type;
+
         public float duration
         {
             get => sceneWindow.duration;

@@ -21,10 +21,9 @@ namespace Plml.Rng
                     maxScenes = show.showSettings.maxScenes,
                     durationSpread = show.showSettings.durationSpread,
                     showDuration = show.showSettings.showDuration,
-                    blackoutDuration = show.showSettings.blackoutDuration,
                 },
                 scenes = show
-                    .scenes
+                    .content.scenes
                     .Select(scene => new RngSceneDataModel
                     {
                         timeWindow = scene.sceneWindow,
@@ -61,7 +60,6 @@ namespace Plml.Rng
             public int maxScenes;
             public float durationSpread;
             public float showDuration;
-            public float blackoutDuration;
         }
 
         [Serializable]

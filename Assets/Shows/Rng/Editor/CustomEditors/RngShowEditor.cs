@@ -17,6 +17,7 @@ namespace Plml.Rng.Editor
             if (Application.isPlaying)
             {
                 if (GUILayout.Button("Start Show")) show.StartShow();
+                if (GUILayout.Button("Play")) show.Play();
                 if (GUILayout.Button("Stop Show")) show.StopShow();
             }
             else
@@ -28,7 +29,7 @@ namespace Plml.Rng.Editor
                     show.RegenerateScenes();
                     Debug.Log("Show generated");
 
-                    foreach (var scene in show.scenes)
+                    foreach (var scene in show.content.scenes)
                     {
                         Debug.Log(scene.name);
                     }

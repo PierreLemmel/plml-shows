@@ -46,5 +46,7 @@ namespace Plml.Rng
         public static TimeWindow operator /(TimeWindow tw, float a) => (1.0f / a) * tw;
 
         public static TimeWindow Empty => new();
+
+        public TimeWindow Translate(float time) => new TimeWindow(startTime + time, duration, fadeInTime, fadeOutTime);
     }
 }
