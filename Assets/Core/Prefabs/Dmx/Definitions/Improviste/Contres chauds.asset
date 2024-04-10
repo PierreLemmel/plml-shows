@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 572f741a08c1afc4eb9ce46a8c4abca3, type: 3}
+  m_Name: Contres chauds
+  m_EditorClassIdentifier: 
+  manufacturer: 
+  type: 
+  mode: 
+  chanCount: 4
+  channels:
+  - channel: 0
+    type: 5
+  - channel: 1
+    type: 6
+  - channel: 2
+    type: 7
+  - channel: 3
+    type: 1

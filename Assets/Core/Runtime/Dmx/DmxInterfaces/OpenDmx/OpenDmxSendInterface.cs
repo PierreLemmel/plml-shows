@@ -60,7 +60,7 @@ namespace Plml.Dmx.OpenDmx
         public void CopyData(int channelOffset, byte[] input, int length)
         {
             if (length > input.Length) throw new InvalidOperationException($"Input length must be smaller than length");
-            if (channelOffset + length > BufferSize) throw new InvalidOperationException($"'channelOffset + length' mush be smaller than BufferSize (513)");
+            if (channelOffset + length - 1 > BufferSize) throw new InvalidOperationException($"'channelOffset + length' mush be smaller than BufferSize (513)");
 
             lock (mutex)
             {

@@ -70,13 +70,16 @@
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Animations\DmxChanRandomizer.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Settings\RngPrePostShowSettings.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngSceneContent.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Animations\DmxSequencer.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\StaticTrackProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\UI\RngTestPanel.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\RngProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\UI\RngInputs.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\RngProviderCollection.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\API\RngPlaylistSender.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Settings\RngShowSettings.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\AudioClipProvider.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\RngPlayState.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\UI\RngMusicsTestPanel.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngSceneGenerator.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\UI\RngUI.cs" />
@@ -91,6 +94,7 @@
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\IRngProviderCollection.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\UI\RngIntroOutroPanel.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngScenePlayer.cs" />
+    <Compile Include="Assets\Shows\Rng\Runtime\RngPlaylistPlayer.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Duration\SceneDurationProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\DmxTrackProviderCollection.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\RngSceneType.cs" />
@@ -102,7 +106,6 @@
     <Compile Include="Assets\Shows\Rng\Runtime\Settings\RngIntroOutroSettings.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Dmx\Improvibar\BicolorTrackProvider.cs" />
     <Compile Include="Assets\Shows\Rng\Runtime\Providers\Audio\NoAudioProvider.cs" />
-    <Compile Include="Assets\Shows\Rng\Runtime\RngPlayState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shows\Rng\Runtime\Plml.Rng.asmdef" />

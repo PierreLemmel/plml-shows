@@ -34,8 +34,8 @@ namespace Plml.Rng
             float blackoutDuration = blackoutSettings.duration;
 
             var blackout = GenerateBlackoutScene();
-            var preShow = GeneratePreShowScene(true);
-            var postShow = GeneratePreShowScene(false);
+            var preShow = GeneratePrePostShowScene(true);
+            var postShow = GeneratePrePostShowScene(false);
             var intro = GenerateIntroOutroScene(true);
             var outro = GenerateIntroOutroScene(false);
 
@@ -121,10 +121,16 @@ namespace Plml.Rng
                 scene.sceneWindow = scene.sceneWindow.Translate(time);
                 scene.audioData.musicWindow = scene.sceneWindow;
 
+                var timeOffset = intro ?
+                    introSettings.lightOffset :
+                    outroSettings.lightOffset;
+
+                scene.lightWindow = scene.sceneWindow.ShiftLeft(timeOffset);
+
                 scene.name = $"{(intro ? "Intro" : "Outro")}: {scene.duration:0.0}s - {introSettings.music.name}";
             }
 
-            RngScene GeneratePreShowScene(bool pre)
+            RngScene GeneratePrePostShowScene(bool pre)
             {
                 GameObject sceneObj = new();
                 RngScene scene = sceneObj.AddComponent<RngScene>();
@@ -133,10 +139,20 @@ namespace Plml.Rng
 
                 scene.type = pre ? RngSceneType.PreShow : RngSceneType.PostShow;
                 scene.name = pre ? "Preshow" : "Postshow";
-                var dmxProvider = pre ? preShowSettings.dmxProvider : postShowSettings.dmxProvider;
-                scene.track = dmxProvider
+
+                var settings = pre ? preShowSettings : postShowSettings;
+                
+                scene.track = settings
+                    .dmxProvider
                     .GetNextElement()
                     .AttachTo(sceneObj);
+
+                var duration = settings.timeGap;
+                Debug.Log(pre);
+                Debug.Log(duration);
+                var fade = settings.fade;
+                var startTime = pre ? -duration : totalDuration;
+                scene.sceneWindow = new(startTime, duration, fade, fade);
 
                 return scene;
             }

@@ -27,6 +27,9 @@ namespace Plml.Rng
         [EditTimeOnly]
         public TimeWindow sceneWindow;
 
+        [EditTimeOnly]
+        public TimeWindow lightWindow = new(-1000f, 100_000f, 0f, 0f);
+
         public bool hasAudio => audioData != null;
 
         [EditTimeOnly]

@@ -81,6 +81,14 @@ namespace Plml
         public static implicit operator Color24(Color c) => (Color24)(Color32)c;
         public static implicit operator Color(Color24 c24) => (Color)(Color32)c24;
 
+        public static Color24 operator *(float a, Color24 c24) => new(
+            (byte)(a * c24.r),
+            (byte)(a * c24.g),
+            (byte)(a * c24.b)
+        );
+
+        public static Color24 operator *(Color24 c24, float a) => a * c24;
+
         public static Color24 Rgb(byte r, byte g, byte b) => new(r, g, b);
         public static Color24 Rgb(int r, int g, int b) => new(r, g, b);
         public static Color24 Hsv(float h, float s, float v)

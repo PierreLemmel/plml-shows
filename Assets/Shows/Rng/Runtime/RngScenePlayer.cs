@@ -25,6 +25,7 @@ namespace Plml.Rng
 
         private DmxTrackControler dmxControler;
         private AudioSource audioSource;
+        private RngPlaylistPlayer playlistPlayer;
 
         private DmxTrack currentTrack;
         private Guid currentTrackId;
@@ -37,11 +38,13 @@ namespace Plml.Rng
         {
             dmxControler = FindObjectOfType<DmxTrackControler>();
             audioSource = FindObjectOfType<AudioSource>();
+            playlistPlayer = FindObjectOfType<RngPlaylistPlayer>();
 
             ResetTrackingVariables();
 
             isPlaying = false;
         }
+
 
         public void Update()
         {
@@ -50,12 +53,13 @@ namespace Plml.Rng
             switch (playState)
             {
                 case RngPlayState.PreShow:
-
+                    
                     break;
 
                 case RngPlayState.PreShowBlackout:
+                    
                     currentTime += Time.deltaTime;
-                    if (currentTime >= 0.0f)
+                    if (currentTime >= content.preShow.endTime)
                         SetState(RngPlayState.Show);
                     break;
 
@@ -67,7 +71,8 @@ namespace Plml.Rng
                         // Continues
                         if (currentTime <= currentScene.endTime)
                         {
-                            float dmxMaster = currentScene.sceneWindow.GetValue(currentTime);
+                            float dmxMaster = currentScene.sceneWindow.GetValue(currentTime)
+                                * currentScene.lightWindow.GetValue(currentTime);
                             currentTrack.master = dmxMaster;
 
                             if (currentScene.hasAudio)
@@ -101,13 +106,14 @@ namespace Plml.Rng
                         // Ends
                         else
                         {
-                            if (currentTime >= showDuration)
+                            if (currentTime < showDuration)
                             {
                                 nextBlackoutWindow = content.blackout.sceneWindow.Translate(currentScene.endTime);
                                 currentScene = null;
                                 SetCurrentTrack(content.blackout.track);
                             }
-                            
+                            else
+                                SetState(RngPlayState.PostShowBlackout);
                         }
                     }
                     // blackout
@@ -140,7 +146,8 @@ namespace Plml.Rng
 
                 case RngPlayState.PostShowBlackout:
 
-                    if (currentTime > nextBlackoutWindow.endTime)
+                    Debug.Log(content.postShow.endTime);
+                    if (currentTime > content.postShow.endTime)
                         SetState(RngPlayState.PostShow);
 
                     currentTime += Time.deltaTime;
@@ -151,7 +158,7 @@ namespace Plml.Rng
             }            
         }
 
-        private void SetCurrentTrack(DmxTrack track)
+        private void SetCurrentTrack(DmxTrack track, bool on = false)
         {
             StopAudio();
             StopLights();
@@ -160,6 +167,7 @@ namespace Plml.Rng
                 Log($"End of track: '{currentTrack.name}'");
 
             currentTrack = dmxControler.AddTrack(track, out currentTrackId);
+            currentTrack.master = on ? 1.0f : 0.0f;
 
             Log($"Start of track: '{currentTrack.name}'");
         }
@@ -171,10 +179,12 @@ namespace Plml.Rng
             switch (newState)
             {
                 case RngPlayState.PreShow:
-                    SetCurrentTrack(content.preShow.track);
+                    SetCurrentTrack(content.preShow.track, true);
+                    playlistPlayer.StartPlaylist();
                     break;
 
                 case RngPlayState.PreShowBlackout:
+                    playlistPlayer.StopPlaylist();
                     currentTime = -content.blackout.duration;
                     SetCurrentTrack(content.blackout.track);
                     break;
@@ -185,11 +195,11 @@ namespace Plml.Rng
 
                 case RngPlayState.PostShowBlackout:
                     SetCurrentTrack(content.blackout.track);
-                    nextBlackoutWindow = content.blackout.sceneWindow.Translate(currentTime);
                     break;
 
                 case RngPlayState.PostShow:
-                    SetCurrentTrack(content.postShow.track);
+                    SetCurrentTrack(content.postShow.track, true);
+                    playlistPlayer.StartPlaylist();
                     break;
             }
 

@@ -34,6 +34,13 @@ namespace Plml.Dmx.Editor
 
                     ApplyColorToArray(channels, addr, result);
                 }
+                else if (chanType.IsSplitColorChannel())
+                {
+                    Color32 initialColor = ExtractSplitColorFromArray(channels, addr);
+                    Color32 result = EditorGUILayout.ColorField(label, initialColor);
+
+                    ApplysplitColorToArray(channels, addr, result);
+                }
                 else if (chanType.IsColorArray())
                 {   
                     int count = chanType.ColorArrayCount();
@@ -98,6 +105,22 @@ namespace Plml.Dmx.Editor
             channels[addr] = color.r;
             channels[addr + 1] = color.g;
             channels[addr + 2] = color.b;
+        }
+
+        private static Color32 ExtractSplitColorFromArray(int[] channels, int addr)
+        {
+            byte r = (byte)channels[addr];
+            byte g = (byte)channels[addr + 2];
+            byte b = (byte)channels[addr + 4];
+
+            return new(r, g, b, 0xff);
+        }
+
+        private static void ApplysplitColorToArray(int[] channels, int addr, Color32 color)
+        {
+            channels[addr] = color.r;
+            channels[addr + 2] = color.g;
+            channels[addr + 4] = color.b;
         }
     }
 }

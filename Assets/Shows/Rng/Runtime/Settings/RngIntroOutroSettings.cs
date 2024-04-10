@@ -11,6 +11,9 @@ namespace Plml.Rng
 
         public DmxTrackProvider dmxProvider;
 
+        [Range(0f, 30f)]
+        public float lightOffset;
+
         public AudioClip music;
 
         [Range(0.0f, 1.0f)]

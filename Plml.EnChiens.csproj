@@ -58,10 +58,14 @@
   <ItemGroup>
     <Compile Include="Assets\Shows\En Chiens\Runtime\Emulators\TimelineEmulator.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\Animations\Improvibar\ContresPulsation.cs" />
+    <Compile Include="Assets\Shows\En Chiens\Runtime\Adapters\Theatre du temps\TheatreDuTempsAdapter.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\Adapters\EnChiensAdapter.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\Adapters\Gouvernail\EnChiensGouvernailAdapter.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\Adapters\Improvibar\EnChiensImprovibarAdapter.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\Animations\SidesButtonsActivation.cs" />
+    <Compile Include="Assets\Shows\En Chiens\Runtime\Adapters\Improviste\ImprovisteAdapter.cs" />
+    <Compile Include="Assets\Shows\En Chiens\Runtime\Animations\TheatreDuTemps\TheatreDuTempsContresPulsation.cs" />
+    <Compile Include="Assets\Shows\En Chiens\Runtime\Animations\Improviste\ImprovisteContresPulsation.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\EnChiensSpectacle.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\Animations\Gouvernail\GouvernailContresPulsation.cs" />
     <Compile Include="Assets\Shows\En Chiens\Runtime\Core\Bpm.cs" />

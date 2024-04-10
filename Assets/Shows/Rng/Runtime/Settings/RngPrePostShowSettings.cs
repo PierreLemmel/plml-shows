@@ -8,11 +8,12 @@ namespace Plml.Rng
     [Serializable]
     public class RngPrePostShowSettings
     {
-        [Range(1f, 20f)]
+        [Range(0f, 20f)]
         public float timeGap = 10.0f;
 
-        public DmxTrackProvider dmxProvider;
+        [Range(0f, 5f)]
+        public float fade = 0f;
 
-        public AudioClipProvider musics;
+        public DmxTrackProvider dmxProvider;
     }
 }

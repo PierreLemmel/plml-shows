@@ -36,10 +36,10 @@ namespace Plml.Rng.Dmx.Animations
             Color24 color2 = Color.HSVToRGB(h2, s, v);
 
             foreach (var fixture in fixturesColor1)
-                fixture.SetColor(color1);
+                fixture.SetColorOrSplitColor(color1);
 
             foreach (var fixture in fixturesColor2)
-                fixture.SetColor(color2);
+                fixture.SetColorOrSplitColor(color2);
         }
 
         public enum BicolorComplementaryType
