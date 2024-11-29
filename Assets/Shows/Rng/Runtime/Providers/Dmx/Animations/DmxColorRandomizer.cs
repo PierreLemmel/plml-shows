@@ -22,7 +22,7 @@ namespace Plml.Rng.Dmx.Animations
             Color24 color = Color.HSVToRGB(h, s, v);
 
             foreach (var fixture in fixtures)
-                fixture.SetColor(color);
+                fixture.SetColorOrSplitColor(color);
         }
     }
 }

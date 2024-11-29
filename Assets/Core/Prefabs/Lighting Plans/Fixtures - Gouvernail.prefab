@@ -510,7 +510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 11400000, guid: acb1cb04805738f4b86f108679a46e32, type: 2}
-  channelOffset: 14
+  channelOffset: 21
 --- !u!1 &5066214968141318291
 GameObject:
   m_ObjectHideFlags: 0

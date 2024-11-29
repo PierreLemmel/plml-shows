@@ -62,6 +62,12 @@ namespace Plml.EnChiens.Gouvernail
         public MidiNote side2Note = MidiNote.D2;
 
         [HideInPlayMode]
+        public KeyCode side1Key = KeyCode.Alpha1;
+
+        [HideInPlayMode]
+        public KeyCode side2Key = KeyCode.Alpha2;
+
+        [HideInPlayMode]
         public DmxTrack side1Track;
 
         [HideInPlayMode]
@@ -135,6 +141,7 @@ namespace Plml.EnChiens.Gouvernail
                 .AttachTo(this);
 
             sideButtons.SetupSideNotes(side1Note, side2Note);
+            sideButtons.SetupSideKeys(side1Key, side2Key);
             sideButtons.smoothTime = faceButtonSmoothTime;
 
             pianoSpots = faces;

@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Assets\Core\Tests\Core\ArraysShould.cs" />
     <Compile Include="Assets\Core\Tests\Dmx\LightScript\Compilation\LightScriptTypeSystemShould.cs" />
+    <Compile Include="Assets\Core\Tests\Core\Bytes.cs" />
     <Compile Include="Assets\Core\Tests\Dmx\LightScript\Compilation\LightScriptCompilatorShould.cs" />
     <Compile Include="Assets\Core\Tests\Dmx\LightScript\Compilation\AbstractSyntaxTreeShould.cs" />
     <Compile Include="Assets\Core\Tests\Dmx\LightScript\Compilation\TokenizeShould.cs" />

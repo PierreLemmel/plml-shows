@@ -6,10 +6,10 @@ namespace Plml.Rng
     [Serializable]
     public class RngShowSettings
     {
-        [Range(5, 25)]
+        [Range(5, 50)]
         public int minScenes = 10;
 
-        [Range(10, 40)]
+        [Range(10, 1000)]
         public int maxScenes = 30;
 
         [CubicRange(0.2f, 4.0f)]
@@ -17,8 +17,5 @@ namespace Plml.Rng
 
         [Range(600.0f, 7200.0f)]
         public float showDuration = 3600.0f;
-
-        [Range(0.0f, 8.0f)]
-        public float blackoutDuration = 2.5f;
     }
 }

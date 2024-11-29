@@ -8,6 +8,8 @@ namespace Plml.Rng
 {
     public class RngScene : MonoBehaviour
     {
+        public RngSceneType type;
+
         public float duration
         {
             get => sceneWindow.duration;
@@ -24,6 +26,9 @@ namespace Plml.Rng
 
         [EditTimeOnly]
         public TimeWindow sceneWindow;
+
+        [EditTimeOnly]
+        public TimeWindow lightWindow = new(-1000f, 100_000f, 0f, 0f);
 
         public bool hasAudio => audioData != null;
 

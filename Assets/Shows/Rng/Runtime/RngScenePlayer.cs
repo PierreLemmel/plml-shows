@@ -1,6 +1,7 @@
 ﻿using Plml.Dmx;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Plml.Rng
@@ -13,114 +14,207 @@ namespace Plml.Rng
         [ReadOnly]
         public bool isPlaying = false;
 
-        [ReadOnly]
-        public bool done = false;
+        public RngPlayState playState = RngPlayState.PreShow;
+
+        public RngSceneContent content = null;
 
 
-        [ReadOnly]
-        public RngScene[] scenes = Array.Empty<RngScene>();
-
-        [PlayTimeOnly, ReadOnly]
-        public int currentSceneIndex = -1;
-
-        [PlayTimeOnly]
         public RngScene currentScene;
 
+        public TimeWindow nextBlackoutWindow;
 
         private DmxTrackControler dmxControler;
         private AudioSource audioSource;
+        private RngPlaylistPlayer playlistPlayer;
 
         private DmxTrack currentTrack;
         private Guid currentTrackId;
 
         private bool audioPlaying;
 
+        public float showDuration;
+
         private void Awake()
         {
             dmxControler = FindObjectOfType<DmxTrackControler>();
             audioSource = FindObjectOfType<AudioSource>();
+            playlistPlayer = FindObjectOfType<RngPlaylistPlayer>();
 
             ResetTrackingVariables();
 
             isPlaying = false;
         }
 
+
         public void Update()
         {
-            if (!isPlaying || done) return;
+            if (!isPlaying) return;
 
-            #region Scene Management
-            if (currentScene == null || currentScene.endTime < currentTime)
+            switch (playState)
             {
-                currentSceneIndex++;
+                case RngPlayState.PreShow:
+                    
+                    break;
 
-                if (currentSceneIndex == scenes.Length)
-                {
-                    done = true;
-                    return;
-                }
-                else
-                {
-                    currentScene = scenes[currentSceneIndex];
-                }
+                case RngPlayState.PreShowBlackout:
+                    
+                    currentTime += Time.deltaTime;
+                    if (currentTime >= content.preShow.endTime)
+                        SetState(RngPlayState.Show);
+                    break;
 
-                StopLights();
+                case RngPlayState.Show:
 
-                if (currentTrack != null)
-                    Log($"End of track: '{currentTrack.name}'");
-
-                StopAudio();
-
-                currentTrack = dmxControler.AddTrack(currentScene.track, out currentTrackId);
-                Log($"Start of track: '{currentTrack.name}'");
-            }
-            #endregion
-
-            #region Dmx
-            float dmxMaster = currentScene.sceneWindow.GetValue(currentTime);
-            currentTrack.master = dmxMaster;
-            #endregion
-
-            #region Audio
-            if (currentScene.hasAudio)
-            {
-                var audioData = currentScene.audioData;
-                var musicWindow = audioData.musicWindow;
-
-                if (musicWindow.Contains(currentTime))
-                {
-                    if (!audioPlaying)
+                    // Scene
+                    if (currentScene != null)
                     {
-                        audioPlaying = true;
-                        audioSource.clip = audioData.audioClip;
+                        // Continues
+                        if (currentTime <= currentScene.endTime)
+                        {
+                            float dmxMaster = currentScene.sceneWindow.GetValue(currentTime)
+                                * currentScene.lightWindow.GetValue(currentTime);
+                            currentTrack.master = dmxMaster;
 
-                        Log($"Playing clip '{audioSource.clip.name}'");
-                        audioSource.Play();
+                            if (currentScene.hasAudio)
+                            {
+                                var audioData = currentScene.audioData;
+                                var musicWindow = audioData.musicWindow;
+
+                                if (musicWindow.Contains(currentTime))
+                                {
+                                    if (!audioPlaying)
+                                    {
+                                        audioPlaying = true;
+                                        audioSource.clip = audioData.audioClip;
+
+                                        Log($"Playing clip '{audioSource.clip.name}'");
+                                        audioSource.Play();
+                                    }
+
+                                    audioSource.volume = musicWindow.GetValue(currentTime) * audioData.audioVolume;
+                                }
+                                else
+                                {
+                                    if (audioPlaying)
+                                    {
+                                        Log($"End of clip '{audioSource.clip.name}'");
+                                        StopAudio();
+                                    }
+                                }
+                            }
+                        }
+                        // Ends
+                        else
+                        {
+                            if (currentTime < showDuration)
+                            {
+                                nextBlackoutWindow = content.blackout.sceneWindow.Translate(currentScene.endTime);
+                                currentScene = null;
+                                SetCurrentTrack(content.blackout.track);
+                            }
+                            else
+                                SetState(RngPlayState.PostShowBlackout);
+                        }
+                    }
+                    // blackout
+                    else
+                    {
+                        if (currentTime <= nextBlackoutWindow.endTime)
+                        {
+                            float dmxMaster = nextBlackoutWindow.GetValue(currentTime);
+                            currentTrack.master = dmxMaster;
+                        }
+                        else
+                        {
+                            if (currentTime <= showDuration)
+                            {
+                                currentScene = content.scenes
+                                    .Prepend(content.intro)
+                                    .Append(content.outro)
+                                    .First(sc => currentTime >= sc.startTime && currentTime <= sc.endTime);
+                                SetCurrentTrack(currentScene.track);
+                            }
+                            else
+                            {
+                                SetState(RngPlayState.PostShowBlackout);
+                            }
+                        }
                     }
 
-                    audioSource.volume = musicWindow.GetValue(currentTime) * audioData.audioVolume;
-                }
-                else
-                {
-                    if (audioPlaying)
-                    {
-                        Log($"End of clip '{audioSource.clip.name}'");
-                        StopAudio();
-                    }
-                }
+                    currentTime += Time.deltaTime;
+                    break;
 
+                case RngPlayState.PostShowBlackout:
+
+                    Debug.Log(content.postShow.endTime);
+                    if (currentTime > content.postShow.endTime)
+                        SetState(RngPlayState.PostShow);
+
+                    currentTime += Time.deltaTime;
+                    break;
+
+                case RngPlayState.PostShow:
+                    break;
+            }            
+        }
+
+        private void SetCurrentTrack(DmxTrack track, bool on = false)
+        {
+            StopAudio();
+            StopLights();
+
+            if (currentTrack != null)
+                Log($"End of track: '{currentTrack.name}'");
+
+            currentTrack = dmxControler.AddTrack(track, out currentTrackId);
+            currentTrack.master = on ? 1.0f : 0.0f;
+
+            Log($"Start of track: '{currentTrack.name}'");
+        }
+
+        private void SetState(RngPlayState newState)
+        {
+            Debug.Log($"End of state: {playState}");
+            Debug.Log($"Stating new state: {newState}");
+            switch (newState)
+            {
+                case RngPlayState.PreShow:
+                    SetCurrentTrack(content.preShow.track, true);
+                    playlistPlayer.StartPlaylist();
+                    break;
+
+                case RngPlayState.PreShowBlackout:
+                    playlistPlayer.StopPlaylist();
+                    currentTime = -content.blackout.duration;
+                    SetCurrentTrack(content.blackout.track);
+                    break;
+
+                case RngPlayState.Show:
+                    StopLights();
+                    break;
+
+                case RngPlayState.PostShowBlackout:
+                    SetCurrentTrack(content.blackout.track);
+                    break;
+
+                case RngPlayState.PostShow:
+                    SetCurrentTrack(content.postShow.track, true);
+                    playlistPlayer.StartPlaylist();
+                    break;
             }
-            #endregion
 
-            currentTime += Time.deltaTime;
+            playState = newState;
+
+            Debug.Log($"New state started: {newState}");
         }
 
         private void ResetTrackingVariables()
         {
             currentTrack = null;
             currentTrackId = Guid.Empty;
-            currentSceneIndex = -1;
+            nextBlackoutWindow = new();
             currentScene = null;
+            playState = RngPlayState.PreShow;
 
             audioPlaying = false;
         }
@@ -142,23 +236,17 @@ namespace Plml.Rng
 
         private void Log(string msg) => Debug.Log($"{currentTime:####:##} - {msg}");
 
-        public void StartShow(RngScene[] scenes, Index? startIndex = null, Index? stopIndex = null)
+        public void StartShow(RngSceneContent content)
         {
-            if (done)
-            {
-                ResetTrackingVariables();
-                done = false;
-            }
+            ResetTrackingVariables();
+            showDuration = content.outro.endTime;
 
-            Range range = new(startIndex ?? Index.Start, stopIndex ?? Index.End);
-
-            this.scenes = scenes.AsSpan(range).ToArray();
+            this.content = content;
+            SetState(RngPlayState.PreShow);
             isPlaying = true;
-            done = false;
-            currentTime = this.scenes[0].startTime;
-
-            Log("Show started");
         }
+
+        public void Play() => SetState(RngPlayState.PreShowBlackout);
 
         public void StopShow()
         {
@@ -169,8 +257,6 @@ namespace Plml.Rng
             StopLights();
 
             ResetTrackingVariables();
-
-            scenes = Array.Empty<RngScene>();
 
             Log("Show stopped");
         }

@@ -13,10 +13,16 @@ namespace Plml.Dmx
         Cold,
         Warm,
         Amber,
+        Lime,
+
+        Beam,
         Pan,
+        PanFine,
         Tilt,
+        TiltFine,
 
         Color,
+        SplitColor,
 
         ColorArray16,
         ColorArray32
@@ -28,6 +34,7 @@ namespace Plml.Dmx
     {
         public static bool IsByteChannel(this DmxChannelType channel) => channel < Color;
         public static bool IsColorChannel(this DmxChannelType channel) => channel == Color;
+        public static bool IsSplitColorChannel(this DmxChannelType channel) => channel == SplitColor;
         public static bool IsColorArray(this DmxChannelType channel) => channel == ColorArray16 || channel == ColorArray32;
 
         public static int ColorArrayCount(this DmxChannelType channel) => channel switch

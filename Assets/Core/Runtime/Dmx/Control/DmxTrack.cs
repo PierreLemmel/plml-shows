@@ -32,6 +32,17 @@ namespace Plml.Dmx
 
         public void AddElements(params DmxFixture[] fixtures) => AddElements(fixtures.AsEnumerable());
 
-        public IEnumerable<DmxTrackElement> Elements => elements;
+        public IEnumerable<DmxTrackElement> Elements
+        {
+            get
+            {
+#if UNITY_EDITOR
+                if (elements?.IsEmpty() ?? true)
+                    elements = GetComponentsInChildren<DmxTrackElement>();
+#endif
+
+                return elements;
+            }
+        }
     }
 }

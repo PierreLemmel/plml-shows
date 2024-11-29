@@ -40,9 +40,9 @@ namespace Plml.Rng.Dmx.Animations
             Color24 color3 = Color.HSVToRGB(h3, s, v3);
 
 
-            foreach (var fixture in fixturesColor1) fixture.SetColor(color1);
-            foreach (var fixture in fixturesColor2) fixture.SetColor(color2);
-            foreach (var fixture in fixturesColor3) fixture.SetColor(color3);
+            foreach (var fixture in fixturesColor1) fixture.SetColorOrSplitColor(color1);
+            foreach (var fixture in fixturesColor2) fixture.SetColorOrSplitColor(color2);
+            foreach (var fixture in fixturesColor3) fixture.SetColorOrSplitColor(color3);
         }
     }
 }

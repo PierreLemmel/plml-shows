@@ -1,7 +1,5 @@
 ﻿using Plml.Rng.Audio;
 using Plml.Rng.Dmx;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
@@ -11,7 +9,14 @@ namespace Plml.Rng
 {
     public class RngSceneGenerator : MonoBehaviour
     {
-        public RngScene[] GenerateScenes(RngShowSettings settings, RngIntroOutroSettings ioSettings)
+        public RngSceneContent GenerateScenes(
+            RngShowSettings showSettings,
+            RngIntroOutroSettings introSettings,
+            RngIntroOutroSettings outroSettings,
+            RngBlackoutSettings blackoutSettings,
+            RngPrePostShowSettings preShowSettings,
+            RngPrePostShowSettings postShowSettings
+        )
         {
             RngSceneCollection sceneCollection = GetComponentInChildren<RngSceneCollection>();
 
@@ -21,17 +26,19 @@ namespace Plml.Rng
             DmxTrackProviderCollection trackProviderCollection = GetComponentInChildren<DmxTrackProviderCollection>();
             AudioProviderCollection audioProviderCollection = GetComponentInChildren<AudioProviderCollection>();
 
-            int sceneCount = URandom.Range(settings.minScenes, settings.maxScenes);
-            int totalSceneCount = sceneCount + 2;
-            RngScene[] scenes = new RngScene[sceneCount + 2];
+            int sceneCount = URandom.Range(showSettings.minScenes, showSettings.maxScenes);
 
-            float totalDuration = settings.showDuration;
-            float blackoutDuration = settings.blackoutDuration;
+            RngScene[] scenes = new RngScene[sceneCount];
 
-            float effectiveDuration = totalDuration - sceneCount * blackoutDuration;
-            float targetDuration = effectiveDuration / sceneCount;
+            float totalDuration = showSettings.showDuration;
+            float blackoutDuration = blackoutSettings.duration;
 
-            scenes[0] = GenerateIntroOutroScene(true);
+            var blackout = GenerateBlackoutScene();
+            var preShow = GeneratePrePostShowScene(true);
+            var postShow = GeneratePrePostShowScene(false);
+            var intro = GenerateIntroOutroScene(true);
+            var outro = GenerateIntroOutroScene(false);
+
             for (int i = 0; i < sceneCount; i++)
             {
                 GameObject sceneObj = new();
@@ -43,28 +50,29 @@ namespace Plml.Rng
                     .GetNextElement()
                     .AttachTo(sceneObj);
 
-                scenes[i + 1] = scene;
+                scenes[i] = scene;
 
                 scene.sceneWindow = durationProviderCollection.GetNextElement();
             }
-            scenes[sceneCount + 1] = GenerateIntroOutroScene(false);
 
-            float totalBlackoutsDuration = (totalSceneCount - 1) * settings.blackoutDuration;
-            float durationFactor = (totalDuration - totalBlackoutsDuration) / scenes.Sum(scene => scene.duration);
+            float totalBlackoutsDuration = (sceneCount +1) * blackoutDuration;
+            float durationFactor = (totalDuration - totalBlackoutsDuration - intro.duration - outro.duration)
+                / scenes.Sum(scene => scene.duration);
 
-            float startTime = 0.0f;
+            float startTime = intro.duration + blackoutDuration;
             foreach (var scene in scenes)
             {
                 float duration = scene.duration * durationFactor;
 
                 scene.duration = duration;
                 scene.startTime = startTime;
+                scene.type = RngSceneType.Scene;
 
                 startTime += duration + blackoutDuration;
             }
 
-            int idx = 1;
-            foreach (var scene in scenes.Skip(1).Take(sceneCount))
+            int idx = 0;
+            foreach (var scene in scenes)
             {
                 var audioData = audioProviderCollection.GetNextElement(scene.startTime, scene.duration);
                 scene.audioData = audioData;
@@ -76,8 +84,8 @@ namespace Plml.Rng
                 scene.name = $"{idx++}: {dmxLabel}, {scene.duration:0.0}s - {audioLabel}";
             }
 
-            SetupIntroOutroScene(scenes[0], true);
-            SetupIntroOutroScene(scenes[scenes.Length - 1], false);
+            SetupIntroOutroScene(intro, true, 0f);
+            SetupIntroOutroScene(outro, false, startTime);
 
             RngScene GenerateIntroOutroScene(bool intro)
             {
@@ -86,30 +94,99 @@ namespace Plml.Rng
 
                 sceneObj.AttachTo(sceneCollection);
 
-                scene.track = ioSettings.dmxProvider
+                scene.type = intro ? RngSceneType.Intro : RngSceneType.Outro;
+                
+                var dmxProvider = intro ? introSettings.dmxProvider : outroSettings.dmxProvider;
+                scene.track = dmxProvider
                     .GetNextElement()
                     .AttachTo(sceneObj);
 
-                TimeWindow window = ioSettings.durationProvider.GetNextElement();
+                var durationProvider = intro ?
+                    introSettings.durationProvider :
+                    outroSettings.durationProvider;
+                TimeWindow window = durationProvider.GetNextElement();
                 scene.sceneWindow = window;
 
                 scene.audioData = new()
                 {
-                    audioClip = ioSettings.music,
-                    audioVolume = ioSettings.volume,
+                    audioClip = introSettings.music,
+                    audioVolume = introSettings.volume,
                 };
 
                 return scene;
             }
 
-            void SetupIntroOutroScene(RngScene scene, bool intro)
+            void SetupIntroOutroScene(RngScene scene, bool intro, float time)
             {
+                scene.sceneWindow = scene.sceneWindow.Translate(time);
                 scene.audioData.musicWindow = scene.sceneWindow;
 
-                scene.name = $"{(intro ? "Intro" : "Outro")}: {scene.duration:0.0}s - {ioSettings.music.name}";
+                var timeOffset = intro ?
+                    introSettings.lightOffset :
+                    outroSettings.lightOffset;
+
+                scene.lightWindow = scene.sceneWindow.ShiftLeft(timeOffset);
+
+                scene.name = $"{(intro ? "Intro" : "Outro")}: {scene.duration:0.0}s - {introSettings.music.name}";
             }
 
-            return scenes;
+            RngScene GeneratePrePostShowScene(bool pre)
+            {
+                GameObject sceneObj = new();
+                RngScene scene = sceneObj.AddComponent<RngScene>();
+
+                sceneObj.AttachTo(sceneCollection);
+
+                scene.type = pre ? RngSceneType.PreShow : RngSceneType.PostShow;
+                scene.name = pre ? "Preshow" : "Postshow";
+
+                var settings = pre ? preShowSettings : postShowSettings;
+                
+                scene.track = settings
+                    .dmxProvider
+                    .GetNextElement()
+                    .AttachTo(sceneObj);
+
+                var duration = settings.timeGap;
+                Debug.Log(pre);
+                Debug.Log(duration);
+                var fade = settings.fade;
+                var startTime = pre ? -duration : totalDuration;
+                scene.sceneWindow = new(startTime, duration, fade, fade);
+
+                return scene;
+            }
+
+            RngScene GenerateBlackoutScene()
+            {
+                GameObject sceneObj = new();
+                RngScene scene = sceneObj.AddComponent<RngScene>();
+                scene.AttachTo(sceneCollection);
+
+                float duration = blackoutSettings.duration;
+                float fade = blackoutSettings.fade;
+
+                scene.type = RngSceneType.Blackout;
+                scene.sceneWindow = new TimeWindow(0, duration, fade, fade);
+                scene.name = "Blackout";
+                scene.track = blackoutSettings.dmxProvider
+                    .GetNextElement()
+                    .AttachTo(sceneObj);
+
+                return scene;
+            }
+
+            RngSceneContent result = new()
+            {
+                scenes = scenes,
+                intro = intro,
+                outro = outro,
+                preShow = preShow,
+                postShow = postShow,
+                blackout = blackout
+            };
+
+            return result;
         }
     }
 }

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 572f741a08c1afc4eb9ce46a8c4abca3, type: 3}
+  m_Name: "Diag Arri\xE8re LED - Th\xE9o Th\xE9\xE2tre"
+  m_EditorClassIdentifier: 
+  manufacturer: 
+  type: 
+  mode: 
+  chanCount: 17
+  channels:
+  - channel: 0
+    type: 1
+  - channel: 2
+    type: 15
+  - channel: 8
+    type: 3
+  - channel: 10
+    type: 2
+  - channel: 14
+    type: 9

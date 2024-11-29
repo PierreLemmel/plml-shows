@@ -22,6 +22,10 @@ namespace Plml.EnChiens.Animations
         private bool setup = false;
         private MidiNote side1Note;
         private MidiNote side2Note;
+
+        private KeyCode side1Key;
+        private KeyCode side2Key;
+
         public void SetupSideNotes(MidiNote side1Note, MidiNote side2Note)
         {
             CleanupListeners();
@@ -37,6 +41,12 @@ namespace Plml.EnChiens.Animations
             setup = true;
             this.side1Note = side1Note;
             this.side2Note = side2Note;
+        }
+
+        public void SetupSideKeys(KeyCode side1Key, KeyCode side2Key)
+        {
+            this.side1Key = side1Key;
+            this.side2Key = side2Key;
         }
 
         private void OnEnable()
@@ -71,6 +81,12 @@ namespace Plml.EnChiens.Animations
         {
             s1Value = Mathf.SmoothDamp(s1Value, s1Target, ref s1Vel, smoothTime);
             s2Value = Mathf.SmoothDamp(s2Value, s2Target, ref s2Vel, smoothTime);
+
+            if (Input.GetKeyDown(side1Key))
+                s1Target = s1Target == 1f ? 0f : 1f;
+
+            if (Input.GetKeyDown(side2Key))
+                s2Target = s2Target == 1f ? 0f : 1f;
         }
     }
 }

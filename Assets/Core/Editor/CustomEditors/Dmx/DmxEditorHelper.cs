@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 
 using UObject = UnityEngine.Object;
 
@@ -6,7 +7,9 @@ namespace Plml.Dmx.Editor
 {
     internal static class DmxEditorHelper
     {
-        public static void AttachDefaultTrackElements(this DmxTrack track) => track.AddElements(UObject.FindObjectsOfType<DmxFixture>().Reverse());
+        public static void AttachDefaultTrackElements(this DmxTrack track) => track.AddElements(UObject
+            .FindObjectsOfType<DmxFixture>()
+            .OrderBy(fixture => fixture.channelOffset));
 
         public static void AttachNewDefaultTrack(this Component component)
         {

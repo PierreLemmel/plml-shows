@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36adcb8a6ad11844696e0266f21b392f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 11400000, guid: be6580f90ef80d049a8dd6991861e336, type: 2}
+  model: {fileID: 0}
   channelOffset: 19
 --- !u!1 &205819364912815581
 GameObject:

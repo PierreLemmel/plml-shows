@@ -31,7 +31,19 @@ namespace Plml.Dmx
             return hasColor;
         }
 
+        public void SetColorOrSplitColor(Color24 color24)
+        {
+            if (HasColor())
+                SetColor(color24);
+            else if (HasSplitColor())
+                SetSplitColor(color24);
+            else
+                throw new InvalidOperationException($"Missing Color channel on fixture '{fixture.name}'");
+        }
+
         public void SetColor(Color24 color24) => SetColor_Internal(color24, fixture.model.GetChannelAddress(DmxChannelType.Color));
+
+        public void SetSplitColor(Color24 color24) => SetSplitColor_Internal(color24, fixture.model.GetChannelAddress(DmxChannelType.SplitColor));
 
         public void SetColors(Color24[] colors)
         {
@@ -72,9 +84,22 @@ namespace Plml.Dmx
             channels[colorChan + 2] = b;
         }
 
+        private void SetSplitColor_Internal(Color24 color24, int colorChan)
+        {
+            byte r = color24.r;
+            byte g = color24.g;
+            byte b = color24.b;
+
+            channels[colorChan] = r;
+            channels[colorChan + 2] = g;
+            channels[colorChan + 4] = b;
+        }
+
         public bool HasColor() => HasChannel(DmxChannelType.Color);
+        public bool HasSplitColor() => HasChannel(DmxChannelType.SplitColor);
 
         public Color24 GetColor() => GetColor_Internal(fixture.model.GetChannelAddress(DmxChannelType.Color));
+        public Color24 GetSplitColor() => GetSplitColor_Internal(fixture.model.GetChannelAddress(DmxChannelType.SplitColor));
 
         public Color24[] GetColorArray16() => GetColors_Internal(DmxChannelType.ColorArray16);
         public void GetColorArray16(Color24[] buffer) => GetColors_Internal(DmxChannelType.ColorArray16, buffer);
@@ -126,10 +151,23 @@ namespace Plml.Dmx
             return hasColor;
         }
 
+        public bool TryGetSplitColor(out Color24 color24)
+        {
+            bool hasSplitColor = TryGetChannel(DmxChannelType.SplitColor, out int colorChan);
+            color24 = hasSplitColor ? GetSplitColor_Internal(colorChan) : default;
+            return hasSplitColor;
+        }
+
         private Color24 GetColor_Internal(int colorChan) => new(
             channels[colorChan],
             channels[colorChan + 1],
             channels[colorChan + 2]
+        );
+
+        private Color24 GetSplitColor_Internal(int colorChan) => new(
+            channels[colorChan],
+            channels[colorChan + 2],
+            channels[colorChan + 4]
         );
 
         public bool HasChannel(DmxChannelType chanType) => fixture.model.HasChannel(chanType);
@@ -153,6 +191,15 @@ namespace Plml.Dmx
             return hasChannel;
         }
 
+        public void SetChannelIfGreater(DmxChannelType chanType, int newVal)
+        {
+            int oldVal = GetChannel(chanType);
+            if (newVal > oldVal)
+            {
+                SetChannel(chanType, newVal);
+            }
+        }
+
         public bool IsTrad() => HasChannel(DmxChannelType.Trad);
         public bool HasDimmer() => HasChannel(DmxChannelType.Dimmer);
         public bool HasStroboscope() => HasChannel(DmxChannelType.Stroboscope);
@@ -166,6 +213,7 @@ namespace Plml.Dmx
 
         public int GetValue() => GetChannel(DmxChannelType.Trad);
         public int GetDimmer() => GetChannel(DmxChannelType.Dimmer);
+        public int GetBeam() => GetChannel(DmxChannelType.Beam);
         public int GetStroboscope() => GetChannel(DmxChannelType.Stroboscope);
         public int GetWhite() => GetChannel(DmxChannelType.White);
         public int GetUv() => GetChannel(DmxChannelType.Uv);
@@ -188,6 +236,7 @@ namespace Plml.Dmx
 
         public void SetValue(int value) => SetChannel(DmxChannelType.Trad, value);
         public void SetDimmer(int value) => SetChannel(DmxChannelType.Dimmer, value);
+        public void SetBeam(int value) => SetChannel(DmxChannelType.Beam, value);
         public void SetStroboscope(int value) => SetChannel(DmxChannelType.Stroboscope, value);
         public void SetWhite(int value) => SetChannel(DmxChannelType.White, value);
         public void SetUv(int value) => SetChannel(DmxChannelType.Uv, value);
@@ -208,12 +257,29 @@ namespace Plml.Dmx
         public bool TrySetPan(int value) => TrySetChannel(DmxChannelType.Pan, value);
         public bool TrySetTilt(int value) => TrySetChannel(DmxChannelType.Tilt, value);
 
+        public void SetValueIfGreater(int value) => SetChannelIfGreater(DmxChannelType.Trad, value);
+        public void SetDimmerIfGreater(int value) => SetChannelIfGreater(DmxChannelType.Dimmer, value);
+        public void SetBeamIfGreater(int value) => SetChannelIfGreater(DmxChannelType.Beam, value);
+        public void SetStroboscopeIfGreater(int value) => SetChannelIfGreater(DmxChannelType.Stroboscope, value);
+        public void SetWhiteIfGreater(int value) => SetChannelIfGreater(DmxChannelType.White, value);
+        public void SetUvIfGreater(int value) => SetChannelIfGreater(DmxChannelType.Uv, value);
+        public void SetColdIfGreater(int value) => SetChannelIfGreater(DmxChannelType.Cold, value);
+        public void SetWarmIfGreater(int value) => SetChannelIfGreater(DmxChannelType.Warm, value);
+        public void SetAmberIfGreater(int value) => SetChannelIfGreater(DmxChannelType.Amber, value);
+        public void SetPanIfGreater(int value) => SetChannelIfGreater(DmxChannelType.Pan, value);
+        public void SetTiltIfGreater(int value) => SetChannelIfGreater(DmxChannelType.Tilt, value);
+
         public Color24 color
         {
             get => GetColor();
             set => SetColor(value);
         }
 
+        public Color24 splitColor
+        {
+            get => GetSplitColor();
+            set => SetSplitColor(value);
+        }
 
 
         public int value
@@ -227,6 +293,13 @@ namespace Plml.Dmx
             get => GetDimmer();
             set => SetDimmer(value);
         }
+
+        public int beam
+        {
+            get => GetBeam();
+            set => SetBeam(value);
+        }
+
 
         public int stroboscope
         {
