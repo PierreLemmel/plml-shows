@@ -388,6 +388,12 @@ MonoBehaviour:
   contreBeamcolor1: {fileID: 479326292}
   contreBeamcolor2: {fileID: 1914526221}
   contreBeamcolor3: {fileID: 685667920}
+  adjStrobeRange:
+    min: 64
+    max: 95
+  beamColorStrobeRange:
+    min: 10
+    max: 170
   chasingMinSpots: 1
   chasingMaxSpots: 4
   flickeringDurationInFrames: 4

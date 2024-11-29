@@ -191,12 +191,12 @@ namespace Plml.Dmx
             return hasChannel;
         }
 
-        public void SetChannelIfGreater(DmxChannelType chanType, int Value)
+        public void SetChannelIfGreater(DmxChannelType chanType, int newVal)
         {
             int oldVal = GetChannel(chanType);
-            if (value > oldVal)
+            if (newVal > oldVal)
             {
-                SetChannel(chanType, value);
+                SetChannel(chanType, newVal);
             }
         }
 

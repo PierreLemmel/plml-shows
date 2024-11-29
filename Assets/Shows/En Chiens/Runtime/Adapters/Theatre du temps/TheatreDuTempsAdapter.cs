@@ -52,6 +52,12 @@ namespace Plml.EnChiens.TheatreDuTemps
 
         [HideInPlayMode]
         public DmxTrackElement contreBeamcolor3;
+
+        [DmxRange]
+        public IntRange adjStrobeRange = new(0, 255);
+
+        [DmxRange]
+        public IntRange beamColorStrobeRange = new(0, 255);
         #endregion
 
         #region Effects
@@ -90,29 +96,37 @@ namespace Plml.EnChiens.TheatreDuTemps
         #endregion
 
         #region Groups
-        private DmxTrackElement[] allLedSpots;
+        private LedElement[] allLedSpots;
         private DmxTrackElement[] adjLedSpots;
         private DmxTrackElement[] beamColors;
-        private DmxTrackElement[] pianoSpots;
+        private LedElement[] pianoSpots;
+
         private DmxTrackElement[] allTradSpots;
         #endregion
 
         private void Awake()
         {
             #region Groups
-            pianoSpots = new[]
-            {
-                latLedJar1, latLedJar2,
-                contreBeamcolor1, contreBeamcolor2, contreBeamcolor3,
-                latLedCour2, latLedCour1
-            };
-
             adjLedSpots = new[] { latLedJar1, latLedJar2, latLedCour1, latLedCour2 };
             beamColors = new[] { contreBeamcolor1, contreBeamcolor2, contreBeamcolor3 };
 
+            LedElement[] adjLedElts = adjLedSpots
+                .Select(elt => new LedElement(elt, adjStrobeRange));
+            LedElement[] beamColorLedElts = beamColors
+                .Select(elt => new LedElement(elt, beamColorStrobeRange));
+
+            pianoSpots = new[]
+            {
+                adjLedElts[0], adjLedElts[1],
+                beamColorLedElts[0], beamColorLedElts[1], beamColorLedElts[2],
+                adjLedElts[3], adjLedElts[2],
+            };
+
+            
+
             allLedSpots = Arrays.Merge(
-                adjLedSpots,
-                beamColors
+                adjLedSpots.Select(elt => new LedElement(elt, adjStrobeRange)),
+                beamColors.Select(elt => new LedElement(elt, beamColorStrobeRange))
             );
 
             allTradSpots = Arrays.Merge(
@@ -136,14 +150,18 @@ namespace Plml.EnChiens.TheatreDuTemps
             contresPulsation.smoothTime = pulsationSmoothTime;
             contresPulsation.bpm = bpm;
             #endregion
+
+            sequenceEnumerator = ChasingSequence.GetEnumerator();
         }
 
 
         #region Overrides
         public override void ResetLights()
         {
-            foreach (var ledSpot in allLedSpots)
+            foreach (var ledElt in allLedSpots)
             {
+                var ledSpot = ledElt.element;
+
                 ledSpot.dimmer = 0x00;
                 ledSpot.stroboscope = 0x00;
             }
@@ -163,8 +181,10 @@ namespace Plml.EnChiens.TheatreDuTemps
                 face.SetValueIfGreater(corrected);
             }
 
-            foreach (var led in allLedSpots)
+            foreach (var ledElt in allLedSpots)
             {
+                var led = ledElt.element;
+
                 led.white = 0xff;
                 led.SetDimmerIfGreater(others);
             }
@@ -179,13 +199,17 @@ namespace Plml.EnChiens.TheatreDuTemps
             rattrapageDoucheCentrale.SetValueIfGreater(rattrapageCorrected);
         }
 
+
         public override void SetupJardinCour(Color color, int jardinCour, int courJardin)
         {
-            int correctedJardin = CorrectDmxValue(jardinCour, latTradLevels);
-            int correctedCour = CorrectDmxValue(jardinCour, latTradLevels);
+            if (currentAnimation != EnChiensSpectacle.Animation.Introduction)
+                return;
 
-            latTradJardin.SetValueIfGreater(correctedJardin);
-            latTradCour.SetValueIfGreater(correctedCour);
+            int correctedJC = CorrectDmxValue(jardinCour, latTradLevels);
+            int correctedCJ = CorrectDmxValue(courJardin, latTradLevels);
+
+            latTradJardin.SetValueIfGreater(correctedJC);
+            latTradCour.SetValueIfGreater(correctedCJ);
         }
 
         public override void SetupFond(int value)
@@ -198,21 +222,24 @@ namespace Plml.EnChiens.TheatreDuTemps
 
         public override void SetupEnd(int value)
         {
-            int centraleCorrected = CorrectDmxValue(value, doucheCentraleLvl);
-            int rattrapageCorrected = CorrectDmxValue(value, rattrapageDoucheCentraleLvl);
+            int correctedVal = CorrectDmxValue(value, latTradLevels);
 
-            doucheCentrale.SetValueIfGreater(centraleCorrected);
-            rattrapageDoucheCentrale.SetValueIfGreater(rattrapageCorrected);
+            latTradJardin.SetValueIfGreater(correctedVal);
+            latTradCour.SetValueIfGreater(correctedVal);
         }
         #endregion
 
         #region Effects
         public override void Chase(int strobe)
         {
-            foreach (var par in GetChasingSpots())
+            foreach (var ledElement in GetChasingSpots())
             {
-                par.dimmer = 0xff;
-                par.stroboscope = strobe;
+                (DmxTrackElement proj, IntRange strobeRange) = ledElement;
+
+                int correctedStrobe = CorrectStrobeValue(strobe, strobeRange);
+
+                proj.dimmer = 0xff;
+                proj.stroboscope = correctedStrobe;
             }
         }
 
@@ -220,21 +247,32 @@ namespace Plml.EnChiens.TheatreDuTemps
         {
             if (IsFlickering())
             {
+                int flickerStrobe = CorrectStrobeValue(strobe, beamColorStrobeRange);
+
                 foreach (var contre in beamColors)
                 {
                     contre.SetDimmerIfGreater(amplitude);
-                    contre.stroboscope = strobe;
+                    contre.stroboscope = flickerStrobe;
                 }
             }
         }
 
+        private bool strobeOnPiano = false;
         public override void PlayPiano(int strobe)
         {
             int pianoIndex = GetPianoIndex();
-            var currentSpot = pianoSpots[pianoIndex];
+            
+            (DmxTrackElement currentSpot, IntRange strobeRange) = pianoSpots[pianoIndex];
+            
 
             currentSpot.dimmer = 0xff;
-            currentSpot.stroboscope = strobe;
+            currentSpot.white = 0xff;
+
+            if (strobeOnPiano)
+            {
+                int pianoStrobe = CorrectStrobeValue(strobe, strobeRange);
+                currentSpot.stroboscope = pianoStrobe;
+            }
         }
 
         public override void UpdatePulsations(Color color, float pulsationMinValue, float pulsationMaxValue)
@@ -250,7 +288,9 @@ namespace Plml.EnChiens.TheatreDuTemps
 
 
         #region Private utils
-        private IEnumerable<DmxTrackElement> GetChasingSpots()
+        private int CorrectStrobeValue(int strobe, IntRange strobeRange) => strobeRange.min + strobeRange.range * strobe / 255;
+
+        private IEnumerable<LedElement> GetChasingSpots()
         {
             if (++chaseFrame >= chasingStepDurationInFrames)
             {
@@ -262,8 +302,8 @@ namespace Plml.EnChiens.TheatreDuTemps
         }
 
         private int chaseFrame = 1_000_000;
-        private IEnumerator<IEnumerable<DmxTrackElement>> sequenceEnumerator;
-        private IEnumerable<IEnumerable<DmxTrackElement>> ChasingSequence
+        private IEnumerator<IEnumerable<LedElement>> sequenceEnumerator;
+        private IEnumerable<IEnumerable<LedElement>> ChasingSequence
         {
             get
             {
@@ -275,7 +315,7 @@ namespace Plml.EnChiens.TheatreDuTemps
                     IEnumerable<int> indices = GetRandomSequence(allLedSpots.Length, count, lastResult);
                     lastResult = indices;
 
-                    IEnumerable<DmxTrackElement> result = indices.Select(idx => allLedSpots[idx]);
+                    var result = indices.Select(idx => allLedSpots[idx]);
                     yield return result;
                 }
             }
@@ -344,5 +384,23 @@ namespace Plml.EnChiens.TheatreDuTemps
 
         private int CorrectDmxValue(int value, int max) => (value * max) / 255;
         #endregion
+
+        private struct LedElement
+        {
+            public DmxTrackElement element;
+            public IntRange strobeRange;
+
+            public LedElement(DmxTrackElement element, IntRange strobeRange)
+            {
+                this.element = element;
+                this.strobeRange = strobeRange;
+            }
+
+            public void Deconstruct(out DmxTrackElement element, out IntRange strobeRange)
+            {
+                element = this.element;
+                strobeRange = this.strobeRange;
+            }
+        }
     }
 }

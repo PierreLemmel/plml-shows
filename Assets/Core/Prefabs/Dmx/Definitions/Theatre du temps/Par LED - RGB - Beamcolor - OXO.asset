@@ -21,7 +21,7 @@ MonoBehaviour:
     type: 1
   - channel: 1
     type: 14
-  - channel: 8
-    type: 3
-  - channel: 9
+  - channel: 4
     type: 2
+  - channel: 5
+    type: 3
